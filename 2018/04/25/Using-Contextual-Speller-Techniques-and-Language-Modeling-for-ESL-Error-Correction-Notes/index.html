@@ -1,0 +1,1227 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Monaco:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Ngrams,Grammar Check,Language Model," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Some notes on paper Using Contextual Speller Techniques and Language Modeling for ESL Error Correction.">
+<meta name="keywords" content="Ngrams,Grammar Check,Language Model">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Using Contextual Speller Techniques and Language Modeling for ESL Error Correction | Notes">
+<meta property="og:url" content="http://yanshengjia.com/2018/04/25/Using-Contextual-Speller-Techniques-and-Language-Modeling-for-ESL-Error-Correction-Notes/index.html">
+<meta property="og:site_name" content="WildPointer">
+<meta property="og:description" content="Some notes on paper Using Contextual Speller Techniques and Language Modeling for ESL Error Correction.">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/esl0.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/esl1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/esl2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/esl3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/esl4.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/esl5.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/esl6.png">
+<meta property="og:updated_time" content="2018-05-17T15:57:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Using Contextual Speller Techniques and Language Modeling for ESL Error Correction | Notes">
+<meta name="twitter:description" content="Some notes on paper Using Contextual Speller Techniques and Language Modeling for ESL Error Correction.">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/esl0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: 'K1YPL7B54D',
+      apiKey: '7f22077ed5b2dfbd70cc761b8cf48112',
+      indexName: 'wildpointer',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yanshengjia.com/2018/04/25/Using-Contextual-Speller-Techniques-and-Language-Modeling-for-ESL-Error-Correction-Notes/"/>
+
+
+
+
+
+  <title> Using Contextual Speller Techniques and Language Modeling for ESL Error Correction | Notes | WildPointer </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">WildPointer</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Welcome to my world!</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Arc
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Cat
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tag
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-projects">
+          <a href="/projects" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-star"></i> <br />
+            
+            Proj
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tech">
+          <a href="/tech" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-code"></i> <br />
+            
+            Tech
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-donate">
+          <a href="/donate" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-usd"></i> <br />
+            
+            Donate
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-me">
+          <a href="/me" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            Me
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yanshengjia.com/2018/04/25/Using-Contextual-Speller-Techniques-and-Language-Modeling-for-ESL-Error-Correction-Notes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shengjia Yan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/profile0.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WildPointer">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Using Contextual Speller Techniques and Language Modeling for ESL Error Correction | Notes
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-25T11:17:27+08:00">
+                2018-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/04/25/Using-Contextual-Speller-Techniques-and-Language-Modeling-for-ESL-Error-Correction-Notes/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/04/25/Using-Contextual-Speller-Techniques-and-Language-Modeling-for-ESL-Error-Correction-Notes/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Some notes on paper <a href="http://www.aclweb.org/anthology/I08-1059" target="_blank" rel="noopener">Using Contextual Speller Techniques and Language Modeling for ESL Error Correction</a>.</p>
+<a id="more"></a>
+<hr>
+<p>使用上下文敏感的拼写检查技术和语言建模进行 ESL (English as a Second Language) 语法纠错</p>
+<hr>
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>作者提出了一个模块化的系统来为非英语母语 (ESL) 写作者提供错误检测 (主要是语法错误) 和修正服务。</p>
+<p>关注2类语法错误</p>
+<ul>
+<li>the incorrect use of determiners 冠词的错误使用</li>
+<li>the choice of prepositions 介词的选择</li>
+</ul>
+<p>方法</p>
+<ol>
+<li>用决策树方法 (受上下文敏感的拼写校正系统启发) 来检测语法错误并生成修正建议</li>
+<li>用基于 Gigaword 语料库训练的大规模语言模型来过滤不可靠的修正建议</li>
+</ol>
+<p>作者在一个非英语母语写作者产生的英文文本上做了实验，验证了系统的性能。</p>
+<hr>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>背景</p>
+<ul>
+<li>英语是国际通用语言</li>
+<li>7.5亿人使用英语作为第二语言，3.75亿人母语是英语 (Crystal 1997)</li>
+<li>74%的英文写作是由非英语母语者写的</li>
+<li>对于非英语母语的人来说，现在的英文写作校正工具都很辣鸡，因为非英语母语者和英语母语者会犯的错误的侧重点不同，而校正工具大多是为母语英语者设计的</li>
+</ul>
+<p>自动写作校正工具的挑战</p>
+<ul>
+<li>语法错误通常出现在一个语义维度 (语义上下文？) 中，很难对它提出一个单一的修正建议</li>
+<li>比如定冠词和不定冠词的选择很大程度上取决于文本上下文和世界知识</li>
+</ul>
+<p>作者认为校正工具发展的趋势是：对语法错误提供一系列修正建议和真实例子，然后让用户自己去选择一个最合理的建议。</p>
+<hr>
+<h2 id="Targeted-Error-Types"><a href="#Targeted-Error-Types" class="headerlink" title="Targeted Error Types"></a>Targeted Error Types</h2><p>8类语法错误 (斜体为文章关注的语法错误)：</p>
+<ul>
+<li><em>Preposition presence and choice</em>: In the other hand, … (On the other hand …) 介词的存在和选择</li>
+<li><em>Definite and indefinite determiner presence and choice</em>: I am teacher… (am a teacher) 定冠词和不定冠词的存在和用法</li>
+<li>Gerund/infinitive confusion: I am interesting in this book. (interested in) 动名词和不定式 混淆</li>
+<li>Auxiliary verb presence and choice: My teacher does is a good teacher (my teacher is…) 助动词的存在和用法</li>
+<li>Over-regularized verb inflection: I writed a letter (wrote) 动词变形</li>
+<li>Adjective/noun confusion: This is a China book (Chinese book) 形容词和名词 混淆</li>
+<li>Word order (adjective sequences and nominal compounds): I am a student of university (university student) 词的顺序（形容词序列与名词性复合词）</li>
+<li>Noun pluralization: They have many knowledges (much knowledge) 名词的复数形式</li>
+</ul>
+<p>一些对非英语母语语料库中语法错误的调查</p>
+<ul>
+<li>NICT Japanese Learners of English (JLE) corpus (Lzumi et al. 2004)<ul>
+<li>26.6% 冠词相关</li>
+<li>10% 介词相关</li>
+<li>口语的原文</li>
+</ul>
+</li>
+<li>Chinese Learners of English Corpus (CLEC, Gui and Yang 2003)<ul>
+<li>粗劣的不连贯的错误标记 (error tagging)，导致分离2类错误很难</li>
+<li>~10% 冠词相关</li>
+<li>~5% 介词相关</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="System-Description"><a href="#System-Description" class="headerlink" title="System Description"></a>System Description</h2><p>系统由3部分组成</p>
+<ul>
+<li>Suggestion Provider (SP)<ul>
+<li>包含处理上述2类错误的模块</li>
+<li>预处理：分词，词性标注</li>
+<li>使用了机器学习技术 (分类) 和启发式算法<ul>
+<li>动名词不定式混淆 和 助动词的存在和用法 - 单分类器</li>
+<li>介词和冠词模块 - 两个分类器，一个判断介词应不应该存在，一个判断介词的选用</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>Language Model (LM)<ul>
+<li>SP 中给出的所有建议都会传到 LM 中</li>
+<li>if (一个修正建议的语言模型分数 &gt; 原句)，该建议进入候选集合</li>
+<li>启发式阈值是基于类别概率的线性组合，类别概率由 SP 中分类器和语言模型分数决定</li>
+</ul>
+</li>
+<li>Example Provider (EP)<ul>
+<li>到 Web 上查询包含修正建议的例句，辅助用户选择修正建议</li>
+</ul>
+</li>
+</ul>
+<h3 id="Suggestion-Provider"><a href="#Suggestion-Provider" class="headerlink" title="Suggestion Provider"></a>Suggestion Provider</h3><p>用于冠词和介词选择的 SP 模块是机器学习模型，在大规模的有错误标签和修正后的文本的数据集上训练。</p>
+<ul>
+<li>训练两种分类器<ul>
+<li>检测介词/冠词是否应该存在 presence/absence classifier<ul>
+<li>determiners pa (presence/absence) classifier</li>
+<li>preposition pa (presence/absence) classifier</li>
+</ul>
+</li>
+<li>如果应该存在，介词/冠词的选择 choice classifier<ul>
+<li>determiners ch (choice) classifier: 类别有 a, an, the</li>
+<li>preposition ch (choice) classifier: 类别有 about, as, at, by, for, from, in, like, of, on, since, to, with, than, “other”</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>训练集<ul>
+<li>English Encarta encyclopedia (560k sentences)</li>
+<li>a random set of 1M sentences from a Reuters news data set</li>
+</ul>
+</li>
+<li>策略<ul>
+<li>和上下文敏感的拼写校正器类似</li>
+<li>冠词/介词的潜在插入点由词性标记的序列启发式地决定</li>
+<li>对于每个冠词/介词的可能插入点，在左右各6个 token 大小的窗口内提取上下文特征，包括窗口内的每个词项抽取其相对位置、字符串和词性标记</li>
+<li>基于上述特征，训练了一个分类器来做冠词选择和介词选择<ul>
+<li>实验中，决策树总体上比线性 SVM 表现更好，训练和参数优化上效率更高</li>
+<li>使用 WinMine toolkit 训练决策树分类器</li>
+<li>决策树的叶子节点中值最高的介词/冠词作为suggestion</li>
+<li>如果有其他类别值的概率高于启发式确定的阈值，则这些类也在候选建议中</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>栗子</strong></p>
+<p>一个语法错误：I am teacher from Korea.</p>
+<p>(1) 首先对句子进行分词，词性标注</p>
+<p>0/I/PRP 1/am/VBP 2/teacher/NN 3/from/IN 4/Korea/NNP 5/./.</p>
+<p>(2) 根据词性标记的序列和名词的大写，启发式算法认为有一个名词短语 (teacher) 前可能有一个冠词，对于这个可能的冠词位置，pa classifier 基于词性标记的特征向量和上下文计算冠词的存在概率</p>
+<p>P(article + teacher) = 0.54</p>
+<p>(3) ch classifier 计算不同冠词出现在该位置的概率</p>
+<p>p(the) = 0.04</p>
+<p>p(a/an) = 0.96 概率更高，选择 a/an 作为冠词</p>
+<p>(4) 生成修正建议 I am teacher from Korea. -&gt; I am a teacher from Korea.</p>
+<h3 id="Language-Model"><a href="#Language-Model" class="headerlink" title="Language Model"></a>Language Model</h3><ul>
+<li>5-gram 模型，基于 English Gigaword corpus (LDC2005T12) 训练<ul>
+<li>为了避免单一的上下文信息，使用了 interpolated KN smoothing 插值 KN 平滑算法</li>
+</ul>
+</li>
+<li>词表 120K 词</li>
+<li>语言模型包含<ul>
+<li>54M bigrams</li>
+<li>338M trigrams</li>
+<li>801M 4grams</li>
+<li>12B 5grams</li>
+</ul>
+</li>
+</ul>
+<p>e.g.</p>
+<p>原句：I am teacher from Korea. score = 0.19</p>
+<p>修正建议：I am a teacher from Korea. score = 0.60</p>
+<p>建议的 LM 分数远高于原句的，建议被提供给用户。</p>
+<h3 id="Example-Provider"><a href="#Example-Provider" class="headerlink" title="Example Provider"></a>Example Provider</h3><p>通常情况下，SP 会给出多个修正建议，有时候用户不知道选择哪个。这时，用户可以使用 EP 来进行 Web 查询，得到一些包含建议的例句，从而做出选择。</p>
+<ul>
+<li>使用搜索引擎检索 web 中包含了 suggested correction 的例句</li>
+<li>对于每个 suggestion，创建一个 query，其包含一个小的 suggested correction 的上下文窗口</li>
+<li>将搜索引擎中检索得到的结果切分成句子，包含 query 字符串的句子被加到候选例句集合中</li>
+<li>候选例句根据2个标准排名<ul>
+<li>句子长度（短句更佳，减少认知负载）</li>
+<li>上下文 overlap（包含更多用户输入词的句子更佳）</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/esl0.png" alt="esl0"></p>
+<hr>
+<h2 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h2><ol>
+<li>自动评估：评估 native English text，基于假设英语母语文本中没有本系统面向的错误，母语文本中的介词选择作为监督类标 (supervision)</li>
+<li>人工评估：评估 non-native text， 由评估人员评估系统提供的每个建议</li>
+</ol>
+<h3 id="独立-SP-模块"><a href="#独立-SP-模块" class="headerlink" title="独立 SP 模块"></a>独立 SP 模块</h3><p>将原始训练集的 70% 作为训练，30% 作为测试。重新训练分类器，然后在测试集上进行测试。</p>
+<p>testset 样本数量：</p>
+<ul>
+<li>1578342 冠词修正</li>
+<li>1828438 介词修正</li>
+</ul>
+<p>对2个模型进行评估：</p>
+<ul>
+<li>pa: preposition/determiners presence/absence</li>
+<li>ch: preposition/determiners choice</li>
+</ul>
+<p>综合准确性表示为：</p>
+<p>$\frac{acc(pa) \ast votes(a) + acc(ch) \ast acc(pa) \ast votes(p)}{total \ cases}$</p>
+<ul>
+<li>votes(a): the counts of votes for class value = absence from pa</li>
+<li>votes(p): counts of votes for presence from pa</li>
+<li>acc(pa): the accuracy of the pa classifier</li>
+<li>acc(ch): the accuracy of the ch classifier</li>
+</ul>
+<h3 id="冠词的选择"><a href="#冠词的选择" class="headerlink" title="冠词的选择"></a>冠词的选择</h3><p>冠词模型的准确率：</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/esl1.png" alt="esl1"></p>
+<p>语料库中冠词的分布：</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/esl2.png" alt="esl2"></p>
+<p>测试集上冠词分类器的准确率和召回率：</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/esl3.png" alt="esl3"></p>
+<h3 id="介词的选择"><a href="#介词的选择" class="headerlink" title="介词的选择"></a>介词的选择</h3><p>介词模型的准确率：</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/esl4.png" alt="esl4"></p>
+<p>介词分类器的准确率和召回率：</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/esl5.png" alt="esl5"></p>
+<h3 id="语言模型的影响"><a href="#语言模型的影响" class="headerlink" title="语言模型的影响"></a>语言模型的影响</h3><p>语言模型用来帮助我们判断 SP 模块给出的修正建议是否靠谱。</p>
+<p>作为过滤器的语言模型：任何修正建议的 LM 分数低于原始句子分数，那么它被过滤掉。减少了 66.8% 的介词修正和 50.7% 的冠词修正。</p>
+<p>但 LM 本身并不能提供足够的信息，作者做了一个实验：对每个可能的介词位置生成所有的介词建议，让后用 LM 分数排名，在 Reuters 数据集上只达到了 58.36% 的准确率。</p>
+<h3 id="人工评估"><a href="#人工评估" class="headerlink" title="人工评估"></a>人工评估</h3><p>系统将在CLEC语料库 (8k for the preposition evaluation and 6k for the determiner evaluation) 中随机抽取的样句作为输入</p>
+<p>将评估结果分为6类：</p>
+<ul>
+<li>更正有效的解决了问题</li>
+<li>错误被正确指出，但更正没有解决错误</li>
+<li>原句和更正后的句子都是正确的</li>
+<li>没有正确指出错误之处</li>
+<li>更正处有语法错误</li>
+<li>更正错误，原句正确</li>
+</ul>
+<p>在 CLEC 数据集上的 冠词/介词修正准确率：</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/esl6.png" alt="esl6"></p>
+<hr>
+<h2 id="Conclusion-and-Future-Work"><a href="#Conclusion-and-Future-Work" class="headerlink" title="Conclusion and Future Work"></a>Conclusion and Future Work</h2><p>帮一个非英语母语者选择正确的冠词和介词是很有挑战的任务。</p>
+<p>人工评估的结果是很激励人的。</p>
+<p>目前最大的挑战是如何减少 “false flags”: 语法错误检测和修正都是错误的。</p>
+<p>作者正在研究一个综合了 语言模型和分类器 提供的信息的排名器，使用 Web 计数作为监督数据。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>资磁一下？</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://raw.githubusercontent.com/yanshengjia/photo/master/wechatpay.jpg" alt="Shengjia Yan WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://raw.githubusercontent.com/yanshengjia/photo/master/alipay.jpg" alt="Shengjia Yan Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Ngrams/" rel="tag"># Ngrams</a>
+          
+            <a href="/tags/Grammar-Check/" rel="tag"># Grammar Check</a>
+          
+            <a href="/tags/Language-Model/" rel="tag"># Language Model</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/02/Machine-Learning-Crash-Course-with-Tensorflow-APIs-Notes/" rel="next" title="Machine Learning Crash Course with Tensorflow APIs | Notes">
+                <i class="fa fa-chevron-left"></i> Machine Learning Crash Course with Tensorflow APIs | Notes
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/17/hello-world/" rel="prev" title="Hello World!">
+                Hello World! <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-589f4a3205db1792" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://raw.githubusercontent.com/yanshengjia/photo/master/profile0.png"
+               alt="Shengjia Yan" />
+          <p class="site-author-name" itemprop="name">Shengjia Yan</p>
+           
+              <p class="site-description motion-element" itemprop="description">工程师 健身者 暴雪粉 | 人生不设限 | CS@SEU</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yanshengjia" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/yanshengjia" target="_blank" title="Linkedin">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  Linkedin
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yanshengjia" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-fw fa-book"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/sjyan1995" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yanshengjia/" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.youtube.com/channel/UCHAyaP2nrMgOfIHtjKeyJyA" target="_blank" title="YouTube">
+                  
+                    <i class="fa fa-fw fa-youtube-play"></i>
+                  
+                  YouTube
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yanshengjia.com/leetcode" title="Conquer LeetCode" target="_blank">Conquer LeetCode</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yanshengjia.com/lintcode" title="Conquer LintCode" target="_blank">Conquer LintCode</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://wdxtub.com" title="小土刀" target="_blank">小土刀</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.shuang0420.com/" title="徐阿衡" target="_blank">徐阿衡</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.52nlp.cn/" title="52nlp" target="_blank">52nlp</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://nlp.stanford.edu/" title="Stanford NLP" target="_blank">Stanford NLP</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Targeted-Error-Types"><span class="nav-number">3.</span> <span class="nav-text">Targeted Error Types</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#System-Description"><span class="nav-number">4.</span> <span class="nav-text">System Description</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Suggestion-Provider"><span class="nav-number">4.1.</span> <span class="nav-text">Suggestion Provider</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Language-Model"><span class="nav-number">4.2.</span> <span class="nav-text">Language Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Example-Provider"><span class="nav-number">4.3.</span> <span class="nav-text">Example Provider</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Evaluation"><span class="nav-number">5.</span> <span class="nav-text">Evaluation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#独立-SP-模块"><span class="nav-number">5.1.</span> <span class="nav-text">独立 SP 模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#冠词的选择"><span class="nav-number">5.2.</span> <span class="nav-text">冠词的选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介词的选择"><span class="nav-number">5.3.</span> <span class="nav-text">介词的选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#语言模型的影响"><span class="nav-number">5.4.</span> <span class="nav-text">语言模型的影响</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#人工评估"><span class="nav-number">5.5.</span> <span class="nav-text">人工评估</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion-and-Future-Work"><span class="nav-number">6.</span> <span class="nav-text">Conclusion and Future Work</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shengjia Yan</span>
+</div>
+
+<!-- <div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div> -->
+
+<div class="busuanzi-count">
+  <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span class="site-uv">
+    <i class="fa fa-user" aria-hidden="true"></i>  <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+  </span>
+  
+  <span class="site-pv">
+    <i class="fa fa-eye" aria-hidden="true"></i>  <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+  </span>
+</div>
+
+
+<div class="quote">
+  life.remove(limits)
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://yanshengjia.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yanshengjia.com/2018/04/25/Using-Contextual-Speller-Techniques-and-Language-Modeling-for-ESL-Error-Correction-Notes/';
+          this.page.identifier = '2018/04/25/Using-Contextual-Speller-Techniques-and-Language-Modeling-for-ESL-Error-Correction-Notes/';
+          this.page.title = 'Using Contextual Speller Techniques and Language Modeling for ESL Error Correction | Notes';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://yanshengjia.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+</body>
+</html>

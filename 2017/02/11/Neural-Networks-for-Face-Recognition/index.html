@@ -1,0 +1,1262 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Monaco:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Neural Networks,Face Recognition," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="This article talks about how to apply Neural Networks for Face Recognition. The method is based on Homework 3: Neural networks and face images. 15-681: Machine Learning, Tom Mitchell, Carnegie Mellon">
+<meta name="keywords" content="Neural Networks,Face Recognition">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neural Networks for Face Recognition">
+<meta property="og:url" content="http://yanshengjia.com/2017/02/11/Neural-Networks-for-Face-Recognition/index.html">
+<meta property="og:site_name" content="WildPointer">
+<meta property="og:description" content="This article talks about how to apply Neural Networks for Face Recognition. The method is based on Homework 3: Neural networks and face images. 15-681: Machine Learning, Tom Mitchell, Carnegie Mellon">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/nn0.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/nn1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/nn2.png">
+<meta property="og:updated_time" content="2018-05-17T15:57:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Neural Networks for Face Recognition">
+<meta name="twitter:description" content="This article talks about how to apply Neural Networks for Face Recognition. The method is based on Homework 3: Neural networks and face images. 15-681: Machine Learning, Tom Mitchell, Carnegie Mellon">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/nn0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: 'K1YPL7B54D',
+      apiKey: '7f22077ed5b2dfbd70cc761b8cf48112',
+      indexName: 'wildpointer',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yanshengjia.com/2017/02/11/Neural-Networks-for-Face-Recognition/"/>
+
+
+
+
+
+  <title> Neural Networks for Face Recognition | WildPointer </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">WildPointer</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Welcome to my world!</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Arc
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Cat
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tag
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-projects">
+          <a href="/projects" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-star"></i> <br />
+            
+            Proj
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tech">
+          <a href="/tech" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-code"></i> <br />
+            
+            Tech
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-donate">
+          <a href="/donate" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-usd"></i> <br />
+            
+            Donate
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-me">
+          <a href="/me" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            Me
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yanshengjia.com/2017/02/11/Neural-Networks-for-Face-Recognition/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shengjia Yan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/profile0.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WildPointer">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Neural Networks for Face Recognition
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-11T12:05:00+08:00">
+                2017-02-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Artificial-Intelligence/" itemprop="url" rel="index">
+                    <span itemprop="name">Artificial Intelligence</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/02/11/Neural-Networks-for-Face-Recognition/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/02/11/Neural-Networks-for-Face-Recognition/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>This article talks about how to apply <strong>Neural Networks</strong> for <strong>Face Recognition</strong>. The method is based on <a href="http://yanshengjia.com/file/hw97.pdf"><em>Homework 3: Neural networks and face images. 15-681: Machine Learning, Tom Mitchell, Carnegie Mellon University.</em></a></p>
+<p>本文讨论如何应用神经网络来做人脸识别。本文中提及的技术基于卡内基梅陇大学的 Tom Mitchell 教授的 Machine  Learning <a href="http://yanshengjia.com/file/hw97.pdf">课程讲义</a>。</p>
+<a id="more"></a>
+<hr>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>应用神经网络来进行人脸识别。两部分工作：</p>
+<ul>
+<li>应用神经网络来训练<ul>
+<li>a sunglass recognizer</li>
+<li>a face recognizer</li>
+<li>a pose recognizer</li>
+</ul>
+</li>
+<li>用神经网络做些感兴趣的事</li>
+</ul>
+<h2 id="头像图片"><a href="#头像图片" class="headerlink" title="头像图片"></a>头像图片</h2><p>faces文件夹中有20个子文件夹，每个子文件夹对于一个人。</p>
+<p>每张图片的名字遵循这个规则：</p>
+<p>(userid)_(pose)_(expression)_(eyes)_(scale).pgm</p>
+<h2 id="查看图片"><a href="#查看图片" class="headerlink" title="查看图片"></a>查看图片</h2><p>使用程序 <a href="http://carmaux.cs.gsu.edu/xv_install_mac.html" target="_blank" rel="noopener">xv</a>，有一些地方需要修改才能编译通过。</p>
+<p>双击运行 xv，右击窗口可以调出控制面板。load 查看图片，或者 window 菜单下的 visual schnauzer 打开文件夹查看图片。</p>
+<p>在打开的图片上按住鼠标中间并拖动可以看到光标所在像素点的 RGB 值和 HSV 值(H:色调，S:饱和度，V:明度)。</p>
+<h2 id="神经网络和读取图片的代码"><a href="#神经网络和读取图片的代码" class="headerlink" title="神经网络和读取图片的代码"></a>神经网络和读取图片的代码</h2><p>提供的C语言代码实现了一个三层全连接的前馈神经网络，使用反向传播算法来调整它的权值。</p>
+<p>提供了图片文件夹、用于训练和测试的顶层程序、一个可视化隐藏单元权值的程序。</p>
+<p>cd 进入程序所在文件夹，make 编译，会产生一个可执行文件 facetrain。</p>
+<p>facetrain 以一系列图片为输入，将它们作为神经网络的训练集和测试集。</p>
+<p>facetrain 可以用于训练和识别，并能够将训练好的网络保存到文件中。</p>
+<p>在我的电脑环境下，OS X 10.11.4 ，程序需要修改许多地方才能成功编译运行</p>
+<ul>
+<li>facetrain.c : line 141 “return” 缺少返回值，改成 return 0;</li>
+<li>修改 trainset 中 *.list 中路径：/Users/yanshengjia/Desktop/neural-networks-for-face-recognition/data/faces/…</li>
+<li>运行时出现 segment fault，找了好久原因，后来才发现是 pgmimage.c 中 imgl_load_images_from_textfile() 函数中 char buf[] 申请的空间太小，而这个字符数组接受的list文件中的字符流可能会很长</li>
+<li>在 facetrain.c 中有很多未声明的函数，也就是隐式声明函数，C语言默认让他们返回int型，所以在链接的文件中这些函数的返回值都要改成 int</li>
+<li>backprop.c : line 91 105 在函数名前加 void</li>
+<li>在 facetrain.c 中添加头文件 “stdlib.h”</li>
+<li>facetrain.c : line 91 evaluate_performance() 函数中第三个参数0去掉</li>
+<li>在 outtopgm.c 和 hidtopgm.c 中添加头文件 “stdlib.h” </li>
+<li>在 imagenet.c 中添加头文件 “string.h”</li>
+<li>在 pgmimage.c 中添加头文件 “string.h” “stdlib.h”</li>
+<li>在 backprop.c 中添加头文件 “stdlib.h”  “unistd.h”  “sys/types.h”  “sys/stat.h”   “fcntl.h”</li>
+</ul>
+<hr>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><h2 id="第一部分"><a href="#第一部分" class="headerlink" title="第一部分"></a>第一部分</h2><p>回答下面实验序列中的问题。</p>
+<h3 id="一"><a href="#一" class="headerlink" title="一"></a>一</h3><p>获取训练集（train set）和测试集（test set）。</p>
+<h3 id="二"><a href="#二" class="headerlink" title="二"></a>二</h3><p>最初的代码是用来学习特定人物识别器（specific person recognizer）。</p>
+<p>默认识别的是 glickman 这个人，如果要识别其他人，只要在 imagenet.c 中修改 load_target 函数中 strcmp(userid, “glickman”) 中第二个参数的值就可以了。</p>
+<p>修改代码以实现一个太阳镜识别器 （sunglasses recognizer），也就是说，训练一个神经网络，当输入一张图片时，判断图片中的人脸有没有戴眼镜。</p>
+<p>看 Section 3 的开头来了解如何修改这份代码。</p>
+<h3 id="三"><a href="#三" class="headerlink" title="三"></a>三</h3><p>训练一个神经网络使用默认的学习参数设置（学习速率 learning rate 0.3, 冲量 momentum 0.3），学习75轮（epochs），使用下面的命令行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./facetrain -n shades.net -t straightrnd_train.list -1 straightrnd_test1.list -2 straightrnd_test2.list -e 75</span><br></pre></td></tr></table></figure>
+<p>shades.net：神经网络文件的名称，当训练结束时它会被保存。</p>
+<p>straightrnd_train.list：训练集（70例）</p>
+<p>straightrnd_test1.list：测试集1（34例）</p>
+<p>straightrnd_test2.list：测试集2（52例）</p>
+<p>上面的命令创建并训练了你的神经网络基于随机选择的70张图（156张 straight 图中），并在随机选择的34张图和52张图上分别测试。</p>
+<p>测试策略是这样的，1/3的图片（straightrnd_test2.list）用于测试；2/3的图片用于训练和交叉校验，这其中的2/3（straightrnd_train.list）用于训练，1/3（straightrnd_test1.list）用于校验集合来决定何时停止训练。</p>
+<h3 id="四"><a href="#四" class="headerlink" title="四"></a>四</h3><p>What code did you modify?</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"imagenet.c"</span> load_target(): <span class="built_in">strcmp</span>(userid, “glickman”) —&gt; <span class="built_in">strcmp</span>(eyes, “sunglasses”)</span><br></pre></td></tr></table></figure>
+<p>What was the maximum classification accuracy achieved on the training set? </p>
+<p>▷ 100%</p>
+<p>How many epochs did it take to reach this level? </p>
+<p>▷ 30 epochs</p>
+<p>How about for the validation set (straightrnd_test1.list) ?</p>
+<p>▷ max 100%, 20 epochs</p>
+<p>The test set (straightrnd_test2.list) ?</p>
+<p>▷ max 94.2308%, 45 epochs</p>
+<h3 id="五"><a href="#五" class="headerlink" title="五"></a>五</h3><p>如果在同样的环境同样的参数和输入，得到的结果也是一样的。</p>
+<p>因为这份代码每次都使用相同的种子（seed）来产生随机数，以在创建网络的时候初始化权值 ([-1,1])</p>
+<p>仔细阅读 Section 3.12有助于理解如何解释实验并回答这些问题。</p>
+<h3 id="六"><a href="#六" class="headerlink" title="六"></a>六</h3><p>现在，让我们来实现一个 1-20人脸识别器（face recognizer）。</p>
+<p>实现一个神经网络，以一张图片为输入，输出它对应的人的userid。</p>
+<p>为了实现它，需要改变输出编码（output encoding），你必须能够分别20个不同的人。</p>
+<p>Hint: 让 learning rate 和 momentum 仍然为 0.3，使用20个隐藏单元。</p>
+<p>像之前一样，训练神经网络，学习100轮</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./facetrain -n face.net -t straighteven_train.list -1 straighteven_test1.list -2 straighteven_test2.list -e 100</span><br></pre></td></tr></table></figure>
+<p>为什么只训练脸朝向是『straight』的例子？</p>
+<p>原因在于这样做可以缩短计算时间。如果机器性能不错，那么可用全部数据集做实验。</p>
+<p>straightrnd_*.list 和 straighteven_*.list之间的区别在于前者的文件中图片完全是从训练集和测试集中随机选择的，后者的文件中每个人的图片数量都相对平均。</p>
+<p>因为每个人都只有7到8张朝向是『straight』的图片，不将它们均分的话可能会导致我们的神经网络在有些人的脸上测试很多，但这些人脸是被训练得很少的。也就是说，效果会变差。</p>
+<h3 id="七"><a href="#七" class="headerlink" title="七"></a>七</h3><p>Which part of the code was it necessary to modify this time?</p>
+<ul>
+<li>use 20 hidden units, 20 output units, 20 target units. </li>
+<li>modify “facetrain.c” evaluate_performance()</li>
+<li>add “facetrain.c” result_on_imagelist()</li>
+<li>print result</li>
+</ul>
+<p>How did you encode the outputs?</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/nn0.png" alt="encode0"></p>
+<p>Fig. 1: outputs encoding 1</p>
+<p>What was the maximum classification accuracy achieved on the training set? </p>
+<p>▷ 100%</p>
+<p>How many epochs did it take to reach this level? </p>
+<p>▷ 64 epochs</p>
+<p>How about for the validation and test set?</p>
+<ul>
+<li>validation set(straighteven_test1.list) :  ▷ max 88.8889%, 79 epochs</li>
+<li>test set(straighteven_test2.list) :  ▷ max 85%, 59 epochs</li>
+</ul>
+<h3 id="八"><a href="#八" class="headerlink" title="八"></a>八</h3><p>现在让我们看看在哪些图片上我们的神经网络可能会分类失败：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./facetrain -n face.net -T -1 straighteven_test1.list -2 straighteven_test2.list</span><br></pre></td></tr></table></figure>
+<p>在分类失败的图片上有没有一些共性呢？</p>
+<p>▷ 这些图片中的人脸缺乏明显的特征。</p>
+<h3 id="九"><a href="#九" class="headerlink" title="九"></a>九</h3><p>实现一个朝向识别器（pose recognizer）。</p>
+<p>实现一个ANN，当给定一张图片作为输入，判断该图片中的人是看着 前面（straight），上面（up），左边（left）还是 右边（right）。</p>
+<p>为了这个任务也要改变输出编码。</p>
+<p>Hint: 让 learning rate 和 momentum 为 0.3，使用6个隐藏单元。</p>
+<h3 id="十"><a href="#十" class="headerlink" title="十"></a>十</h3><p>训练我们的ANN100轮，这次在所有的数据集上训练：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./facetrain -n pose.net -t all_train.list -1 all_test1.list -2 all_test2.list -e 100</span><br></pre></td></tr></table></figure>
+<p>因为 pose-recognizing 网络大体上比 face-recogzing 网络有更少的权重（weights）需要更新，所以即使机器比较慢，仍然可以使用所有的图片来玩这个实验。</p>
+<p>这里用到的，训练集中有260张图片，测试集1中有140张图片，测试集2中有193张图片。</p>
+<h3 id="十一"><a href="#十一" class="headerlink" title="十一"></a>十一</h3><p>What code did you modify?</p>
+<ul>
+<li>use 6 hidden units, 4 output units, 4 target units</li>
+<li>modify “facetrain.c” result_on_imagelist</li>
+</ul>
+<p>How did you encode your outputs this time?</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/nn1.png" alt="encode1"></p>
+<p>Fig. 2: outputs encoding 2</p>
+<p>What was the maximum classification accuracy achieved on the training set? </p>
+<p>▷ 99.639%</p>
+<p>How many epochs did it take to reach this level? </p>
+<p>▷ 48 epochs</p>
+<p>How about for each test set?</p>
+<ul>
+<li>test1 set :  ▷ max 85.6115%, 99 epochs      </li>
+<li>test2 set :  ▷ max 91.3462%, 51 epochs</li>
+</ul>
+<h3 id="十二"><a href="#十二" class="headerlink" title="十二"></a>十二</h3><p>现在考察 反向传播算法是如何基于每个像素来调整隐藏单元的权重。</p>
+<p>首先，输入 make hidtopgm 来编译工程。</p>
+<p>然后，可视化 隐藏单元n 的权重，输入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hidtopgm pose.net image-filename 32 30 n</span><br></pre></td></tr></table></figure>
+<p>在图片 image-filename 上调用 xv 可以显示权重的范围，最低权重映射到像素值0，最高权重映射到像素值255。</p>
+<p>假如这图片看上去是噪声，试着使用 facetrain_init0 （由 make facetrain_init0编译）重新训练，这样可以初始化新的神经网络的隐藏单元的权重为0，而不是随机值。</p>
+<h3 id="十三"><a href="#十三" class="headerlink" title="十三"></a>十三</h3><p>Do the hidden units seems to weight particular regions of the image greater than others?</p>
+<p>Do particular hidden units seem to be tuned to different features of some sort?</p>
+<hr>
+<h2 id="第二部分"><a href="#第二部分" class="headerlink" title="第二部分"></a>第二部分</h2><p>玩点好玩的! <strong>表情识别器(expression recognizer)</strong></p>
+<p>训练ANN100轮：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./facetrain -n newexpression.net -t all_train.list -1 all_test1.list -2 all_test2.list -e 100</span><br></pre></td></tr></table></figure>
+<p>用训练过10000轮的网络再训练100次：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./facetrain -n expression.net -t all_train.list -1 all_test1.list -2 all_test2.list -e 100</span><br></pre></td></tr></table></figure>
+<p>输出编码：</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/nn2.png" alt="encode2"></p>
+<p>Fig. 3: outputs encoding 3</p>
+<p>实验结果(训练10000轮)：</p>
+<ul>
+<li>training set :  ▷ max 94.5848%</li>
+<li>test1 set :       ▷ max 15.8273%</li>
+<li>test2 set :       ▷ max 17.3077%</li>
+</ul>
+<p>其他可选方案（当然不限于此）：</p>
+<ul>
+<li>使用 pose recognizer 的输出作为 face recognizer 的输入，观察这怎么影响实验效果。要实现这个实验，需要增加一个机制来保存 pose recognizer 的输出单元，增加一个机制来装载这个数据到 face recognizer 里。</li>
+<li>学习图片中一些特征的位置，比如眼睛。可以用xv来得到这些特征在每张图片上的坐标。</li>
+<li>使用图片包，权值可视化程序，或其他你觉得可能使用的来更好地理解神经网络到底学习到了什么。使用这些信息，你认为神经网络正在学什么？你能用这些信息来提升性能吗？</li>
+<li>改变输入或输出编码来提升识别准确率。</li>
+<li>改变隐藏单元的个数，训练样例的个数，迭代的次数，学习速率和冲量，或其他任何你想尝试改变的，尽可能使训练集和测试集的准确度相差大（你能使这个神经网络过拟合到多差），和尽可能使训练集和测试集的准确率相差小（你能使这个网络达到多好的表现）。</li>
+</ul>
+<hr>
+<h1 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h1><p>代码模块</p>
+<ul>
+<li>pgmimage.c, pgmimage.h   <ul>
+<li>处理图片的模块</li>
+<li>支持读写 PGM 图片文件和像素存取/赋值</li>
+<li>提供了 IMAGE 数据结构和 IMAGELIST 数据结构（图片指针的数组，在处理许多图片时有用）</li>
+</ul>
+</li>
+<li>backprop.c, backprop.h   <ul>
+<li>神经网络模块</li>
+<li>支持三层全连接前馈神经网络</li>
+<li>使用 backpropagation 算法来调整权值</li>
+<li>提供高等级的程序来创造、训练和使用神经网络</li>
+</ul>
+</li>
+<li>iamgenet.c     <ul>
+<li>用于装载图片到网络的输入单元，和设置训练的目标向量的 接口程序</li>
+<li>当实现 face recognizer 和 pose recognizer 的时候，需要修改 <strong>load_target()</strong>, 根据你选择的输出编码设置合适的目标向量</li>
+</ul>
+</li>
+<li>facetrain.c<ul>
+<li>顶层程序，使用以上所有的模块来实现一个“TA”识别器</li>
+<li>修改这个代码来改变神经网络的大小和学习参数，这两个都是无关紧要的改变</li>
+<li>表现评估程序 <strong>performance_on_imagelist()</strong> 和 <strong>evaluate_performance()</strong> 都在此模块中，修改他们来实现 face recognizer 和 pose recognizer</li>
+</ul>
+</li>
+<li>hidtopgm.c<ul>
+<li>隐藏单元权值可视化程序</li>
+</ul>
+</li>
+</ul>
+<p>需要修改 imagenet.c 和 facetrain.c</p>
+<h2 id="facetrain"><a href="#facetrain" class="headerlink" title="facetrain"></a>facetrain</h2><h3 id="facetrain-用法"><a href="#facetrain-用法" class="headerlink" title="facetrain 用法"></a>facetrain 用法</h3><p>facetrain 在终端中运行有许多不同的选项。如果什么都不输入，会显示一些总结信息。</p>
+<ul>
+<li>-n [network file]<ul>
+<li>或装载一个已存在的网络文件，或用所给的名字创建一个新的网络文件</li>
+<li>在训练的最后，神经网络会被保存到这个文件中</li>
+</ul>
+</li>
+<li>-e [number of epochs]<ul>
+<li>训练的次数</li>
+<li>默认为100</li>
+</ul>
+</li>
+<li>-s [seed]<ul>
+<li>随机数产生器的种子</li>
+<li>默认为102194</li>
+<li>改变种子尝试不同的随机数序列来重新实验</li>
+</ul>
+</li>
+<li>-S [number of epochs between saves]<ul>
+<li>保存网络需要的最小训练次数</li>
+</ul>
+</li>
+<li>-t [training image list]<ul>
+<li>指定训练集</li>
+<li>如果没有这个参数，意味着没有训练（训练集都是0），网络直接在测试集上跑</li>
+</ul>
+</li>
+<li>-1 [test set 1 list]<ul>
+<li>指定测试集1</li>
+<li>如果没有这个参数，测试集1都是0</li>
+</ul>
+</li>
+<li>-2 [test set 2 list]<ul>
+<li>指定测试集2</li>
+<li>如果没有这个参数，测试集2都是0</li>
+</ul>
+</li>
+</ul>
+<h3 id="facetrain-输出格式"><a href="#facetrain-输出格式" class="headerlink" title="facetrain 输出格式"></a>facetrain 输出格式</h3><p>facetrain首先读入所有数据文件并输出一些相关信息。当所有数据都读入，开始训练。网络的训练集和测试集的表现每次迭代都会输出一行信息。</p>
+<p>(epoch)_(delta)_(trainperf)_(trainerr)_(t1perf)_(t1err)_(t2perf)_(t2err)</p>
+<ul>
+<li>epoch : 已完成的迭代次数；为0表示训练还没开始</li>
+<li>delta : 对于本次迭代的所有训练样例，在backprop中计算的隐藏单元和输出单元的δ值之和</li>
+<li>trainperf : 训练集中的例子分类正确的比例</li>
+<li>trainerr : 对于所有训练样例，误差方程 $\frac{1}{2}\sum (t_i-o_i)^2$ 的均值，$t_i$ 是输出单元 $i$ 的目标值，$o_i$ 是该单元的实际输出值 </li>
+<li>t1perf : 测试集1中的例子分类正确的比例</li>
+<li>t1err : 对于测试集1中的所有例子，误差方程 $\frac{1}{2}\sum (t_i-o_i)^2$ 的均值</li>
+<li>t2perf : 测试集2中的例子分类正确的比例</li>
+<li>t2err : 对于测试集2中的所有例子，误差方程 $\frac{1}{2}\sum (t_i-o_i)^2$ 的均值</li>
+</ul>
+<h2 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h2><p>观察 imagenet.c, facetrain.c 来了解程序是如何运行的。</p>
+<p>可以先看一遍 facetrain.c 来看看训练流程是怎么样的。</p>
+<p>imagenet.c 中的 load_target() 用来设置训练的目标向量。</p>
+<p>performance_on_imagelist() 和 evaluate_performance() 分别用于评估表现和计算误差数据。</p>
+<p>前者在图片集中迭代，计算这些图片的平均误差，后者计算单个图片的误差和准确率。</p>
+<p>处理图片模块可以以图像形式查看单元间连接的权值，你可以找到创建和写这样的图像的程序。</p>
+<hr>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a href="http://www.cs.cmu.edu/afs/cs.cmu.edu/user/mitchell/ftp/faces.html" target="_blank" rel="noopener">http://www.cs.cmu.edu/afs/cs.cmu.edu/user/mitchell/ftp/faces.html</a></li>
+<li>机器学习/ (美) 米歇尔(Mitchell, T. M.)著; 曾华军等译. ——北京: 机械工业出版社, 2003. 1 </li>
+<li>Tom Mitchell. hw97. In: 15-681: Machine Learning. Carnegie Mellon University</li>
+</ul>
+<hr>
+<p><strong>测试代码：</strong><a href="https://github.com/yanshengjia/artificial-intelligence/tree/master/neural-networks-for-face-recognition/src" target="_blank" rel="noopener">face-recognition</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>资磁一下？</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://raw.githubusercontent.com/yanshengjia/photo/master/wechatpay.jpg" alt="Shengjia Yan WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://raw.githubusercontent.com/yanshengjia/photo/master/alipay.jpg" alt="Shengjia Yan Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Neural-Networks/" rel="tag"># Neural Networks</a>
+          
+            <a href="/tags/Face-Recognition/" rel="tag"># Face Recognition</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/10/24-Puzzle-Problem/" rel="next" title="24 Puzzle Problem">
+                <i class="fa fa-chevron-left"></i> 24 Puzzle Problem
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/12/JIST-2016-Paper/" rel="prev" title="Entity Linking in Web Tables with Multiple Linked Knowledge Bases (JIST 2016)">
+                Entity Linking in Web Tables with Multiple Linked Knowledge Bases (JIST 2016) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-589f4a3205db1792" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://raw.githubusercontent.com/yanshengjia/photo/master/profile0.png"
+               alt="Shengjia Yan" />
+          <p class="site-author-name" itemprop="name">Shengjia Yan</p>
+           
+              <p class="site-description motion-element" itemprop="description">工程师 健身者 暴雪粉 | 人生不设限 | CS@SEU</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yanshengjia" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/yanshengjia" target="_blank" title="Linkedin">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  Linkedin
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yanshengjia" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-fw fa-book"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/sjyan1995" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yanshengjia/" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.youtube.com/channel/UCHAyaP2nrMgOfIHtjKeyJyA" target="_blank" title="YouTube">
+                  
+                    <i class="fa fa-fw fa-youtube-play"></i>
+                  
+                  YouTube
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yanshengjia.com/leetcode" title="Conquer LeetCode" target="_blank">Conquer LeetCode</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yanshengjia.com/lintcode" title="Conquer LintCode" target="_blank">Conquer LintCode</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://wdxtub.com" title="小土刀" target="_blank">小土刀</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.shuang0420.com/" title="徐阿衡" target="_blank">徐阿衡</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.52nlp.cn/" title="52nlp" target="_blank">52nlp</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://nlp.stanford.edu/" title="Stanford NLP" target="_blank">Stanford NLP</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#头像图片"><span class="nav-number">1.1.</span> <span class="nav-text">头像图片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看图片"><span class="nav-number">1.2.</span> <span class="nav-text">查看图片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#神经网络和读取图片的代码"><span class="nav-number">1.3.</span> <span class="nav-text">神经网络和读取图片的代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验"><span class="nav-number">2.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分"><span class="nav-number">2.1.</span> <span class="nav-text">第一部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一"><span class="nav-number">2.1.1.</span> <span class="nav-text">一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二"><span class="nav-number">2.1.2.</span> <span class="nav-text">二</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三"><span class="nav-number">2.1.3.</span> <span class="nav-text">三</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四"><span class="nav-number">2.1.4.</span> <span class="nav-text">四</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五"><span class="nav-number">2.1.5.</span> <span class="nav-text">五</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六"><span class="nav-number">2.1.6.</span> <span class="nav-text">六</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七"><span class="nav-number">2.1.7.</span> <span class="nav-text">七</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八"><span class="nav-number">2.1.8.</span> <span class="nav-text">八</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#九"><span class="nav-number">2.1.9.</span> <span class="nav-text">九</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#十"><span class="nav-number">2.1.10.</span> <span class="nav-text">十</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#十一"><span class="nav-number">2.1.11.</span> <span class="nav-text">十一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#十二"><span class="nav-number">2.1.12.</span> <span class="nav-text">十二</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#十三"><span class="nav-number">2.1.13.</span> <span class="nav-text">十三</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分"><span class="nav-number">2.2.</span> <span class="nav-text">第二部分</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文档"><span class="nav-number">3.</span> <span class="nav-text">文档</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#facetrain"><span class="nav-number">3.1.</span> <span class="nav-text">facetrain</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#facetrain-用法"><span class="nav-number">3.1.1.</span> <span class="nav-text">facetrain 用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#facetrain-输出格式"><span class="nav-number">3.1.2.</span> <span class="nav-text">facetrain 输出格式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建议"><span class="nav-number">3.2.</span> <span class="nav-text">建议</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shengjia Yan</span>
+</div>
+
+<!-- <div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div> -->
+
+<div class="busuanzi-count">
+  <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span class="site-uv">
+    <i class="fa fa-user" aria-hidden="true"></i>  <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+  </span>
+  
+  <span class="site-pv">
+    <i class="fa fa-eye" aria-hidden="true"></i>  <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+  </span>
+</div>
+
+
+<div class="quote">
+  life.remove(limits)
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://yanshengjia.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yanshengjia.com/2017/02/11/Neural-Networks-for-Face-Recognition/';
+          this.page.identifier = '2017/02/11/Neural-Networks-for-Face-Recognition/';
+          this.page.title = 'Neural Networks for Face Recognition';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://yanshengjia.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+</body>
+</html>
