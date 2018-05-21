@@ -102,8 +102,7 @@
 <meta property="og:description" content="This is my accepted long paper Entity Linking in Web Tables with Multiple Linked Knowledge Bases in proceedings of the 6th Joint International Semantic Technology Conference (JIST 2016). [PDF] 这是我的 JI">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/nodes.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/Aij.png">
-<meta property="og:updated_time" content="2018-05-17T15:57:18.000Z">
+<meta property="og:updated_time" content="2018-05-21T04:11:18.034Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Entity Linking in Web Tables with Multiple Linked Knowledge Bases (JIST 2016)">
 <meta name="twitter:description" content="This is my accepted long paper Entity Linking in Web Tables with Multiple Linked Knowledge Bases in proceedings of the 6th Joint International Semantic Technology Conference (JIST 2016). [PDF] 这是我的 JI">
@@ -453,10 +452,16 @@
 <p><strong>Code</strong>: <a href="https://github.com/yanshengjia/jist2016" target="_blank" rel="noopener">[JIST2016]</a></p>
 <p>Corrections:</p>
 <p>In section 3.1 (c), there are a few mistakes about the definition of $A_{ij}$.</p>
-<p>Actually I find out that “Aij = Aji” does not apply to all circumstances.</p>
+<p>Actually I find out that $A<em>{ij} = A</em>{ji}$ does not apply to all circumstances.</p>
 <p>Now I give the new definition of $A_{ij}$ as</p>
-<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/Aij.png" alt="Aij"></p>
-<p>where $SR_{em}(i)$ is the <em>mention-entity semantic relatedness</em> between an entity node <em>i</em> and its only adjacent mention node.</p>
+<script type="math/tex; mode=display">
+A_{ij}=\left\{
+\begin{array}{rcl}
+\frac{SR_{me}(i,j)}{SR_{me}(i,*)} && {if \ i \neq j,\ i\ is\ a\ mention\ node\ and\ j\ is\ an\ entity\ node}\\
+(1-SR_{em}(i)) \times \frac{SR_{ee}(i,j)}{SR_{ee}(i,*)} && {if\ i \neq j,\ i\ and\ j\ are\ two\ entity\ nodes}\\
+\frac{SR_{me}(j,i)}{SR_{me}(j,*)} && {if \ i \neq j,\ i\ is\ an\ entity\ node\ and\ j\ is\ a\ mention\ node}\\
+0 && {otherwise}
+\end{array} \right.</script><p>where $SR_{em}(i)​$ is the <em>mention-entity semantic relatedness</em> between an entity node <em>i</em> and its only adjacent mention node.</p>
 <p>Besides, in <strong>Iterative Probability Propagation</strong>, <em>damping factor = 0.5</em> seems to  make it easier to reach the convergence.</p>
 
       
