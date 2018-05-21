@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda4.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda5.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda6.png">
-<meta property="og:updated_time" content="2018-05-21T03:25:39.684Z">
+<meta property="og:updated_time" content="2018-05-21T03:30:59.760Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LDA 数学笔记">
 <meta name="twitter:description" content="LDA 主题模型几乎是每一个 NLP 工程师的必修课，而她背后的数学与概率论知识却让她看起来有些高冷。 那么何为 LDA (Latent Dirichlet Allocation)？ 简单的说，L (Latent 隐含)，主题隐含在文档中；DA (Dirichlet Allocation 狄利克雷分布)，文档的主题服从 Dirichlet Distribution。 本文将站在一个初学者的角度来讲">
@@ -689,10 +689,10 @@
 <li>之后对下述操作进行重复迭代。</li>
 <li>对所有文档中的所有词进行遍历，假如当前文档 $m$ 的词 $t$ 对应主题为 $k$，则 $n^{(k)}_m-1, n_m-1, n^{(t)}_k-1, n_k-1$, 即先拿出当前词，之后根据 LDA 中 topic sample 的概率分布 sample 出新的主题，在对应的 $n^{(k)}_m, n_m, n^{(t)}_k, n_k$ 上分别 +1。</li>
 </ul>
-<p>$$<br>p(z_{i}=k|z_{-i},w) \propto (n_{k,-i}^{(t)}+\beta <em>{t})(n</em>{m,-i}^{(k)}+\alpha _{k})/(\sum <em>{t=1}^{V}n</em>{k,-i}^{(t)}+\beta _{t})<br>$$</p>
+<p>$$<br>p(z_{i}=k|z_{-i},w) \propto \frac{(n_{k,-i}^{(t)} + \beta <em>{t})(n</em>{m,-i}^{(k)} + \alpha _{k})}{(\sum <em>{t=1}^{V}n</em>{k,-i}^{(t)} + \beta _{t})}<br>$$</p>
 <p>迭代完成后输出 主题-词矩阵 $\varphi​$ 和 文档-主题矩阵 $\theta​$</p>
-<p>$$<br>\phi <em>{k,t}=(n</em>{k}^{(t)}+\beta <em>{t})/(n</em>{k}+\beta _{t})<br>$$</p>
-<p>$$<br>\theta <em>{m,k}=(n</em>{m}^{(k)}+\alpha <em>{k})/(n</em>{m}+\alpha _{k})<br>$$</p>
+<p>$$<br>\phi <em>{k,t} = \frac{(n</em>{k}^{(t)} + \beta <em>{t})}{(n</em>{k} + \beta _{t})}<br>$$</p>
+<p>$$<br>\theta <em>{m,k} = \frac{(n</em>{m}^{(k)} + \alpha <em>{k})}{(n</em>{m} + \alpha _{k})}<br>$$</p>
 <hr>
 <h2 id="结论-Conclusions"><a href="#结论-Conclusions" class="headerlink" title="结论 Conclusions"></a>结论 Conclusions</h2><p>文档是主题上的概率分布，主题是单词上的概率分布。</p>
 <p>LDA 接受的输入是若干文档。她认为每篇文档中的单词是语义相关的。她试图想明白每篇文档是如何创造出来的。我们只需要告诉她有多少个主题需要构造，她就会根据主题的数量在语料库上生成主题和单词的分布。基于她的输出，可以预测新文档的主题分布，计算文档之间的相似度，文本分类。</p>
