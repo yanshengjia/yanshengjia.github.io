@@ -498,6 +498,7 @@
 <li>如果太大，初始化时间太长</li>
 </ul>
 <p>可能冲突的皇后数 c 与皇后数 n 相关。二者关系如下表。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -539,6 +540,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 <p>Table 1: 可能冲突的皇后数 c 与皇后数 n 的关系</p>
 <p>在初始排列生成后，至多 c 个皇后需要移动来寻找解。</p>
 <p>QS4 中的搜索算法和 QS1 中类似：</p>
@@ -1126,7 +1128,24 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 

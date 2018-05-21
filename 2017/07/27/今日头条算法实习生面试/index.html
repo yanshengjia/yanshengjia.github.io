@@ -446,7 +446,7 @@
 <hr>
 <p>今天做了一个今日头条的算法实习生面试，是在牛客网上视频面试的。</p>
 <p>上来就自我介绍了一下我的经历，讲了讲学校做的项目和实体链接SRTP项目。</p>
-<p>然后就是<strong>限时编程测试</strong>，题目是：删除给定字符串中的合法括号对，void remove_bracket(string &amp;str)，时间 O(n) 空间O(1)，e.g.:ab(c()(  –&gt;  ab(c(</p>
+<p>然后就是<strong>限时编程测试</strong>，题目是：删除给定字符串中的合法括号对，void remove_bracket(string &amp;str)，时间 O(n) 空间O(1)，e.g.:ab(c()(  —&gt;  ab(c(</p>
 <p>由于本人愚钝，一时没有想到 O(1) 空间的做法，感觉可能空间做不到 O(1)，因为不知道括号匹配合不合法，所以得把读到的左括号位置存储一下。</p>
 <p>用栈的操作来解决这题很容易，遇到左括号压栈，遇到右括号判断栈是否为空，如果非空，说明之前读到了左括号，此时则将这一对括号从字符串中删除；如果空，那么说明之前字符串中没有出现与之对应的左括号，当前的右括号匹配失败。这种做法是 O(n)时间 O(n)空间的。</p>
 <p>[C++ Code]</p>
@@ -981,7 +981,24 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 

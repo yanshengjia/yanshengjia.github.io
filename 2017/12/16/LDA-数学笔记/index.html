@@ -478,7 +478,7 @@
 <ul>
 <li>一个概念：贝叶斯定理</li>
 <li>一个函数：Gamma 函数</li>
-<li>五个分布：二项分布 <-> Beta 分布，多项分布 <-> Dirichlet 分布，共轭分布</-></-></li>
+<li>五个分布：二项分布 &lt;-&gt; Beta 分布，多项分布 &lt;-&gt; Dirichlet 分布，共轭分布</li>
 <li>两个模型：PLSA 模型，LDA 模型</li>
 <li>两个算法：变分推断之 EM 算法，Gibbs 采样算法 (马尔科夫链蒙特卡罗 MCMC)</li>
 </ul>
@@ -497,10 +497,10 @@
 <p>要想理解她的原理，我们需要了解在 LDA 中，一篇文档的生成过程以及其逆过程，这个逆过程就是求解文档的主题分布的过程。</p>
 <p>在深入讲解她之前，我们需要一些先验知识作为铺垫。</p>
 <hr>
-<h2 id="贝叶斯定理-Bayes-Theorem"><a href="#贝叶斯定理-Bayes-Theorem" class="headerlink" title="贝叶斯定理 Bayes Theorem"></a>贝叶斯定理 Bayes Theorem</h2><p>$$<br>P(A|B)=\frac{P(A)\times{P(B|A)}}{P(B)}<br>$$</p>
-<p>$$<br>posterior = prior \times likelihood<br>$$</p>
-<p>$$<br>后验概率 = 先验概率 \times 似然<br>$$</p>
-<ul>
+<h2 id="贝叶斯定理-Bayes-Theorem"><a href="#贝叶斯定理-Bayes-Theorem" class="headerlink" title="贝叶斯定理 Bayes Theorem"></a>贝叶斯定理 Bayes Theorem</h2><script type="math/tex; mode=display">
+P(A|B)=\frac{P(A)\times{P(B|A)}}{P(B)}</script><script type="math/tex; mode=display">
+posterior = prior \times likelihood</script><script type="math/tex; mode=display">
+后验概率 = 先验概率 \times 似然</script><ul>
 <li>概率: 用于在已知一些参数的情况下，预测接下来的观测所得到的结果。</li>
 <li>似然: 用于在已知某些观测所得到的结果时，对有关事物的性质的参数进行估计。</li>
 <li>$P(A|B)$: 是已知 B 发生后 A 的条件概率，也由于得自B的取值而被称作 A 的后验概率。</li>
@@ -513,24 +513,45 @@
 <p>LDA 是基于贝叶斯模型的，她是一个三层贝叶斯模型。</p>
 <hr>
 <h2 id="伽玛函数-Gamma-Function"><a href="#伽玛函数-Gamma-Function" class="headerlink" title="伽玛函数 Gamma Function"></a>伽玛函数 Gamma Function</h2><p>定义：</p>
-<p>$$<br>\Gamma(x) = \int_{0}^{\infty}t^{x-1}e^{-t}dt<br>$$<br>分部积分后，可以发现 Gamma 函数具有这样神奇的性质：<br>$$<br>\Gamma(x+1) = x \Gamma(x)<br>$$<br>Gamma 函数可以看成是阶乘在实数集上的延拓：<br>$$<br>\Gamma(n) = (n-1)!<br>$$<br>为什么要提到 Gamma 函数？</p>
+<script type="math/tex; mode=display">
+\Gamma(x) = \int_{0}^{\infty}t^{x-1}e^{-t}dt</script><p>分部积分后，可以发现 Gamma 函数具有这样神奇的性质：</p>
+<script type="math/tex; mode=display">
+\Gamma(x+1) = x \Gamma(x)</script><p>Gamma 函数可以看成是阶乘在实数集上的延拓：</p>
+<script type="math/tex; mode=display">
+\Gamma(n) = (n-1)!</script><p>为什么要提到 Gamma 函数？</p>
 <p>LDA 所涉及的概率分布中会用到 Gamma 函数以及它的性质，所以先介绍一下 Gamma 函数。</p>
 <hr>
 <h2 id="一些概率论-Some-Probability-Theory"><a href="#一些概率论-Some-Probability-Theory" class="headerlink" title="一些概率论 Some Probability Theory"></a>一些概率论 Some Probability Theory</h2><p>LDA 主题模型中涉及了许多概率分布，列举如下。</p>
 <h3 id="伯努利分布-Bernoulli-Distribution"><a href="#伯努利分布-Bernoulli-Distribution" class="headerlink" title="伯努利分布 Bernoulli Distribution"></a>伯努利分布 Bernoulli Distribution</h3><p>伯努利试验是只有2种可能结果的单次随机试验。</p>
 <p>进行一次伯努利试验，成功 (X=1) 概率为 p (0&lt;=p&lt;=1)，失败 (X=0) 概率是 1-p，则称随机变量 X 服从伯努利分布。</p>
 <p>概率密度公式为：</p>
-<p>$$<br>f_{X}(x) = p^{x}(1-p)^{1-x} =<br>\begin{cases}<br>  p &amp; \text{if} \ x = 1,\<br>  q &amp; \text{if} \ x = 0.<br>\end{cases}<br>$$</p>
-<h3 id="二项分布-Binomial-Distribution"><a href="#二项分布-Binomial-Distribution" class="headerlink" title="二项分布 Binomial Distribution"></a>二项分布 Binomial Distribution</h3><p>是 N 重伯努利分布，X ~ B(n, p). </p>
+<script type="math/tex; mode=display">
+f_{X}(x) = p^{x}(1-p)^{1-x} =
+\begin{cases}
+  p & \text{if} \ x = 1,\\
+  q & \text{if} \ x = 0.
+\end{cases}</script><h3 id="二项分布-Binomial-Distribution"><a href="#二项分布-Binomial-Distribution" class="headerlink" title="二项分布 Binomial Distribution"></a>二项分布 Binomial Distribution</h3><p>是 N 重伯努利分布，X ~ B(n, p). </p>
 <p>概率密度公式为：</p>
-<p>$$<br>P(K = k) =<br>\begin{pmatrix}<br>  n \<br>  k \<br>\end{pmatrix}<br>p^k{(1-p)}^{n-k}<br>$$</p>
-<h3 id="多项分布-Multinomial-Distribution"><a href="#多项分布-Multinomial-Distribution" class="headerlink" title="多项分布 Multinomial Distribution"></a>多项分布 Multinomial Distribution</h3><p>多项分布，是二项分布扩展到多维的情况. 多项分布是指单次试验中的随机变量的取值不再是 0-1 的，而是有多种离散值可能（1,2,3…,k）.</p>
+<script type="math/tex; mode=display">
+P(K = k) = 
+\begin{pmatrix}
+  n \\
+  k \\ 
+\end{pmatrix}
+p^k{(1-p)}^{n-k}</script><h3 id="多项分布-Multinomial-Distribution"><a href="#多项分布-Multinomial-Distribution" class="headerlink" title="多项分布 Multinomial Distribution"></a>多项分布 Multinomial Distribution</h3><p>多项分布，是二项分布扩展到多维的情况. 多项分布是指单次试验中的随机变量的取值不再是 0-1 的，而是有多种离散值可能（1,2,3…,k）.</p>
 <p>概率密度函数为：</p>
-<p>$$<br>P(x_1, x_2, …, x_k; n, p_1, p_2, …, p_k) = \frac{n!}{x_1!…x_k!}{p_1}^{x_1}…{p_k}^{x_k}<br>$$</p>
-<h3 id="贝塔分布-Beta-Distribution"><a href="#贝塔分布-Beta-Distribution" class="headerlink" title="贝塔分布 Beta Distribution"></a>贝塔分布 Beta Distribution</h3><p>Beta分布的定义：对于参数 $\alpha &gt; 0, \beta &gt; 0$ , 取值范围为 [0, 1] 的随机变量 X 的概率密度函数为：</p>
-<p>$$<br>f(x; \alpha, \beta) = \frac{1}{B(\alpha, \beta)} x^{\alpha - 1} {(1-x)}^{\beta-1}<br>$$<br>其中，<br>$$<br>\frac{1}{B(\alpha, \beta)} = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)}<br>$$</p>
-<h3 id="狄利克雷分布-Dirichlet-Distribution"><a href="#狄利克雷分布-Dirichlet-Distribution" class="headerlink" title="狄利克雷分布 Dirichlet Distribution"></a>狄利克雷分布 Dirichlet Distribution</h3><p>概率密度函数为：<br>$$<br>f(x_1, x_2, …, x_k; \alpha_1, \alpha_2, …, \alpha_k) = \frac{1}{B(\alpha)} \prod_{i=1}^{k}{x_i}^{\alpha^i-1}<br>$$<br>其中，<br>$$<br>B(\alpha) = \frac{\prod_{i=1}^{k}\Gamma(\alpha^i)}{\Gamma(\sum_{i=1}^{k}\alpha^i)}, \sum_{i=1}^{k}x^i = 1<br>$$</p>
-<h3 id="共轭分布-Conjugate-Distribution"><a href="#共轭分布-Conjugate-Distribution" class="headerlink" title="共轭分布 Conjugate Distribution"></a>共轭分布 Conjugate Distribution</h3><p>在贝叶斯理论中，如果后验概率分布 $P(\theta | x)$ 与先验概率分布 $P(\theta)$ 具有相同形式，则先验分布与后验分布被称为共轭分布，先验分布被称为似然函数的共轭先验。<br>$$<br>P(\theta | x) = \frac{P(\theta, x)} {P(x)}<br>$$<br>共轭先验的好处主要在于代数上的方便性，可以直接给出后验分布的封闭形式，否则的话只能数值计算。共轭先验也有助于获得关于似然函数如何更新先验分布的直观印象。</p>
+<script type="math/tex; mode=display">
+P(x_1, x_2, ..., x_k; n, p_1, p_2, ..., p_k) = \frac{n!}{x_1!...x_k!}{p_1}^{x_1}...{p_k}^{x_k}</script><h3 id="贝塔分布-Beta-Distribution"><a href="#贝塔分布-Beta-Distribution" class="headerlink" title="贝塔分布 Beta Distribution"></a>贝塔分布 Beta Distribution</h3><p>Beta分布的定义：对于参数 $\alpha &gt; 0, \beta &gt; 0$ , 取值范围为 [0, 1] 的随机变量 X 的概率密度函数为：</p>
+<script type="math/tex; mode=display">
+f(x; \alpha, \beta) = \frac{1}{B(\alpha, \beta)} x^{\alpha - 1} {(1-x)}^{\beta-1}</script><p>其中，</p>
+<script type="math/tex; mode=display">
+\frac{1}{B(\alpha, \beta)} = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)}</script><h3 id="狄利克雷分布-Dirichlet-Distribution"><a href="#狄利克雷分布-Dirichlet-Distribution" class="headerlink" title="狄利克雷分布 Dirichlet Distribution"></a>狄利克雷分布 Dirichlet Distribution</h3><p>概率密度函数为：</p>
+<script type="math/tex; mode=display">
+f(x_1, x_2, ..., x_k; \alpha_1, \alpha_2, ..., \alpha_k) = \frac{1}{B(\alpha)} \prod_{i=1}^{k}{x_i}^{\alpha^i-1}</script><p>其中，</p>
+<script type="math/tex; mode=display">
+B(\alpha) = \frac{\prod_{i=1}^{k}\Gamma(\alpha^i)}{\Gamma(\sum_{i=1}^{k}\alpha^i)}, \sum_{i=1}^{k}x^i = 1</script><h3 id="共轭分布-Conjugate-Distribution"><a href="#共轭分布-Conjugate-Distribution" class="headerlink" title="共轭分布 Conjugate Distribution"></a>共轭分布 Conjugate Distribution</h3><p>在贝叶斯理论中，如果后验概率分布 $P(\theta | x)$ 与先验概率分布 $P(\theta)$ 具有相同形式，则先验分布与后验分布被称为共轭分布，先验分布被称为似然函数的共轭先验。</p>
+<script type="math/tex; mode=display">
+P(\theta | x) = \frac{P(\theta, x)} {P(x)}</script><p>共轭先验的好处主要在于代数上的方便性，可以直接给出后验分布的封闭形式，否则的话只能数值计算。共轭先验也有助于获得关于似然函数如何更新先验分布的直观印象。</p>
 <p>为什么要讲共轭分布呢？</p>
 <p>联系到前文提到的贝叶斯理论，因为我们希望先验分布和似然对应的后验分布，在后面还可以作为先验分布！就像上面例子里的 “102个好人和101个的坏人” ，它既是前面一次贝叶斯推荐的后验分布，又是后一次贝叶斯推荐的先验分布。换句话说，我们希望先验分布和后验分布的形式是一样的，这样的分布叫共轭分布。</p>
 <p>根据 二项分布、贝塔分布、多项式分布、狄利克雷分布的公式，数学上可以推导出：</p>
@@ -593,7 +614,7 @@
 <li>越低，代表每个主题包含的单词数越少</li>
 </ul>
 </li>
-<li>$\varphi_{z_{ij}}$: 主题 $z_{ij}$ 的单词分布</li>
+<li>$\varphi<em>{z</em>{ij}}$: 主题 $z_{ij}$ 的单词分布</li>
 <li>$w_{ij}$: 特定的单词，服从多项式分布</li>
 </ul>
 <h3 id="生成过程-Generative-Process"><a href="#生成过程-Generative-Process" class="headerlink" title="生成过程 Generative Process"></a>生成过程 Generative Process</h3><p>为了能比较好地理解 LDA 推测文档的主题分布的过程，先了解一篇文档的生成过程是很有帮助的。</p>
@@ -601,14 +622,14 @@
 <ul>
 <li>For each document $i$, draw $\theta_i \sim Dirichlet(\alpha), d = 1…D$</li>
 <li>For each word $j$ in document $i$:<ul>
-<li>从 $\theta_i$ 中采样，Draw a topic index $z_{ij} \sim Multinomial(\theta_i)$</li>
-<li>从 $\varphi_{z_{ij}}$ 中采样，Draw the observed word $w_{ij} \sim Multinomial(\varphi_{z_{ij}})$</li>
+<li>从 $\theta<em>i$ 中采样，Draw a topic index $z</em>{ij} \sim Multinomial(\theta_i)$</li>
+<li>从 $\varphi<em>{z</em>{ij}}$ 中采样，Draw the observed word $w<em>{ij} \sim Multinomial(\varphi</em>{z_{ij}})$</li>
 </ul>
 </li>
 </ul>
 <p>For parameter estimation, the posterior distribution is:</p>
-<p>$$<br>P(z, \theta, \varphi | w, \alpha, \beta) = \frac{P(z, \theta, \varphi | \alpha, \beta)}{P(w | \alpha, \beta)}<br>$$</p>
-<p>简单点，一篇文档的生成分为三步：</p>
+<script type="math/tex; mode=display">
+P(z, \theta, \varphi | w, \alpha, \beta) = \frac{P(z, \theta, \varphi | \alpha, \beta)}{P(w | \alpha, \beta)}</script><p>简单点，一篇文档的生成分为三步：</p>
 <ul>
 <li>决定文档中单词的数量</li>
 <li>给文档选择一个主题分布 (i.e. 20% topic A, 30% topic B, 50% topic C)</li>
@@ -689,11 +710,11 @@
 <li>之后对下述操作进行重复迭代。</li>
 <li>对所有文档中的所有词进行遍历，假如当前文档 $m$ 的词 $t$ 对应主题为 $k$，则 $n^{(k)}_m-1, n_m-1, n^{(t)}_k-1, n_k-1$, 即先拿出当前词，之后根据 LDA 中 topic sample 的概率分布 sample 出新的主题，在对应的 $n^{(k)}_m, n_m, n^{(t)}_k, n_k$ 上分别 +1。</li>
 </ul>
-<p>$$<br>p(z_{i}=k|z_{-i},w) \propto \frac{(n_{k,-i}^{(t)} + \beta <em>{t})(n</em>{m,-i}^{(k)} + \alpha _{k})}{(\sum <em>{t=1}^{V}n</em>{k,-i}^{(t)} + \beta _{t})}<br>$$</p>
-<p>迭代完成后输出 主题-词矩阵 $\varphi​$ 和 文档-主题矩阵 $\theta​$</p>
-<p>$$<br>\phi <em>{k,t} = \frac{(n</em>{k}^{(t)} + \beta <em>{t})}{(n</em>{k} + \beta _{t})}<br>$$</p>
-<p>$$<br>\theta <em>{m,k} = \frac{(n</em>{m}^{(k)} + \alpha <em>{k})}{(n</em>{m} + \alpha _{k})}<br>$$</p>
-<hr>
+<script type="math/tex; mode=display">
+p(z_{i}=k|z_{-i},w) \propto \frac{(n_{k,-i}^{(t)} + \beta _{t})(n_{m,-i}^{(k)} + \alpha _{k})}{(\sum _{t=1}^{V}n_{k,-i}^{(t)} + \beta _{t})}</script><p>迭代完成后输出 主题-词矩阵 $\varphi​$ 和 文档-主题矩阵 $\theta​$</p>
+<script type="math/tex; mode=display">
+\phi _{k,t} = \frac{(n_{k}^{(t)} + \beta _{t})}{(n_{k} + \beta _{t})}</script><script type="math/tex; mode=display">
+\theta _{m,k} = \frac{(n_{m}^{(k)} + \alpha _{k})}{(n_{m} + \alpha _{k})}</script><hr>
 <h2 id="结论-Conclusions"><a href="#结论-Conclusions" class="headerlink" title="结论 Conclusions"></a>结论 Conclusions</h2><p>文档是主题上的概率分布，主题是单词上的概率分布。</p>
 <p>LDA 接受的输入是若干文档。她认为每篇文档中的单词是语义相关的。她试图想明白每篇文档是如何创造出来的。我们只需要告诉她有多少个主题需要构造，她就会根据主题的数量在语料库上生成主题和单词的分布。基于她的输出，可以预测新文档的主题分布，计算文档之间的相似度，文本分类。</p>
 <p>LDA</p>
@@ -1302,7 +1323,24 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 
