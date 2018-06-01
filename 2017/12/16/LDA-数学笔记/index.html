@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda4.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda5.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda6.png">
-<meta property="og:updated_time" content="2018-05-21T03:30:59.760Z">
+<meta property="og:updated_time" content="2018-06-01T13:04:01.001Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LDA 数学笔记">
 <meta name="twitter:description" content="LDA 主题模型几乎是每一个 NLP 工程师的必修课，而她背后的数学与概率论知识却让她看起来有些高冷。 那么何为 LDA (Latent Dirichlet Allocation)？ 简单的说，L (Latent 隐含)，主题隐含在文档中；DA (Dirichlet Allocation 狄利克雷分布)，文档的主题服从 Dirichlet Distribution。 本文将站在一个初学者的角度来讲">
@@ -621,9 +621,9 @@ P(\theta | x) = \frac{P(\theta, x)} {P(x)}</script><p>共轭先验的好处主�
 <p>LDA 认为一篇新文档是以这样的方式生成的：</p>
 <ul>
 <li>For each document $i$, draw $\theta_i \sim Dirichlet(\alpha), d = 1…D$</li>
-<li>For each word $j$ in document $i$:<ul>
+<li>For each word $j​$ in document $i​$:<ul>
 <li>从 $\theta<em>i$ 中采样，Draw a topic index $z</em>{ij} \sim Multinomial(\theta_i)$</li>
-<li>从 $\varphi<em>{z</em>{ij}}$ 中采样，Draw the observed word $w<em>{ij} \sim Multinomial(\varphi</em>{z_{ij}})$</li>
+<li>从 $\varphi<em>{z</em>{ij} }$ 中采样，Draw the observed word $w<em>{ij} \sim Multinomial(\varphi</em>{z_{ij} })$</li>
 </ul>
 </li>
 </ul>
