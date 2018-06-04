@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda4.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda5.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda6.png">
-<meta property="og:updated_time" content="2018-06-04T05:27:48.016Z">
+<meta property="og:updated_time" content="2018-06-04T05:31:18.742Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LDA 数学笔记">
 <meta name="twitter:description" content="LDA 主题模型几乎是每一个 NLP 工程师的必修课，而她背后的数学与概率论知识却让她看起来有些高冷。 那么何为 LDA (Latent Dirichlet Allocation)？ 简单的说，L (Latent 隐含)，主题隐含在文档中；DA (Dirichlet Allocation 狄利克雷分布)，文档的主题服从 Dirichlet Distribution。 本文将站在一个初学者的角度来讲">
@@ -614,7 +614,7 @@ P(\theta | x) = \frac{P(\theta, x)} {P(x)}</script><p>共轭先验的好处主�
 <li>越低，代表每个主题包含的单词数越少</li>
 </ul>
 </li>
-<li>$\varphi<em>{z}$: 主题 $z</em>{ij}$ 的单词分布</li>
+<li>$\varphi<em>{z</em>{ij}}$: 主题 $z_{ij}$ 的单词分布</li>
 <li>$w_{ij}$: 特定的单词，服从多项式分布</li>
 </ul>
 <h3 id="生成过程-Generative-Process"><a href="#生成过程-Generative-Process" class="headerlink" title="生成过程 Generative Process"></a>生成过程 Generative Process</h3><p>为了能比较好地理解 LDA 推测文档的主题分布的过程，先了解一篇文档的生成过程是很有帮助的。</p>
@@ -622,8 +622,8 @@ P(\theta | x) = \frac{P(\theta, x)} {P(x)}</script><p>共轭先验的好处主�
 <ul>
 <li>For each document $i$, draw $\theta_i \sim Dirichlet(\alpha), d = 1…D$</li>
 <li>For each word $j$ in document $i$:<ul>
-<li>Sample from $\theta<em>i$, draw a topic index $z</em>{ij} \sim Multinomial(\theta_i)$</li>
-<li>Sample from $\varphi<em>{z}$, draw the observed word $w</em>{ij} \sim Multinomial(\varphi_{z})$</li>
+<li>Sample from $\theta<em>i$ , draw a topic index $z</em>{ij} \sim Multinomial(\theta_i)$</li>
+<li>Sample from $\varphi<em>{z</em>{ij}}$ , draw the observed word $w<em>{ij} \sim Multinomial(\varphi</em>{z_{ij}})$</li>
 </ul>
 </li>
 </ul>
