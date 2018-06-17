@@ -110,7 +110,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/wildpointer_category.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/wildpointer_tags.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/wildpointer_search.png">
-<meta property="og:updated_time" content="2018-05-17T15:57:18.000Z">
+<meta property="og:updated_time" content="2018-06-17T10:14:24.352Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用 Hexo + Github Pages 搭建独立博客">
 <meta name="twitter:description" content="How to build a blog step by step. 手把手教你搭建独立博客。">
@@ -674,9 +674,18 @@
 <p>安装主题的方法很简单，只需要将主题文件拷贝至站点目录的 themes 目录下，然后修改配置文件即可。</p>
 <p>我使用的主题是 <a href="http://theme-next.iissnan.com" target="_blank" rel="noopener">NexT: Elegant Theme for Hexo</a>，一个简约美观的主题。</p>
 <hr>
-<h1 id="给域名加上-SSL-证书"><a href="#给域名加上-SSL-证书" class="headerlink" title="给域名加上 SSL 证书"></a>给域名加上 SSL 证书</h1><p>TODO</p>
-<hr>
-<h1 id="配置个人域名邮箱"><a href="#配置个人域名邮箱" class="headerlink" title="配置个人域名邮箱"></a>配置个人域名邮箱</h1><p>TODO</p>
+<h1 id="启用-HTTPS"><a href="#启用-HTTPS" class="headerlink" title="启用 HTTPS"></a>启用 HTTPS</h1><p>自 2018 年 5 月 1 日起，GitHub 支持自定义域名的 HTTPS 请求了。</p>
+<p>详情见<a href="https://blog.github.com/2018-05-01-github-pages-custom-domains-https/blog.github.com" target="_blank" rel="noopener">这</a>。</p>
+<p>配置也相当简单，只需要更新 DNS 配置里的 A 记录，将其指向以下4个 IP 地址中的至少一个。</p>
+<ul>
+<li>185.199.108.153</li>
+<li>185.199.109.153</li>
+<li>185.199.110.153</li>
+<li>185.199.111.153</li>
+</ul>
+<p>HTTPS 让你的网站和网站访客更安全，并且 GitHub 提供的这些 IP 地址自动将你的站点加入了 CDN，提高了访问速度。</p>
+<p>你还可以在 GiHub Pages 仓库的设置里勾选 ‘Enforce HTTPS’，这样所有访问你站点的请求都会走 HTTPS。</p>
+<p>不得不说，GitHub 是真的良心。</p>
 <hr>
 <h1 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h1><p>当完成了上述步骤，你的独立博客也就搭建完成了！恭喜你！</p>
 <p>附几张我的网站截图：</p>
@@ -1016,7 +1025,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#初心"><span class="nav-number">1.</span> <span class="nav-text">初心</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#搭建流程"><span class="nav-number">2.</span> <span class="nav-text">搭建流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建-Github-Pages"><span class="nav-number">2.1.</span> <span class="nav-text">创建 Github Pages</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#域名绑定"><span class="nav-number">2.2.</span> <span class="nav-text">域名绑定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#购买域名"><span class="nav-number">2.2.1.</span> <span class="nav-text">购买域名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置-DNS-解析"><span class="nav-number">2.2.2.</span> <span class="nav-text">设置 DNS 解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加-CNAME-文件"><span class="nav-number">2.2.3.</span> <span class="nav-text">添加 CNAME 文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置-Hexo"><span class="nav-number">2.3.</span> <span class="nav-text">配置 Hexo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#部署站点"><span class="nav-number">2.3.1.</span> <span class="nav-text">部署站点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选择主题"><span class="nav-number">2.3.2.</span> <span class="nav-text">选择主题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#给域名加上-SSL-证书"><span class="nav-number">3.</span> <span class="nav-text">给域名加上 SSL 证书</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置个人域名邮箱"><span class="nav-number">4.</span> <span class="nav-text">配置个人域名邮箱</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#大功告成"><span class="nav-number">5.</span> <span class="nav-text">大功告成</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#初心"><span class="nav-number">1.</span> <span class="nav-text">初心</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#搭建流程"><span class="nav-number">2.</span> <span class="nav-text">搭建流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建-Github-Pages"><span class="nav-number">2.1.</span> <span class="nav-text">创建 Github Pages</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#域名绑定"><span class="nav-number">2.2.</span> <span class="nav-text">域名绑定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#购买域名"><span class="nav-number">2.2.1.</span> <span class="nav-text">购买域名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置-DNS-解析"><span class="nav-number">2.2.2.</span> <span class="nav-text">设置 DNS 解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加-CNAME-文件"><span class="nav-number">2.2.3.</span> <span class="nav-text">添加 CNAME 文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置-Hexo"><span class="nav-number">2.3.</span> <span class="nav-text">配置 Hexo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#部署站点"><span class="nav-number">2.3.1.</span> <span class="nav-text">部署站点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选择主题"><span class="nav-number">2.3.2.</span> <span class="nav-text">选择主题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启用-HTTPS"><span class="nav-number">3.</span> <span class="nav-text">启用 HTTPS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#大功告成"><span class="nav-number">4.</span> <span class="nav-text">大功告成</span></a></li></ol></div>
             
 
           </div>
