@@ -102,7 +102,7 @@
 <meta property="og:description" content="最近在写一个层次分类模型，为了更好地选择模型，用到了交叉验证，于是详细了解了一下。">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/10_fold_cv.png">
-<meta property="og:updated_time" content="2018-07-13T09:03:16.287Z">
+<meta property="og:updated_time" content="2018-07-13T09:19:34.725Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="交叉验证是什么？">
 <meta name="twitter:description" content="最近在写一个层次分类模型，为了更好地选择模型，用到了交叉验证，于是详细了解了一下。">
@@ -471,7 +471,7 @@
 <ul>
 <li>所有数据都会参与到训练和预测中，有效避免过拟合，充分体现了交叉的思想</li>
 </ul>
-<p>交叉验证可能存在 bias 或者 variance。如果我们提高切分的数量 k，variance 会上升但 bias 会下降。相反得，如果降低 k，bias 会上升但 variance 会下降。</p>
+<p>交叉验证可能存在 bias 或者 variance。如果我们提高切分的数量 k，variance 会上升但 bias 可能会下降。相反得，如果降低 k，bias 可能会上升但 variance 会下降。bias-variance tradeoff 是一个有趣的问题，我们希望模型的 bias 和 variance 都很低，但有时候做不到，只好权衡利弊，选取他们二者的平衡点。</p>
 <p>通常使用10折交叉验证，当然这也取决于训练数据的样本数量。</p>
 <p>10-fold cross validation</p>
 <p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/10_fold_cv.png" alt="10-fold cv"></p>
