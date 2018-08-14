@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="WildPointer">
 <meta property="og:description" content="LanguageTool 是一款开源的语言校正软件，用于文本的风格检测和语法纠错。她是一个规则系统，拥有超过2000条规则和一个功能强大的规则解析器。本文介绍了如何使用和拓展 LanguageTool。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-08-14T12:54:00.008Z">
+<meta property="og:updated_time" content="2018-08-14T13:32:14.271Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Introduction to LanguageTool">
 <meta name="twitter:description" content="LanguageTool 是一款开源的语言校正软件，用于文本的风格检测和语法纠错。她是一个规则系统，拥有超过2000条规则和一个功能强大的规则解析器。本文介绍了如何使用和拓展 LanguageTool。">
@@ -450,9 +450,6 @@
 <hr>
 <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>LanguageTool 是一个开源的语言校正软件，基于 Java 编写，在 GitHub 上有 2k+ star。</p>
 <p>用于文本的风格检测和语法纠错。可以检测超过20种语言的风格和语法错误，More than a simple spell checker.</p>
-<p>GitHub Repo: <a href="https://github.com/languagetool-org/languagetool" target="_blank" rel="noopener">https://github.com/languagetool-org/languagetool</a></p>
-<p>Homepage: <a href="https://languagetool.org/" target="_blank" rel="noopener">https://languagetool.org/</a></p>
-<p>Development Overview: <a href="http://wiki.languagetool.org/development-overview" target="_blank" rel="noopener">http://wiki.languagetool.org/development-overview</a></p>
 <p>目前我司的 GEC 系统是一个规则与机器学习算法相结合的系统，包含了基于 CRF 的语法检测器 SyntaxCheck 和基于 rule 的 LanguageTool。未来我们会使用深度学习的模型，比如最近 MSRA 的一个语法纠错工作中用到的 seq2seq 模型。</p>
 <p>LanguageTool 语法错误检测流程：</p>
 <ol>
@@ -656,40 +653,26 @@
 <p><em>A rule is a pattern.</em></p>
 <p>当 pattern 匹配到了文本，LT 会显示错误信息。pattern 可以处理 words 或者 pos tag。</p>
 <p>举些规则中 token 元素的栗子：</p>
-<ul>
-<li>\<token\>think\&lt;/token></token\></li>
-</ul>
-<p>​    匹配单词 think</p>
-<ul>
-<li>\<token\>think\&lt;/token> \<token\>about\&lt;/token></token\></token\></li>
-</ul>
-<p>​    匹配短语 think about - 因为文本会被分词, 你需要把每个单词分别表示成一个 token.</p>
-<p>​    这样是不行滴: \<token\>think about\&lt;/token></token\></p>
-<ul>
-<li>\<token regexp="yes" \="">think|say\&lt;/token></token></li>
-</ul>
-<p>​    匹配正则表达式 think|say, i.e. 单词 think 或单词 say. 想了解更多关于正则表达式？请看这个<a href="http://www.regular-expressions.info/tutorialcnt.html" target="_blank" rel="noopener">教程</a>。</p>
-<ul>
-<li>\<token postag="VB"></token></li>
-</ul>
-<p>​    匹配一个基本形式的动词 (像 we have to walk 中的 walk). </p>
-<p>​    查看 <a href="https://github.com/languagetool-org/languagetool/blob/master/languagetool-language-modules/en/src/main/resources/org/languagetool/resource/en/tagset.txt" target="_blank" rel="noopener">resource/en/tagset.txt</a> 来获取所有的英语词性标记。</p>
-<ul>
-<li>\<token postag="V.*" postag_regexp="yes"></token></li>
-</ul>
-<p>​    匹配一个词性标记由 V 开头 (英语中，都是动词) 的单词。</p>
-<p>​    注意，对于那些含有特殊字符的词性标记，比如 PRP$，需要将 $ 转义，因为它在正则中有特殊含义。</p>
-<ul>
-<li>\<token>cause\</token> \<token regexp="yes" negate="yes">and|to\</token></li>
-</ul>
-<p>​    匹配单词 cause 后面跟的不是 and 或 to 的情况。</p>
-<ul>
-<li>\<token postag="SENT_START"> \<token>foobar\</token></token></li>
-</ul>
-<p>​    匹配只出现在句子开头的单词 foobar。</p>
-<p>​    句子结尾的 pos tag 是 SENT_END.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">token</span>&gt;</span>think<span class="tag">&lt;/<span class="name">token</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>匹配单词 think</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">token</span>&gt;</span>think<span class="tag">&lt;/<span class="name">token</span>&gt;</span> <span class="tag">&lt;<span class="name">token</span>&gt;</span>about<span class="tag">&lt;/<span class="name">token</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>匹配短语 think about - 因为文本会被分词, 你需要把每个单词分别表示成一个 token.</p>
+<p>这样是不行滴: <code>&lt;token&gt;think about&lt;/token&gt;</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">token</span> <span class="attr">regexp</span>=<span class="string">"yes"</span>&gt;</span>think|say<span class="tag">&lt;/<span class="name">token</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>匹配正则表达式 think|say, i.e. 单词 think 或单词 say. 想了解更多关于正则表达式？请看这个<a href="http://www.regular-expressions.info/tutorialcnt.html" target="_blank" rel="noopener">教程</a>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">token</span> <span class="attr">postag</span>=<span class="string">"VB"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>匹配一个基本形式的动词 (像 we have to walk 中的 walk). </p>
+<p>查看 <a href="https://github.com/languagetool-org/languagetool/blob/master/languagetool-language-modules/en/src/main/resources/org/languagetool/resource/en/tagset.txt" target="_blank" rel="noopener">resource/en/tagset.txt</a> 来获取所有的英语词性标记。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">token</span> <span class="attr">postag</span>=<span class="string">"V.*"</span> <span class="attr">postag_regexp</span>=<span class="string">"yes"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>匹配一个词性标记由 V 开头 (英语中，都是动词) 的单词。</p>
+<p>注意，对于那些含有特殊字符的词性标记，比如 PRP$，需要将 $ 转义，因为它在正则中有特殊含义。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">token</span>&gt;</span>cause<span class="tag">&lt;/<span class="name">token</span>&gt;</span> <span class="tag">&lt;<span class="name">token</span> <span class="attr">regexp</span>=<span class="string">"yes"</span> <span class="attr">negate</span>=<span class="string">"yes"</span>&gt;</span>and|to<span class="tag">&lt;/<span class="name">token</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>匹配单词 cause 后面跟的不是 and 或 to 的情况。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">token</span> <span class="attr">postag</span>=<span class="string">"SENT_START"</span> /&gt;</span> <span class="tag">&lt;<span class="name">token</span>&gt;</span>foobar<span class="tag">&lt;/<span class="name">token</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>匹配只出现在句子开头的单词 foobar。</p>
+<p>句子结尾的 pos tag 是 SENT_END.</p>
 <p>一个 pattern 中的 token 匹配默认是大小写不敏感的。可以通过设置 case_sensitive=“yes” 改变。</p>
-<p>另外，单个 token 大小写敏感的匹配可以通过正则中的 (?-i) 来打开 (ex: \<token regexp="“yes”">(?-i)Bill\<token> 会匹配 Bill 而不是 bill)。</token></token></p>
+<p>另外，单个 token 大小写敏感的匹配可以通过正则中的 (?-i) 来打开 (ex: <code>&lt;token regexp=“yes”&gt;(?-i)Bill&lt;token&gt;</code> 会匹配 Bill 而不是 bill)。</p>
 <p>element token 只是规则中的一个元素，现在我们再来看看规则中还有哪些元素吧。</p>
 <h3 id="一条规则的基本元素"><a href="#一条规则的基本元素" class="headerlink" title="一条规则的基本元素"></a>一条规则的基本元素</h3><p>简单介绍一下基本的元素 (elements) 和他们的属性 (attributes)：</p>
 <ul>
@@ -747,6 +730,12 @@
 <h3 id="Online-Rule-Editor"><a href="#Online-Rule-Editor" class="headerlink" title="Online Rule Editor"></a>Online Rule Editor</h3><p>LanguageTool Rule Editor: <a href="https://community.languagetool.org/ruleEditor2/index?lang=en" target="_blank" rel="noopener">https://community.languagetool.org/ruleEditor2/index?lang=en</a></p>
 <p>介绍视频：<a href="https://www.youtube.com/watch?v=KnQCHo14gOU" target="_blank" rel="noopener">https://www.youtube.com/watch?v=KnQCHo14gOU</a></p>
 <p>Text Analyzer: <a href="https://community.languagetool.org/analysis/index?lang=en" target="_blank" rel="noopener">https://community.languagetool.org/analysis/index?lang=en</a></p>
+<hr>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li>GitHub Repo: <a href="https://github.com/languagetool-org/languagetool" target="_blank" rel="noopener">https://github.com/languagetool-org/languagetool</a></li>
+<li>Homepage: <a href="https://languagetool.org/" target="_blank" rel="noopener">https://languagetool.org/</a></li>
+<li>Development Overview: <a href="http://wiki.languagetool.org/development-overview" target="_blank" rel="noopener">http://wiki.languagetool.org/development-overview</a></li>
+</ul>
 
       
     </div>
@@ -1060,7 +1049,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Usage"><span class="nav-number">2.</span> <span class="nav-text">Usage</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Build"><span class="nav-number">2.1.</span> <span class="nav-text">Build</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Scripted-installation-and-building"><span class="nav-number">2.1.1.</span> <span class="nav-text">Scripted installation and building</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-from-source"><span class="nav-number">2.1.2.</span> <span class="nav-text">Build from source</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API"><span class="nav-number">2.2.</span> <span class="nav-text">API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-LanguageTool-via-HTTP-HTTPS"><span class="nav-number">2.2.1.</span> <span class="nav-text">Using LanguageTool via HTTP/HTTPS</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Start-Local-LanguageTool-HTTP-Server"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">Start Local LanguageTool HTTP Server</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改-IP-Address-并开放公共访问"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">修改 IP Address 并开放公共访问</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-LanguageTool-from-a-Java-application"><span class="nav-number">2.2.2.</span> <span class="nav-text">Using LanguageTool from a Java application</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Embedding-LanguageTool-on-a-Web-Page"><span class="nav-number">2.2.3.</span> <span class="nav-text">Embedding LanguageTool on a Web Page</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Rules"><span class="nav-number">3.</span> <span class="nav-text">Rules</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Browse-Rules"><span class="nav-number">3.1.</span> <span class="nav-text">Browse Rules</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Edit-Rules"><span class="nav-number">3.2.</span> <span class="nav-text">Edit Rules</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#增加新的-XML-规则"><span class="nav-number">3.2.1.</span> <span class="nav-text">增加新的 XML 规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一条规则的基本元素"><span class="nav-number">3.2.2.</span> <span class="nav-text">一条规则的基本元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加新的-Java-规则"><span class="nav-number">3.2.3.</span> <span class="nav-text">增加新的 Java 规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试规则"><span class="nav-number">3.2.4.</span> <span class="nav-text">测试规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Online-Rule-Editor"><span class="nav-number">3.2.5.</span> <span class="nav-text">Online Rule Editor</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Usage"><span class="nav-number">2.</span> <span class="nav-text">Usage</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Build"><span class="nav-number">2.1.</span> <span class="nav-text">Build</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Scripted-installation-and-building"><span class="nav-number">2.1.1.</span> <span class="nav-text">Scripted installation and building</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-from-source"><span class="nav-number">2.1.2.</span> <span class="nav-text">Build from source</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API"><span class="nav-number">2.2.</span> <span class="nav-text">API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-LanguageTool-via-HTTP-HTTPS"><span class="nav-number">2.2.1.</span> <span class="nav-text">Using LanguageTool via HTTP/HTTPS</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Start-Local-LanguageTool-HTTP-Server"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">Start Local LanguageTool HTTP Server</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改-IP-Address-并开放公共访问"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">修改 IP Address 并开放公共访问</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-LanguageTool-from-a-Java-application"><span class="nav-number">2.2.2.</span> <span class="nav-text">Using LanguageTool from a Java application</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Embedding-LanguageTool-on-a-Web-Page"><span class="nav-number">2.2.3.</span> <span class="nav-text">Embedding LanguageTool on a Web Page</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Rules"><span class="nav-number">3.</span> <span class="nav-text">Rules</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Browse-Rules"><span class="nav-number">3.1.</span> <span class="nav-text">Browse Rules</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Edit-Rules"><span class="nav-number">3.2.</span> <span class="nav-text">Edit Rules</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#增加新的-XML-规则"><span class="nav-number">3.2.1.</span> <span class="nav-text">增加新的 XML 规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一条规则的基本元素"><span class="nav-number">3.2.2.</span> <span class="nav-text">一条规则的基本元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加新的-Java-规则"><span class="nav-number">3.2.3.</span> <span class="nav-text">增加新的 Java 规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试规则"><span class="nav-number">3.2.4.</span> <span class="nav-text">测试规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Online-Rule-Editor"><span class="nav-number">3.2.5.</span> <span class="nav-text">Online Rule Editor</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
             
 
           </div>
