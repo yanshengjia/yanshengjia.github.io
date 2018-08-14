@@ -1,0 +1,1331 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Monaco:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="LanguageTool," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="LanguageTool 是一款开源的语言校正软件，用于文本的风格检测和语法纠错。她是一个规则系统，拥有超过2000条规则和一个功能强大的规则解析器。本文介绍了如何使用和拓展 LanguageTool。">
+<meta name="keywords" content="LanguageTool">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Introduction to LanguageTool">
+<meta property="og:url" content="http://yanshengjia.com/2018/08/14/Introduction-to-LanguageTool/index.html">
+<meta property="og:site_name" content="WildPointer">
+<meta property="og:description" content="LanguageTool 是一款开源的语言校正软件，用于文本的风格检测和语法纠错。她是一个规则系统，拥有超过2000条规则和一个功能强大的规则解析器。本文介绍了如何使用和拓展 LanguageTool。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-08-14T12:54:00.008Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Introduction to LanguageTool">
+<meta name="twitter:description" content="LanguageTool 是一款开源的语言校正软件，用于文本的风格检测和语法纠错。她是一个规则系统，拥有超过2000条规则和一个功能强大的规则解析器。本文介绍了如何使用和拓展 LanguageTool。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":true,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: 'K1YPL7B54D',
+      apiKey: '7f22077ed5b2dfbd70cc761b8cf48112',
+      indexName: 'wildpointer',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yanshengjia.com/2018/08/14/Introduction-to-LanguageTool/"/>
+
+
+
+
+
+  <title> Introduction to LanguageTool | WildPointer </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">WildPointer</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Welcome to my world!</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Arc
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Cat
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tag
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-projects">
+          <a href="/projects" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-star"></i> <br />
+            
+            Proj
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tech">
+          <a href="/tech" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-code"></i> <br />
+            
+            Tech
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-donate">
+          <a href="/donate" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-usd"></i> <br />
+            
+            Donate
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-me">
+          <a href="/me" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            Me
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yanshengjia.com/2018/08/14/Introduction-to-LanguageTool/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shengjia Yan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/profile0.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WildPointer">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Introduction to LanguageTool
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-14T16:47:30+08:00">
+                2018-08-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/14/Introduction-to-LanguageTool/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/08/14/Introduction-to-LanguageTool/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>LanguageTool 是一款开源的语言校正软件，用于文本的风格检测和语法纠错。她是一个规则系统，拥有超过2000条规则和一个功能强大的规则解析器。本文介绍了如何使用和拓展 LanguageTool。</p>
+<a id="more"></a>
+<hr>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>LanguageTool 是一个开源的语言校正软件，基于 Java 编写，在 GitHub 上有 2k+ star。</p>
+<p>用于文本的风格检测和语法纠错。可以检测超过20种语言的风格和语法错误，More than a simple spell checker.</p>
+<p>GitHub Repo: <a href="https://github.com/languagetool-org/languagetool" target="_blank" rel="noopener">https://github.com/languagetool-org/languagetool</a></p>
+<p>Homepage: <a href="https://languagetool.org/" target="_blank" rel="noopener">https://languagetool.org/</a></p>
+<p>Development Overview: <a href="http://wiki.languagetool.org/development-overview" target="_blank" rel="noopener">http://wiki.languagetool.org/development-overview</a></p>
+<p>目前我司的 GEC 系统是一个规则与机器学习算法相结合的系统，包含了基于 CRF 的语法检测器 SyntaxCheck 和基于 rule 的 LanguageTool。未来我们会使用深度学习的模型，比如最近 MSRA 的一个语法纠错工作中用到的 seq2seq 模型。</p>
+<p>LanguageTool 语法错误检测流程：</p>
+<ol>
+<li>分句</li>
+<li>分词</li>
+<li>每个单词都分配一个词性标签 (e.g. cars = plural noun, talked = simple past verb)</li>
+<li>带分析的文本将与内建 (built-in, 写在源代码中) 规则和从 grammar.xml 文件中加载的规则进行匹配</li>
+</ol>
+<p>LanguageTool 是一个规则系统，所有错误的检测和修正都依赖于规则，截止到当前 (2018-08-13) 的版本 v4.3，共有 2117 条规则，其中 2105 条规则是由规则解析器从 grammar.xml 文件中加载；仅有 12 条规则是内置 (Built-in) 的，由 Java 代码实现。换句话说，99.4% 的规则是从文件中加载，并不需要我们写代码实现，LanguageTool 已经实现了功能强大的规则解析器。</p>
+<p>优缺点</p>
+<ul>
+<li>缺点<ul>
+<li>所有 Pattern 都是人为制定，开发成本大，费时费力，无法穷尽所有语法错误</li>
+</ul>
+</li>
+<li>优点<ul>
+<li>修正准确率高</li>
+</ul>
+</li>
+</ul>
+<p>要让 LanguageTool 变得更好，简单的说，就是<strong>写规则</strong>。无须编程，只要懂一些英语语法和 XML (Extensive Markup Language) 即可。</p>
+<p>但是我不喜欢这个想法，因为写规则很无聊。我始终相信机器学习的算法是更有力量的，因为他能够自动学习 Pattern。</p>
+<p>LanguageTool 的使命应该是我们的 GEC (Grammar Error Correction) 系统的一个 fail-safe。</p>
+<hr>
+<h1 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h1><h2 id="Build"><a href="#Build" class="headerlink" title="Build"></a>Build</h2><h3 id="Scripted-installation-and-building"><a href="#Scripted-installation-and-building" class="headerlink" title="Scripted installation and building"></a>Scripted installation and building</h3><p>To install or build using a script, simply type:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">curl -L https://git.io/vNqdP | sudo bash &lt;options&gt;</span><br><span class="line">sudo bash install.sh &lt;options&gt;</span><br><span class="line">Usage: install.sh &lt;option&gt; &lt;package&gt;</span><br><span class="line">Options:</span><br><span class="line">   -h --help                   Show help</span><br><span class="line">   -b --build                  Builds packages from the bleeding edge development copy of LanguageTool</span><br><span class="line">   -c --command &lt;command&gt;      Specifies post-installation command to run (default gui when screen is detected)</span><br><span class="line">   -q --quiet                  Shut up LanguageTool installer! Only tell me important stuff!</span><br><span class="line">   -t --text &lt;file&gt;            Specifies what text to be spellchecked by LanguageTool command line (default spellcheck.txt)</span><br><span class="line">   -d --depth &lt;value&gt;          Specifies the depth to clone when building LanguageTool yourself (default 1).</span><br><span class="line">   -p --package &lt;package&gt;      Specifies package to install when building (default all)</span><br><span class="line">   -o --override &lt;OS&gt;          Override automatic OS detection with &lt;OS&gt;</span><br><span class="line">   -a --accept                 Accept the oracle license at http://java.com/license. Only run this if you have seen the license and agree to its terms!</span><br><span class="line">   -r --remove &lt;all/partial&gt;   Removes LanguageTool install. &lt;all&gt; uninstalls the dependencies that were auto-installed. (default partial)</span><br><span class="line"></span><br><span class="line">Packages(only if -b is specified):</span><br><span class="line">   standalone                  Installs standalone package</span><br><span class="line">   wikipedia                   Installs Wikipedia package</span><br><span class="line">   office-extension            Installs the LibreOffice/OpenOffice extension package</span><br><span class="line"></span><br><span class="line">Commands:</span><br><span class="line">   GUI                         Runs GUI version of LanguageTool</span><br><span class="line">   commandline                 Runs command line version of LanguageTool</span><br><span class="line">   server                      Runs server version of LanguageTool</span><br></pre></td></tr></table></figure>
+<h3 id="Build-from-source"><a href="#Build-from-source" class="headerlink" title="Build from source"></a>Build from source</h3><p>Before start: you will need to clone from GitHub and install Java 8 and Apache Maven.</p>
+<p>Warning: a complete clone requires downloading more than 360 MB and needs more than 500 MB on disk. This can be reduced if you only need the last few revisions of the master branch by creating a shallow clone:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth 5 https://github.com/languagetool-org/languagetool.git</span><br></pre></td></tr></table></figure>
+<p>A shallow clone downloads less than 60 MB and needs less than 200 MB on disk.</p>
+<p>In the root project folder, run:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn clean test</span><br></pre></td></tr></table></figure>
+<p>(sometimes you can skip Maven step for repeated builds)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./build.sh languagetool-standalone package -DskipTests</span><br></pre></td></tr></table></figure>
+<p>Test the result in languagetool-standalone/target/.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./build.sh languagetool-wikipedia package -DskipTests</span><br></pre></td></tr></table></figure>
+<p>Test the result in languagetool-wikipedia/target.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./build.sh languagetool-office-extension package -DskipTests</span><br></pre></td></tr></table></figure>
+<p>Test the result in languagetool-office-extension/target, rename the <em>.zip to </em>.oxt to install it in LibreOffice/OpenOffice.</p>
+<p>Maven 的默认内存设置一般都很低，所以可能需要设置环境变量 MAVEN_OPTS 为 -Xmx512m</p>
+<p>Now you can use the bleeding edge development copy of LanguageTool *.jar files, be aware that it might contain regressions.</p>
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><h3 id="Using-LanguageTool-via-HTTP-HTTPS"><a href="#Using-LanguageTool-via-HTTP-HTTPS" class="headerlink" title="Using LanguageTool via HTTP/HTTPS"></a>Using LanguageTool via HTTP/HTTPS</h3><p>LanguageTool 提供了 RESTful 服务，只要往他的 URL 发 POST 就可以使用 LanguageTool 的检测服务。</p>
+<p>Remote Service Address:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://languagetool.org/api/v2/check</span><br></pre></td></tr></table></figure>
+<p>Python Code:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(essay)</span>:</span></span><br><span class="line">    url = <span class="string">"https://languagetool.org/api/v2/check"</span></span><br><span class="line">    payload = &#123;</span><br><span class="line">        <span class="string">"text"</span>: essay,</span><br><span class="line">        <span class="string">"language"</span>: <span class="string">"en"</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">'Content-Type'</span>: <span class="string">"application/x-www-form-urlencoded"</span>,</span><br><span class="line">        <span class="string">'Cache-Control'</span>: <span class="string">"no-cache"</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    result = requests.request(<span class="string">"POST"</span>, url, data=payload, headers=headers).text</span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<p>Remote API 服务是受限制的，每分钟发送的次数和文本大小都受限，目前我们是起了一个本地的 LanguageTool service，来使用他的全部功能。</p>
+<h4 id="Start-Local-LanguageTool-HTTP-Server"><a href="#Start-Local-LanguageTool-HTTP-Server" class="headerlink" title="Start Local LanguageTool HTTP Server"></a>Start Local LanguageTool HTTP Server</h4><p>为了启动 LanguageTool 的 HTTPServer，试了一下直接运行 build 好的 jar 包，发现不行，解决方法是指定主类运行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd path-to-languagetool/languagetool-standalone/target/LanguageTool-4.2-SNAPSHOT/LanguageTool-4.2-SNAPSHOT</span><br><span class="line">java -cp languagetool-server.jar org.languagetool.server.HTTPServer</span><br></pre></td></tr></table></figure>
+<h4 id="修改-IP-Address-并开放公共访问"><a href="#修改-IP-Address-并开放公共访问" class="headerlink" title="修改 IP Address 并开放公共访问"></a>修改 IP Address 并开放公共访问</h4><p>直接修改 <code>languagetool/languagetool-server/src/main/java/org/languagetool/server/HTTPServerConfig.java</code> 中的 DEFAULT_HOST = ‘10.7.13.73’，同时修改 publicAccess = true 开放公共访问，然后重新编译。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mvn clean</span><br><span class="line">./build.sh languagetool-standalone package -DskipTests</span><br><span class="line">cd path-to-languagetool/languagetool-standalone/target/LanguageTool-4.2-SNAPSHOT/LanguageTool-4.2-SNAPSHOT</span><br><span class="line">java -cp languagetool-server.jar org.languagetool.server.HTTPServer</span><br></pre></td></tr></table></figure>
+<h3 id="Using-LanguageTool-from-a-Java-application"><a href="#Using-LanguageTool-from-a-Java-application" class="headerlink" title="Using LanguageTool from a Java application"></a>Using LanguageTool from a Java application</h3><p>LanguageTool 需要 Java 8 或者以后的版本。</p>
+<p>获取 LanguageTool 可以通过在官网下载 *.zip 安装包或者在 Maven pom.xml 中添加依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.languagetool<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>language-en<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这会下载用于检测英语的相关依赖项。如需下载别的语言的 LanguageTool，修改 artifactId.</p>
+<p>如果在 Java 代码中调用 LanguageTool?</p>
+<p>只需要创建一个 JLanguageTool 对象并用她来检测文本即可。了解更多，请看 <a href="http://languagetool.org/development/api/" target="_blank" rel="noopener">API文档</a>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">JLanguageTool langTool = <span class="keyword">new</span> JLanguageTool(<span class="keyword">new</span> BritishEnglish());</span><br><span class="line"><span class="comment">// comment in to use statistical ngram data:</span></span><br><span class="line"><span class="comment">// langTool.activateLanguageModelRules(new File("/data/google-ngram-data"));</span></span><br><span class="line">List&lt;RuleMatch&gt; matches = langTool.check(<span class="string">"A sentence with a error in the Hitchhiker's Guide tot he Galaxy"</span>);</span><br><span class="line"><span class="keyword">for</span> (RuleMatch match : matches) &#123;</span><br><span class="line">  System.out.println(<span class="string">"Potential error at characters "</span> +</span><br><span class="line">      match.getFromPos() + <span class="string">"-"</span> + match.getToPos() + <span class="string">": "</span> +</span><br><span class="line">      match.getMessage());</span><br><span class="line">  System.out.println(<span class="string">"Suggested correction(s): "</span> +</span><br><span class="line">      match.getSuggestedReplacements());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Embedding-LanguageTool-on-a-Web-Page"><a href="#Embedding-LanguageTool-on-a-Web-Page" class="headerlink" title="Embedding LanguageTool on a Web Page"></a>Embedding LanguageTool on a Web Page</h3><p>想把 LanguageTool 集成到网页中，这也很 esay! 就像 LanguageTool 官网或者我们的 Essay Rater 中一样。</p>
+<p>只需要2步，即可将 LanguageTool 集成到 Web 页面中：</p>
+<ol>
+<li>在页面 (*.html) 的 \<head\> 部分加入一些 Javascript 代码来调用 LT 的远程 HTTPS 服务</head\></li>
+<li>添加 HTML 代码来创建一个 textarea</li>
+</ol>
+<p>Javascript includes and initialization code:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span></span><br><span class="line">    src=<span class="string">"https://www.languagetool.org/js/jquery-1.7.0.min.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">&lt;script type=<span class="string">"text/javascript"</span></span><br><span class="line">    src=<span class="string">"https://www.languagetool.org/online-check/tiny_mce/tiny_mce.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">&lt;script type=<span class="string">"text/javascript"</span></span><br><span class="line">    src=<span class="string">"https://www.languagetool.org/online-check/tiny_mce/plugins/atd-tinymce/editor_plugin2.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">&lt;script language=<span class="string">"javascript"</span> type=<span class="string">"text/javascript"</span>&gt; </span><br><span class="line">  tinyMCE.init(&#123;</span><br><span class="line">     mode : <span class="string">"textareas"</span>,</span><br><span class="line">     plugins : <span class="string">"AtD,paste"</span>,</span><br><span class="line">     paste_text_sticky : <span class="literal">true</span>,</span><br><span class="line">     setup : <span class="function"><span class="keyword">function</span>(<span class="params">ed</span>) </span>&#123;</span><br><span class="line">         ed.onInit.add(<span class="function"><span class="keyword">function</span>(<span class="params">ed</span>) </span>&#123;</span><br><span class="line">             ed.pasteAsPlainText = <span class="literal">true</span>;</span><br><span class="line">         &#125;);</span><br><span class="line">     &#125;, </span><br><span class="line">     <span class="comment">/* translations: */</span></span><br><span class="line">     languagetool_i18n_no_errors : &#123;</span><br><span class="line">         <span class="comment">// "No errors were found.":</span></span><br><span class="line">         <span class="string">"de-DE"</span>: <span class="string">"Keine Fehler gefunden."</span></span><br><span class="line">     &#125;,</span><br><span class="line">     languagetool_i18n_explain : &#123;</span><br><span class="line">         <span class="comment">// "Explain..." - shown if there is an URL with a detailed description:</span></span><br><span class="line">         <span class="string">"de-DE"</span>: <span class="string">"Mehr Informationen..."</span></span><br><span class="line">     &#125;,</span><br><span class="line">     languagetool_i18n_ignore_once : &#123;</span><br><span class="line">         <span class="comment">// "Ignore this error":</span></span><br><span class="line">         <span class="string">"de-DE"</span>: <span class="string">"Hier ignorieren"</span></span><br><span class="line">     &#125;,</span><br><span class="line">     languagetool_i18n_ignore_all : &#123;</span><br><span class="line">         <span class="comment">// "Ignore this kind of error":</span></span><br><span class="line">         <span class="string">"de-DE"</span>: <span class="string">"Fehler dieses Typs ignorieren"</span></span><br><span class="line">     &#125;,</span><br><span class="line">     languagetool_i18n_rule_implementation : &#123;</span><br><span class="line">         <span class="comment">// "Rule implementation":</span></span><br><span class="line">         <span class="string">"de-DE"</span>: <span class="string">"Implementierung der Regel"</span></span><br><span class="line">     &#125;,</span><br><span class="line">     languagetool_i18n_current_lang :</span><br><span class="line">         <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="built_in">document</span>.checkform.lang.value; &#125;,</span><br><span class="line">     <span class="comment">/* The URL of your LanguageTool server.</span></span><br><span class="line"><span class="comment">        If you use your own server here and it's not running on the same domain</span></span><br><span class="line"><span class="comment">        as the text form, make sure the server gets started with '--allow-origin ...'</span></span><br><span class="line"><span class="comment">        and use 'https://your-server/v2/check' as URL: */</span></span><br><span class="line">     languagetool_rpc_url                 : <span class="string">"https://languagetool.org/api/v2/check"</span>,</span><br><span class="line">     <span class="comment">/* edit this file to customize how LanguageTool shows errors: */</span></span><br><span class="line">     languagetool_css_url :</span><br><span class="line">         <span class="string">"https://www.languagetool.org/online-check/"</span> +</span><br><span class="line">         <span class="string">"tiny_mce/plugins/atd-tinymce/css/content.css"</span>,</span><br><span class="line">     <span class="comment">/* this stuff is a matter of preference: */</span></span><br><span class="line">     theme                              : <span class="string">"advanced"</span>,</span><br><span class="line">     theme_advanced_buttons1            : <span class="string">""</span>,</span><br><span class="line">     theme_advanced_buttons2            : <span class="string">""</span>,</span><br><span class="line">     theme_advanced_buttons3            : <span class="string">""</span>,</span><br><span class="line">     theme_advanced_toolbar_location    : <span class="string">"none"</span>,</span><br><span class="line">     theme_advanced_toolbar_align       : <span class="string">"left"</span>,</span><br><span class="line">     theme_advanced_statusbar_location  : <span class="string">"bottom"</span>,</span><br><span class="line">     theme_advanced_path                : <span class="literal">false</span>,</span><br><span class="line">     theme_advanced_resizing            : <span class="literal">true</span>,</span><br><span class="line">     theme_advanced_resizing_use_cookie : <span class="literal">false</span>,</span><br><span class="line">     gecko_spellcheck                   : <span class="literal">false</span></span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">doit</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">     <span class="keyword">var</span> langCode = <span class="built_in">document</span>.checkform.lang.value;</span><br><span class="line">     tinyMCE.activeEditor.execCommand(<span class="string">"mceWritingImprovementTool"</span>, langCode);</span><br><span class="line">  &#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果你使用的是本地 LT 服务，并且它和集成 LT 的网页不在同一个域名，会有跨域访问受阻的问题。确保用 —allow-origin ‘*’ 起你的本地服务。</p>
+<p>HTML code for the textarea:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">name</span>=<span class="string">"checkform"</span> <span class="attr">action</span>=<span class="string">"http://community.languagetool.org"</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">"checktextpara"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">textarea</span> <span class="attr">id</span>=<span class="string">"checktext"</span> <span class="attr">name</span>=<span class="string">"text"</span> <span class="attr">style</span>=<span class="string">"width: 100%"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">rows</span>=<span class="string">"6"</span>&gt;</span>Paste your own text here... or check check this text.<span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">select</span> <span class="attr">name</span>=<span class="string">"lang"</span> <span class="attr">id</span>=<span class="string">"lang"</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"en-US"</span>&gt;</span>English<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"de-DE"</span>&gt;</span>German<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"it"</span>&gt;</span>Italian<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">name</span>=<span class="string">"_action_checkText"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">value</span>=<span class="string">"Check Text"</span> <span class="attr">onClick</span>=<span class="string">"doit();return false;"</span>&gt;</span> Powered by <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://languagetool.org"</span>&gt;</span>languagetool.org<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"feedbackErrorMessage"</span> <span class="attr">style</span>=<span class="string">"color: red;"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Examples</p>
+<ul>
+<li><a href="http://languagetool.org/" target="_blank" rel="noopener">languagetool.org</a></li>
+<li><a href="http://10.6.1.203:8080/check" target="_blank" rel="noopener">Essay Rater Check</a></li>
+</ul>
+<hr>
+<h1 id="Rules"><a href="#Rules" class="headerlink" title="Rules"></a>Rules</h1><h2 id="Browse-Rules"><a href="#Browse-Rules" class="headerlink" title="Browse Rules"></a>Browse Rules</h2><p>Rules Browser: <a href="https://community.languagetool.org/rule/list?lang=en" target="_blank" rel="noopener">https://community.languagetool.org/rule/list?lang=en</a></p>
+<p>截止 2018-08-13，LanguageTool v4.3 共有 2117 条规则，分为 18 个 category，13 类从 grammar.xml 中加载，5 类是内建规则。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Quantity</th>
+<th>是否在 grammar.xml 中</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Capitalization 大小写错误</td>
+<td>1</td>
+<td>不在</td>
+</tr>
+<tr>
+<td>Collocations 搭配错误</td>
+<td>224</td>
+<td>在</td>
+</tr>
+<tr>
+<td>Commonly Confused Words 常见易混词</td>
+<td>278</td>
+<td>在</td>
+</tr>
+<tr>
+<td>Creative Writing 创造性写作</td>
+<td>2</td>
+<td>不在</td>
+</tr>
+<tr>
+<td>Grammar 语法错误</td>
+<td>464</td>
+<td>在</td>
+</tr>
+<tr>
+<td>Miscellaneous 其他</td>
+<td>5</td>
+<td>不在</td>
+</tr>
+<tr>
+<td>Misused Terms in EU publications (Gardner) 术语滥用</td>
+<td>149</td>
+<td>在</td>
+</tr>
+<tr>
+<td>Nonstandard Phrases 不标准短语</td>
+<td>27</td>
+<td>在</td>
+</tr>
+<tr>
+<td>Plain English 通俗英语</td>
+<td>101</td>
+<td>在</td>
+</tr>
+<tr>
+<td>Possible Typo 错别字</td>
+<td>554</td>
+<td>在</td>
+</tr>
+<tr>
+<td>Punctuation 标点缺失</td>
+<td>3</td>
+<td>不在</td>
+</tr>
+<tr>
+<td>Punctuation Errors 标点错误</td>
+<td>53</td>
+<td>在</td>
+</tr>
+<tr>
+<td>Redundant Phrases 冗余短语</td>
+<td>164</td>
+<td>在</td>
+</tr>
+<tr>
+<td>Semantic 语义错误</td>
+<td>32</td>
+<td>在</td>
+</tr>
+<tr>
+<td>Style 风格问题</td>
+<td>34</td>
+<td>在</td>
+</tr>
+<tr>
+<td>Stylistic hints for creative writing</td>
+<td>1</td>
+<td>不在</td>
+</tr>
+<tr>
+<td>Typography 格式错误</td>
+<td>19</td>
+<td>在</td>
+</tr>
+<tr>
+<td>Wikipedia 维基百科</td>
+<td>6</td>
+<td>在</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>grammar.xml 中包含了13个种类：</p>
+<ul>
+<li>category id: TYPOS, name: Possible Typo, type: misspelling</li>
+<li>category id: GRAMMAR, name: Grammar, type: grammar</li>
+<li>category id: COLLOCATIONS, name: Collocations, type: grammar</li>
+<li>category id: PUNCTUATION, name: Punctuation Errors, type: typographical</li>
+<li>category id: CONFUSED_WORDS, name: Commonly Confused Words, type: misspelling</li>
+<li>category id: NONSTANDARD_PHRASES, name: Nonstandard Phrases, type: misspelling</li>
+<li>category id: REDUNDANCY, name: Redundant Phrases, type: style</li>
+<li>category id: STYLE, name: Style, type: style</li>
+<li>category id: SEMANTICS, name: Semantic, type: inconsistency</li>
+<li>category id: PLAIN_ENGLISH, name: Plain English, type: style</li>
+<li>category id: WIKIPEDIA, name: Wikipedia, type: None</li>
+<li>category id: TYPOGRAPHY, name: Typography, type: typographical</li>
+<li>category id: MISUSED_TERMS_EU_PUBLICATIONS, name: Misused terms in EU publications (Gardner), type: style</li>
+</ul>
+<h2 id="Edit-Rules"><a href="#Edit-Rules" class="headerlink" title="Edit Rules"></a>Edit Rules</h2><p>LanguageTool 目前的规则分为 18 类，其中 13 类是从 XML 规则文件中加载，由规则解析器去执行，通过修改规则文件可以新增或者删改规则；剩余的无法由 grammar.xml 中的 pattern 表示的规则是内建规则，写在 Java 源代码中，修改它们需要改源代码。</p>
+<p>LanguageTool 提供了一个网页规则编辑器，可以自动生成 XML 形式的规则，非常方便。</p>
+<h3 id="增加新的-XML-规则"><a href="#增加新的-XML-规则" class="headerlink" title="增加新的 XML 规则"></a>增加新的 XML 规则</h3><p>绝大多数规则都包含在 rules/xx/grammar.xml 中，xx 是语言代码比如 en 或者 de。</p>
+<p>在源代码中，这个规则文件可以在 <code>languagetool-language-modules/xx/src/main/resources/org/languagetool/</code> 目录下找到；独立的 GUI 程序中在 org/languagetool/ 目录下包含这个规则文件。</p>
+<p><em>A rule is a pattern.</em></p>
+<p>当 pattern 匹配到了文本，LT 会显示错误信息。pattern 可以处理 words 或者 pos tag。</p>
+<p>举些规则中 token 元素的栗子：</p>
+<ul>
+<li>\<token\>think\&lt;/token></token\></li>
+</ul>
+<p>​    匹配单词 think</p>
+<ul>
+<li>\<token\>think\&lt;/token> \<token\>about\&lt;/token></token\></token\></li>
+</ul>
+<p>​    匹配短语 think about - 因为文本会被分词, 你需要把每个单词分别表示成一个 token.</p>
+<p>​    这样是不行滴: \<token\>think about\&lt;/token></token\></p>
+<ul>
+<li>\<token regexp="yes" \="">think|say\&lt;/token></token></li>
+</ul>
+<p>​    匹配正则表达式 think|say, i.e. 单词 think 或单词 say. 想了解更多关于正则表达式？请看这个<a href="http://www.regular-expressions.info/tutorialcnt.html" target="_blank" rel="noopener">教程</a>。</p>
+<ul>
+<li>\<token postag="VB"></token></li>
+</ul>
+<p>​    匹配一个基本形式的动词 (像 we have to walk 中的 walk). </p>
+<p>​    查看 <a href="https://github.com/languagetool-org/languagetool/blob/master/languagetool-language-modules/en/src/main/resources/org/languagetool/resource/en/tagset.txt" target="_blank" rel="noopener">resource/en/tagset.txt</a> 来获取所有的英语词性标记。</p>
+<ul>
+<li>\<token postag="V.*" postag_regexp="yes"></token></li>
+</ul>
+<p>​    匹配一个词性标记由 V 开头 (英语中，都是动词) 的单词。</p>
+<p>​    注意，对于那些含有特殊字符的词性标记，比如 PRP$，需要将 $ 转义，因为它在正则中有特殊含义。</p>
+<ul>
+<li>\<token>cause\</token> \<token regexp="yes" negate="yes">and|to\</token></li>
+</ul>
+<p>​    匹配单词 cause 后面跟的不是 and 或 to 的情况。</p>
+<ul>
+<li>\<token postag="SENT_START"> \<token>foobar\</token></token></li>
+</ul>
+<p>​    匹配只出现在句子开头的单词 foobar。</p>
+<p>​    句子结尾的 pos tag 是 SENT_END.</p>
+<p>一个 pattern 中的 token 匹配默认是大小写不敏感的。可以通过设置 case_sensitive=“yes” 改变。</p>
+<p>另外，单个 token 大小写敏感的匹配可以通过正则中的 (?-i) 来打开 (ex: \<token regexp="“yes”">(?-i)Bill\<token> 会匹配 Bill 而不是 bill)。</token></token></p>
+<p>element token 只是规则中的一个元素，现在我们再来看看规则中还有哪些元素吧。</p>
+<h3 id="一条规则的基本元素"><a href="#一条规则的基本元素" class="headerlink" title="一条规则的基本元素"></a>一条规则的基本元素</h3><p>简单介绍一下基本的元素 (elements) 和他们的属性 (attributes)：</p>
+<ul>
+<li>element rule, attribute id: 用来定位这条规则的内部标识符. 必须是独一无二的 (unique).</li>
+<li>element rule, attribute name: 描述这条规则的一段短文本.</li>
+<li>element antipattern (optional, 可以出现多次): 规则的例外.</li>
+<li>element pattern, sub element marker: 原始文本的哪个部分应该被标记成一个错误。如果所有 token 都是错误的一部分，可以忽略这个元素。</li>
+<li>element token, attribute regexp: 加入设为 yes, 规则解析器会把给定的 token 当做正则表达式</li>
+<li>element message: 当规则匹配到时显示给用户的文本。使用 sub-element suggestion 来给出给出一个可能的修正建议.</li>
+<li>element url (optional): 解释规则更多细节的一个 URL. 假如包含字符 &amp;, 需转义成 &amp;.</li>
+<li>element short (optional): 规则的一个简短的描述, 在 GUI 和 Libre/OpenOffice 的右键菜单中显示.</li>
+<li>element example: 至少有2个例子，一个是正确的句子，一个是错误的句子。带有 attribute type=”incorrect” 的句子应该被该规则匹配。 错误的位置需由 sub-element marker 标记.</li>
+</ul>
+<p>看两个完整的栗子：</p>
+<p>这是一条奇怪的检测拼写错误的规则</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">rule</span> <span class="attr">id</span>=<span class="string">"EXAMPLE_RULE"</span> <span class="attr">name</span>=<span class="string">"My example rule"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">pattern</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">token</span>&gt;</span>foo<span class="tag">&lt;/<span class="name">token</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">token</span>&gt;</span>bar<span class="tag">&lt;/<span class="name">token</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">message</span>&gt;</span>Did you mean <span class="tag">&lt;<span class="name">suggestion</span>&gt;</span>bicycle<span class="tag">&lt;/<span class="name">suggestion</span>&gt;</span>?<span class="tag">&lt;/<span class="name">message</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">example</span> <span class="attr">type</span>=<span class="string">"incorrect"</span>&gt;</span>My <span class="tag">&lt;<span class="name">marker</span>&gt;</span>foo bar<span class="tag">&lt;/<span class="name">marker</span>&gt;</span> is broken.<span class="tag">&lt;/<span class="name">example</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">example</span> <span class="attr">type</span>=<span class="string">"correct"</span>&gt;</span>My bicycle is broken.<span class="tag">&lt;/<span class="name">example</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">rule</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这是一条完整的规则，来检测 bed English, bat attitude, etc.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">rule</span> <span class="attr">id</span>=<span class="string">"BED_ENGLISH"</span> <span class="attr">name</span>=<span class="string">"Possible typo 'bed/bat(bad) English/...'"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">pattern</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">marker</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">token</span> <span class="attr">regexp</span>=<span class="string">"yes"</span>&gt;</span>bed|bat<span class="tag">&lt;/<span class="name">token</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">marker</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">token</span> <span class="attr">regexp</span>=<span class="string">"yes"</span>&gt;</span>English|attitude<span class="tag">&lt;/<span class="name">token</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">message</span>&gt;</span>Did you mean <span class="tag">&lt;<span class="name">suggestion</span>&gt;</span>bad<span class="tag">&lt;/<span class="name">suggestion</span>&gt;</span>?<span class="tag">&lt;/<span class="name">message</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://some-server.org/the-bed-bad-error<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">example</span> <span class="attr">type</span>=<span class="string">"correct"</span>&gt;</span>Sorry for my <span class="tag">&lt;<span class="name">marker</span>&gt;</span>bad<span class="tag">&lt;/<span class="name">marker</span>&gt;</span> English.<span class="tag">&lt;/<span class="name">example</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">example</span> <span class="attr">correction</span>=<span class="string">"bad"</span> <span class="attr">type</span>=<span class="string">"incorrect"</span>&gt;</span>Sorry for my <span class="tag">&lt;<span class="name">marker</span>&gt;</span>bed<span class="tag">&lt;/<span class="name">marker</span>&gt;</span> English.<span class="tag">&lt;/<span class="name">example</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">rule</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>打开 <code>LanguageTool-xx/org/languagetool/rules/en/grammar.xml</code>，将这些规则 XML 添加到相应的 \<category …\=""> 标签下，然后保存文件。重新编译工程，现在 LT 应该可以检测出 My foo bar is broken 和 bed English 中的错误了。</category></p>
+<p>如果不想直接编辑 XML 文件，那么可以使用 <a href="https://community.languagetool.org/ruleEditor2/index?lang=en" target="_blank" rel="noopener">在线规则编辑器</a> 来自动生成 XML 规则。</p>
+<p>LanguageTool 的规则解析器十分强大，支持多种 XML 元素和属性，支持多种正则表达式。当然，你的规则中如果出现了 LanguageTool 中没有预定义的 XML 元素，她也是不认识的。</p>
+<p>想了解更多，请看这个<a href="http://wiki.languagetool.org/development-overview" target="_blank" rel="noopener">文档</a>。</p>
+<ul>
+<li>Regular Expressions</li>
+<li>Inflection</li>
+<li>Grouping rules</li>
+<li>Whitespace</li>
+<li>Categories</li>
+<li>Turning rules off by default</li>
+<li>Antipatterns</li>
+<li>Min/Max</li>
+<li>\<or\>, \<and\></and\></or\></li>
+<li>Skip</li>
+<li>Variables</li>
+<li>RuleFilter</li>
+</ul>
+<h3 id="增加新的-Java-规则"><a href="#增加新的-Java-规则" class="headerlink" title="增加新的 Java 规则"></a>增加新的 Java 规则</h3><p>不在 grammar.xml 中的规则都是由 Java 代码编写 (一共才12条)。</p>
+<p>如果你想用 Java 代码编写新的规则，拓展 LanguageTool 的 Rule 类并实现 <a href="http://languagetool.org/development/api/org/languagetool/rules/Rule.html#match-org.languagetool.AnalyzedSentence-" target="_blank" rel="noopener">match(AnalyzedSentence)</a> 方法。如果你的规则不是在句子层面工作的，实现 <a href="http://languagetool.org/development/api/org/languagetool/rules/TextLevelRule.html" target="_blank" rel="noopener">TextLevelRule</a> .</p>
+<p>查看 <a href="https://github.com/languagetool-org/languagetool/blob/master/languagetool-core/src/main/java/org/languagetool/rules/DemoRule.java" target="_blank" rel="noopener">DemoRule.java</a> 中的小例子来了解如何开发新的规则。需要将你的 rule 类添加进 <a href="https://languagetool.org/development/api/org/languagetool/Language.html#getRelevantRules-java.util.ResourceBundle-" target="_blank" rel="noopener">getRelevantRules()</a> 方法来激活它。假如你使用的是 LanguageTool API，可以调用 <a href="https://languagetool.org/development/api/org/languagetool/JLanguageTool.html#addRule-org.languagetool.rules.Rule-" target="_blank" rel="noopener">JLanguageTool.addRule()</a> .</p>
+<p>汉化</p>
+<p>编译完工程之后，程序会自动生成一个 grammar.xml，将汉化过的 (汉化主要指的是汉化规则中的 message 字段) 规则文件 grammar.xml 直接覆盖原来的 grammar.xml 即可汉化，无须重新编译。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd path-to-languagetool/languagetool-standalone/target/LanguageTool-4.2-SNAPSHOT/LanguageTool-4.2-SNAPSHOT/org/languagetool/rules/en</span><br><span class="line">vi grammar.xml</span><br></pre></td></tr></table></figure>
+<p>英文提示信息的资源文件在 <code>/languagetool/languagetool-core/src/main/resources/org/languagetool/MessagesBundle.properties</code></p>
+<p>直接修改 MessagesBundle.properties 为中文的话会导致乱码，需要将中文转成 Unicode。</p>
+<h3 id="测试规则"><a href="#测试规则" class="headerlink" title="测试规则"></a>测试规则</h3><p>在我们修改了规则文件 grammar.xml 之后，LanguageTool 应用 (languagetool.jar) 需要重启才会生效。</p>
+<p>为了测试我们修改的规则是否符合预期，每次重启太麻烦了，可以使用 LanguageTool 内置的测试用例功能。</p>
+<p>不同平台的测试方法 (语言码为 en)</p>
+<ul>
+<li>Linux: 调用 sh testrules.sh en</li>
+<li>Windows: 调用 testrules.bat en</li>
+<li>Java: mvn clean test</li>
+</ul>
+<p>这种测试方法会用规则的 examples 句子来测试你的所有规则：不正确的句子会被检测出来，正确的句子不会报错。如果不是这样，你会得到一个提示信息，告诉你规则或者例子不太对。</p>
+<p>用测试脚本来测试比重启系统快太多，比较推荐。</p>
+<h3 id="Online-Rule-Editor"><a href="#Online-Rule-Editor" class="headerlink" title="Online Rule Editor"></a>Online Rule Editor</h3><p>LanguageTool Rule Editor: <a href="https://community.languagetool.org/ruleEditor2/index?lang=en" target="_blank" rel="noopener">https://community.languagetool.org/ruleEditor2/index?lang=en</a></p>
+<p>介绍视频：<a href="https://www.youtube.com/watch?v=KnQCHo14gOU" target="_blank" rel="noopener">https://www.youtube.com/watch?v=KnQCHo14gOU</a></p>
+<p>Text Analyzer: <a href="https://community.languagetool.org/analysis/index?lang=en" target="_blank" rel="noopener">https://community.languagetool.org/analysis/index?lang=en</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>资磁一下？</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://raw.githubusercontent.com/yanshengjia/photo/master/wechatpay.jpg" alt="Shengjia Yan WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://raw.githubusercontent.com/yanshengjia/photo/master/alipay.jpg" alt="Shengjia Yan Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LanguageTool/" rel="tag"># LanguageTool</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/13/交叉验证的原理及实现/" rel="next" title="交叉验证的原理及实现">
+                <i class="fa fa-chevron-left"></i> 交叉验证的原理及实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-589f4a3205db1792" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://raw.githubusercontent.com/yanshengjia/photo/master/profile0.png"
+               alt="Shengjia Yan" />
+          <p class="site-author-name" itemprop="name">Shengjia Yan</p>
+           
+              <p class="site-description motion-element" itemprop="description">工程师 健身者 暴雪粉 | 人生不设限 | CS@SEU</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yanshengjia" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/yanshengjia" target="_blank" title="Linkedin">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  Linkedin
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yanshengjia" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-fw fa-book"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/sjyan1995" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yanshengjia/" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.youtube.com/channel/UCHAyaP2nrMgOfIHtjKeyJyA" target="_blank" title="YouTube">
+                  
+                    <i class="fa fa-fw fa-youtube-play"></i>
+                  
+                  YouTube
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yanshengjia.com/leetcode" title="Conquer LeetCode" target="_blank">Conquer LeetCode</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yanshengjia.com/lintcode" title="Conquer LintCode" target="_blank">Conquer LintCode</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://wdxtub.com" title="小土刀" target="_blank">小土刀</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.shuang0420.com/" title="徐阿衡" target="_blank">徐阿衡</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.52nlp.cn/" title="52nlp" target="_blank">52nlp</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://nlp.stanford.edu/" title="Stanford NLP" target="_blank">Stanford NLP</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Usage"><span class="nav-number">2.</span> <span class="nav-text">Usage</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Build"><span class="nav-number">2.1.</span> <span class="nav-text">Build</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Scripted-installation-and-building"><span class="nav-number">2.1.1.</span> <span class="nav-text">Scripted installation and building</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-from-source"><span class="nav-number">2.1.2.</span> <span class="nav-text">Build from source</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API"><span class="nav-number">2.2.</span> <span class="nav-text">API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-LanguageTool-via-HTTP-HTTPS"><span class="nav-number">2.2.1.</span> <span class="nav-text">Using LanguageTool via HTTP/HTTPS</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Start-Local-LanguageTool-HTTP-Server"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">Start Local LanguageTool HTTP Server</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改-IP-Address-并开放公共访问"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">修改 IP Address 并开放公共访问</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-LanguageTool-from-a-Java-application"><span class="nav-number">2.2.2.</span> <span class="nav-text">Using LanguageTool from a Java application</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Embedding-LanguageTool-on-a-Web-Page"><span class="nav-number">2.2.3.</span> <span class="nav-text">Embedding LanguageTool on a Web Page</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Rules"><span class="nav-number">3.</span> <span class="nav-text">Rules</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Browse-Rules"><span class="nav-number">3.1.</span> <span class="nav-text">Browse Rules</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Edit-Rules"><span class="nav-number">3.2.</span> <span class="nav-text">Edit Rules</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#增加新的-XML-规则"><span class="nav-number">3.2.1.</span> <span class="nav-text">增加新的 XML 规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一条规则的基本元素"><span class="nav-number">3.2.2.</span> <span class="nav-text">一条规则的基本元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加新的-Java-规则"><span class="nav-number">3.2.3.</span> <span class="nav-text">增加新的 Java 规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试规则"><span class="nav-number">3.2.4.</span> <span class="nav-text">测试规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Online-Rule-Editor"><span class="nav-number">3.2.5.</span> <span class="nav-text">Online Rule Editor</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shengjia Yan</span>
+</div>
+
+<!-- <div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div> -->
+
+<div class="busuanzi-count">
+  <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span class="site-uv">
+    <i class="fa fa-user" aria-hidden="true"></i>  <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+  </span>
+  
+  <span class="site-pv">
+    <i class="fa fa-eye" aria-hidden="true"></i>  <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+  </span>
+</div>
+
+
+<div class="quote">
+  life.remove(limits)
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://yanshengjia.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yanshengjia.com/2018/08/14/Introduction-to-LanguageTool/';
+          this.page.identifier = '2018/08/14/Introduction-to-LanguageTool/';
+          this.page.title = 'Introduction to LanguageTool';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://yanshengjia.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+</body>
+</html>
