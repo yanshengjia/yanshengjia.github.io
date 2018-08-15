@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="WildPointer">
 <meta property="og:description" content="LanguageTool 是一款开源的语言校正软件，用于文本的风格检测和语法纠错。她是一个规则系统，拥有超过2000条规则和一个功能强大的规则解析器。本文介绍了如何使用和拓展 LanguageTool。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-08-15T00:47:29.930Z">
+<meta property="og:updated_time" content="2018-08-15T01:02:25.670Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Introduction to LanguageTool">
 <meta name="twitter:description" content="LanguageTool 是一款开源的语言校正软件，用于文本的风格检测和语法纠错。她是一个规则系统，拥有超过2000条规则和一个功能强大的规则解析器。本文介绍了如何使用和拓展 LanguageTool。">
@@ -697,7 +697,7 @@
 <li>Turning rules off by default</li>
 <li>Antipatterns</li>
 <li>Min/Max</li>
-<li>\<or\>, \<and\></and\></or\></li>
+<li>or, and</li>
 <li>Skip</li>
 <li>Variables</li>
 <li>RuleFilter</li>
@@ -708,7 +708,7 @@
 <p>汉化</p>
 <p>编译完工程之后，程序会自动生成一个 grammar.xml，将汉化过的 (汉化主要指的是汉化规则中的 message 字段) 规则文件 grammar.xml 直接覆盖原来的 grammar.xml 即可汉化，无须重新编译。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd path-to-languagetool/languagetool-standalone/target/LanguageTool-4.2-SNAPSHOT/LanguageTool-4.2-SNAPSHOT/org/languagetool/rules/en</span><br><span class="line">vi grammar.xml</span><br></pre></td></tr></table></figure>
-<p>英文提示信息的资源文件在 /languagetool/languagetool-core/src/main/resources/org/languagetool/MessagesBundle.properties 。</p>
+<p>英文提示信息的资源文件的路径为： /languagetool/languagetool-core/src/main/resources/org/languagetool/MessagesBundle.properties</p>
 <p>直接修改 MessagesBundle.properties 为中文的话会导致乱码，需要将中文转成 Unicode。</p>
 <h3 id="测试规则"><a href="#测试规则" class="headerlink" title="测试规则"></a>测试规则</h3><p>在我们修改了规则文件 grammar.xml 之后，LanguageTool 应用 (languagetool.jar) 需要重启才会生效。</p>
 <p>为了测试我们修改的规则是否符合预期，每次重启太麻烦了，可以使用 LanguageTool 内置的测试用例功能。</p>
