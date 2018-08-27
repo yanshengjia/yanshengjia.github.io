@@ -110,7 +110,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/beam_search.png">
-<meta property="og:updated_time" content="2018-08-27T08:38:41.212Z">
+<meta property="og:updated_time" content="2018-08-27T08:41:58.683Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Seq2Seq (Encoder-Decoder) and Attention Mechanism">
 <meta name="twitter:description" content="在很多 NLP 应用中，输入和输出都可以是不定长序列。当输入输出都是不定长序列时，我们可以使用编码器-解码器 (encoder-decoder) 来对序列数据进行建模。">
@@ -546,8 +546,8 @@ y_{t'} = \text{argmax}_{y_{t'} \in \mathcal{Y}} \mathbb{P}(y_{t'} \mid y_1, \ldo
 <h1 id="注意力机制-Attention-Mechanism"><a href="#注意力机制-Attention-Mechanism" class="headerlink" title="注意力机制 Attention Mechanism"></a>注意力机制 Attention Mechanism</h1><p>在”编码器—解码器”一节里的解码器设计中，输出序列的各个时间步使用了相同的上下文变量。如果解码器的不同时间步可以使用不同的上下文变量呢？这样做有什么好处？</p>
 <h2 id="动机-Motivation"><a href="#动机-Motivation" class="headerlink" title="动机 Motivation"></a>动机 Motivation</h2><p>以英语-法语翻译为例，给定一对英语输入序列 “They”、“are”、“watching”、“.” 和法语输出序列 “Ils”、“regardent”、“.”。解码器可以在输出序列的时间步1使用更集中编码了 “They”、“are” 信息的上下文变量来生成 “Ils”，在时间步2使用更集中编码了 “watching” 信息的上下文变量来生成“regardent”，在时间步3使用更集中编码了 “.” 信息的上下文变量来生成 “.”。这看上去就像是在解码器的每一时间步对输入序列中不同时间步编码的信息分配不同的注意力。这也是注意力机制的由来。它最早由 Bahanau 等提出。</p>
 <h2 id="设计-Design"><a href="#设计-Design" class="headerlink" title="设计 Design"></a>设计 Design</h2><p>本节沿用”编码器—解码器”一节里的数学符号。</p>
-<p>我们对”编码器—解码器”一节里的解码器稍作修改。在时间步 $t’$，设解码器的上下文变量为 <script type="math/tex">\boldsymbol{c}_{t'}</script>，输出 $y<em>{t’}$ 的特征向量为 $$\boldsymbol{y}</em>{t’}$$。</p>
-<p>和输入的特征向量一样，这里每个输出的特征向量也是模型参数。解码器在时间步 $t’​$ 的隐藏状态</p>
+<p>我们对”编码器—解码器”一节里的解码器稍作修改。在时间步 $t’$，设解码器的上下文变量为 <script type="math/tex">\boldsymbol{c}_{t'}</script>，输出 $y<em>{t’}$ 的特征向量为 $$ \boldsymbol{y}</em>{t’} $$。</p>
+<p>和输入的特征向量一样，这里每个输出的特征向量也是模型参数。解码器在时间步 $t’$ 的隐藏状态</p>
 <script type="math/tex; mode=display">
 \boldsymbol{s}_{t'} = g(\boldsymbol{y}_{t'-1}, \boldsymbol{c}_{t'}, \boldsymbol{s}_{t'-1})</script><p>令编码器在时间步$t$的隐藏状态为 $\boldsymbol{h}_t$，且总时间步数为 $T$。解码器在时间步 $t’$ 的背景变量为</p>
 <script type="math/tex; mode=display">
