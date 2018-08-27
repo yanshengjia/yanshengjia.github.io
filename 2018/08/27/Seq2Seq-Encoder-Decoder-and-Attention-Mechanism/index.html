@@ -110,7 +110,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/beam_search.png">
-<meta property="og:updated_time" content="2018-08-27T03:53:36.481Z">
+<meta property="og:updated_time" content="2018-08-27T06:43:52.317Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Seq2Seq (Encoder-Decoder) and Attention Mechanism">
 <meta name="twitter:description" content="在很多 NLP 应用中，输入和输出都可以是不定长序列。当输入输出都是不定长序列时，我们可以使用编码器-解码器 (encoder-decoder) 来对序列数据进行建模。">
@@ -493,28 +493,28 @@
 </ul>
 <p>我们注意到在每一个案例中，都没有对序列长度进行预先特定约束，因为递归变换 (绿色部分) 是固定的，而且我们可以根据需要多次使用。</p>
 <p>在近些年，人们利用 RNN 不可思议地解决了各种各样的问题：语音识别，语言模型，翻译，图像描述，等等。关于 RNN 在这些方面取得的惊人成功，我们可以看 Andrej Karpathy 的博文：<a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank" rel="noopener">The Unreasonable Effectiveness of Recurrent Neural Networks</a>.</p>
-<p>RNN 之所以能够取得这样的成功，主要是因为 LSTM / GRU 的使用。他们都是带门控 (gate) 的 RNN 单元，用于解决长期依赖 (long-term dependencies) 的问题，对于很多任务，比普通的 RNN 单元效果要好很多！基本上现在所使用的循环神经网络用的都是 LSTM / GRU。</p>
+<p>RNN 之所以能够取得这样的成功，主要是因为 LSTM / GRU 的使用。他们都是带门控 (gate) 的 RNN 单元，用于解决长期依赖 (long-term dependencies) 的问题，对于很多任务，比普通的 RNN 单元效果要好很多！基本上现在所使用的循环神经网络用的都是 LSTM / GRU 单元。</p>
 <hr>
 <h1 id="编码器-解码器-Encoder-Decoder"><a href="#编码器-解码器-Encoder-Decoder" class="headerlink" title="编码器-解码器 Encoder-Decoder"></a>编码器-解码器 Encoder-Decoder</h1><p>在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如</p>
 <blockquote>
 <p>英语输入：“They”、“are”、“watching”、“.”</p>
 <p>法语输出：“Ils”、“regardent”、“.”</p>
 </blockquote>
-<p>当输入输出都是不定长序列时，我们可以使用编码器—解码器（encoder-decoder）[1] 或者seq2seq模型 [2]。这两个模型本质上都用到了两个循环神经网络，分别叫做编码器和解码器。编码器对应输入序列，解码器对应输出序列。</p>
-<p>下图描述了使用编码器—解码器将上述英语句子翻译成法语句子的一种方法。在训练数据集中，我们可以在每个句子后附上特殊符号“&lt;eos&gt;”（end of sequence）表示序列的终止。编码器每个时间步的输入依次为英语句子中的单词、标点和特殊符号“&lt;eos&gt;”。下图使用了编码器在最终时间步的隐藏状态作为输入句子的编码信息。解码器在各个时间步中使用输入句子的编码信息和上个时间步的输出以及隐藏状态作为输入。<br>我们希望解码器在各个时间步能正确依次输出翻译后的法语单词、标点和特殊符号“&lt;eos&gt;”。<br>需要注意的是，解码器在最初时间步的输入用到了一个表示序列开始的特殊符号“&lt;bos&gt;”（beginning of sequence）。</p>
+<p>当输入输出都是不定长序列时，我们可以使用编码器—解码器 (encoder-decoder) 或者 seq2seq 模型。这两个模型本质上都用到了两个循环神经网络，分别叫做编码器和解码器。编码器对应输入序列，解码器对应输出序列。</p>
+<p>下图描述了使用编码器—解码器将上述英语句子翻译成法语句子的一种方法。在训练数据集中，我们可以在每个句子后附上特殊符号 “&lt;eos&gt;” (end of sequence) 表示序列的终止。编码器每个时间步的输入依次为英语句子中的单词、标点和特殊符号 “&lt;eos&gt;”。下图使用了编码器在最终时间步的隐藏状态作为输入句子的编码信息。解码器在各个时间步中使用输入句子的编码信息和上个时间步的输出以及隐藏状态作为输入。<br>我们希望解码器在各个时间步能正确依次输出翻译后的法语单词、标点和特殊符号 “&lt;eos&gt;”。<br>需要注意的是，解码器在最初时间步的输入用到了一个表示序列开始的特殊符号 “&lt;bos&gt;” (beginning of sequence) 。</p>
 <p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/seq2seq.png" alt="使用编码器—解码器将句子由英语翻译成法语。编码器和解码器分别为循环神经网络。"></p>
 <p>接下来我们介绍编码器和解码器的定义。</p>
-<h2 id="编码器-Encoder"><a href="#编码器-Encoder" class="headerlink" title="编码器 Encoder"></a>编码器 Encoder</h2><p>编码器的作用是把一个不定长的输入序列变换成一个定长的背景变量$\boldsymbol{c}$，并在该背景变量中编码输入序列信息。常用的编码器是循环神经网络。</p>
-<p>让我们考虑批量大小为1的时序数据样本。假设输入序列是$x<em>1,\ldots,x_T$，例如$x_i$是输入句子中的第$i$个词。在时间步$t$，循环神经网络将输入$x_t$的特征向量$\boldsymbol{x}_t$和上个时间步的隐藏状态$\boldsymbol{h}</em>{t-1}$变换为当前时间步的隐藏状态$\boldsymbol{h}_t$。我们可以用函数$f$表达循环神经网络隐藏层的变换：</p>
+<h2 id="编码器-Encoder"><a href="#编码器-Encoder" class="headerlink" title="编码器 Encoder"></a>编码器 Encoder</h2><p>编码器的作用是把一个不定长的输入序列变换成一个定长的上下文变量 $\boldsymbol{c}$，并在该上下文变量中编码输入序列信息。常用的编码器是循环神经网络。</p>
+<p>让我们考虑批量大小为1的时序数据样本。假设输入序列是 $x<em>1, \ldots, x_T$，例如 $x_i$ 是输入句子中的第$i$个词。在时间步 $t$，循环神经网络将输入 $x_t$ 的特征向量 $\boldsymbol{x}_t$ 和上个时间步的隐藏状态 $\boldsymbol{h}</em>{t-1}$ 变换为当前时间步的隐藏状态 $\boldsymbol{h}_t$ 。我们可以用函数 $f$ 表达循环神经网络隐藏层的变换：</p>
 <script type="math/tex; mode=display">
-\boldsymbol{h}_t = f(\boldsymbol{x}_t, \boldsymbol{h}_{t-1})</script><p>这里特征向量$\boldsymbol{x}_t$既可以是需要学习的词向量，也可以是预训练的词向量。假设输入序列的总时间步数为$T$。接下来编码器通过自定义函数$q$将各个时间步的隐藏状态变换为背景变量</p>
+\boldsymbol{h}_t = f(\boldsymbol{x}_t, \boldsymbol{h}_{t-1})</script><p>这里特征向量 $\boldsymbol{x}_t$ 既可以是需要学习的词向量，也可以是预训练的词向量。假设输入序列的总时间步数为 $T$ 。接下来编码器通过自定义函数 $q$ 将各个时间步的隐藏状态变换为上下文变量</p>
 <script type="math/tex; mode=display">
-\boldsymbol{c} =  q(\boldsymbol{h}_1, \ldots, \boldsymbol{h}_T)</script><p>例如，当选择$q(\boldsymbol{h}_1, \ldots, \boldsymbol{h}_T) = \boldsymbol{h}_T$时，背景变量是输入序列最终时间步的隐藏状态$\boldsymbol{h}_T$。</p>
-<p>以上描述的编码器是一个单向的循环神经网络，每个时间步的隐藏状态只取决于该时间步及之前的输入子序列。我们也可以使用双向循环神经网络构造编码器。这种情况下，编码器每个时间步的隐藏状态同时取决于该时间步之前和之后的子序列（包括当前时间步的输入），并编码了整个序列的信息。</p>
-<h2 id="解码器-Decoder"><a href="#解码器-Decoder" class="headerlink" title="解码器 Decoder"></a>解码器 Decoder</h2><p>刚刚已经介绍，编码器输出的背景变量$\boldsymbol{c}$编码了整个输入序列$x<em>1, \ldots, x_T$的信息。给定训练样本中的输出序列$y_1, y_2, \ldots, y</em>{T’}$，对每个时间步$t’$，解码器输出$y<em>{t’}$的条件概率将基于之前的输出序列$y_1,\ldots,y</em>{t’-1}$和背景变量$\boldsymbol{c}$，即$\mathbb{P}(y<em>{t’} \mid y_1, \ldots, y</em>{t’-1}, \boldsymbol{c})$。</p>
-<p>为此，我们可以使用另一个循环神经网络作为解码器。<br>在输出序列的时间步$t^\prime$，解码器将上一时间步的输出$y<em>{t^\prime-1}$以及背景变量$\boldsymbol{c}$作为输入，并将它们与上一时间步的隐藏状态$\boldsymbol{s}</em>{t^\prime-1}$变换为当前时间步的隐藏状态$\boldsymbol{s}_{t^\prime}$。因此，我们可以用函数$g$表达解码器隐藏层的变换：</p>
+\boldsymbol{c} =  q(\boldsymbol{h}_1, \ldots, \boldsymbol{h}_T)</script><p>例如，当选择 $q(\boldsymbol{h}_1, \ldots, \boldsymbol{h}_T) = \boldsymbol{h}_T$ 时，上下文变量是输入序列最终时间步的隐藏状态 $\boldsymbol{h}_T$ 。</p>
+<p>以上描述的编码器是一个单向的循环神经网络，每个时间步的隐藏状态只取决于该时间步及之前的输入子序列。我们也可以使用双向循环神经网络构造编码器。这种情况下，编码器每个时间步的隐藏状态同时取决于该时间步之前和之后的子序列 (包括当前时间步的输入) ，并编码了整个序列的信息。</p>
+<h2 id="解码器-Decoder"><a href="#解码器-Decoder" class="headerlink" title="解码器 Decoder"></a>解码器 Decoder</h2><p>刚刚已经介绍，编码器输出的上下文变量 $\boldsymbol{c}$ 编码了整个输入序列 $x<em>1, \ldots, x_T$ 的信息。给定训练样本中的输出序列 $y_1, y_2, \ldots, y</em>{T’}$ ，对每个时间步 $t’$ ，解码器输出 $y<em>{t’}$ 的条件概率将基于之前的输出序列 $y_1, \ldots, y</em>{t’-1}$ 和上下文变量 $\boldsymbol{c}$ ，即 $\mathbb{P}(y<em>{t’} \mid y_1, \ldots, y</em>{t’-1}, \boldsymbol{c})$ 。</p>
+<p>为此，我们可以使用另一个循环神经网络作为解码器。<br>在输出序列的时间步 $t^\prime$ ，解码器将上一时间步的输出 $y<em>{t^\prime-1}$ 以及背景变量 $\boldsymbol{c}$ 作为输入，并将它们与上一时间步的隐藏状态 $\boldsymbol{s}</em>{t^\prime-1}$ 变换为当前时间步的隐藏状态 $\boldsymbol{s}_{t^\prime}$ 。因此，我们可以用函数 $g$ 表达解码器隐藏层的变换：</p>
 <script type="math/tex; mode=display">
-\boldsymbol{s}_{t^\prime} = g(y_{t^\prime-1}, \boldsymbol{c}, \boldsymbol{s}_{t^\prime-1})</script><p>有了解码器的隐藏状态后，我们可以使用自定义的输出层和softmax运算来计算$\mathbb{P}(y<em>{t^\prime} \mid y_1, \ldots, y</em>{t^\prime-1}, \boldsymbol{c})$，例如基于当前时间步的解码器隐藏状态 $\boldsymbol{s}<em>{t^\prime}$、上一时间步的输出$y</em>{t^\prime-1}$以及背景变量$\boldsymbol{c}$来计算当前时间步输出$y_{t^\prime}$的概率分布。</p>
+\boldsymbol{s}_{t^\prime} = g(y_{t^\prime-1}, \boldsymbol{c}, \boldsymbol{s}_{t^\prime-1})</script><p>有了解码器的隐藏状态后，我们可以使用自定义的输出层和 softmax 运算来计算 $\mathbb{P}(y<em>{t^\prime} \mid y_1, \ldots, y</em>{t^\prime-1}, \boldsymbol{c})$ ，例如基于当前时间步的解码器隐藏状态 $\boldsymbol{s}<em>{t^\prime}$、上一时间步的输出 $y</em>{t^\prime-1}$ 以及上下文变量 $\boldsymbol{c}$ 来计算当前时间步输出 $y_{t^\prime}$ 的概率分布。</p>
 <h2 id="模型训练-Model-Training"><a href="#模型训练-Model-Training" class="headerlink" title="模型训练 Model Training"></a>模型训练 Model Training</h2><p>根据最大似然估计，我们可以最大化输出序列基于输入序列的条件概率</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
@@ -525,36 +525,39 @@
 <script type="math/tex; mode=display">
 \log\mathbb{P}(y_1, \ldots, y_{T'} \mid x_1, \ldots, x_T) = -\sum_{t'=1}^{T'} \log \mathbb{P}(y_{t'} \mid y_1, \ldots, y_{t'-1}, \boldsymbol{c})</script><p>在模型训练中，我们通过最小化这个损失函数来得到模型参数。</p>
 <h2 id="模型预测-Model-Prediction"><a href="#模型预测-Model-Prediction" class="headerlink" title="模型预测 Model Prediction"></a>模型预测 Model Prediction</h2><p>上一节介绍了如何训练输入输出均为不定长序列的编码器—解码器，这一节我们介绍如何使用编码器—解码器来预测不定长的序列。</p>
-<p>上一节里已经提到，在准备训练数据集时，我们通常会在样本的输入序列和输出序列后面分别附上一个特殊符号“&lt;eos&gt;”表示序列的终止。我们在接下来的讨论中也将沿用上一节的数学符号。为了便于讨论，假设解码器的输出是一段文本序列。设输出文本词典$\mathcal{Y}$（包含特殊符号“&lt;eos&gt;”）的大小为$\left|\mathcal{Y}\right|$，输出序列的最大长度为$T’$。所有可能的输出序列一共有$\mathcal{O}(\left|\mathcal{Y}\right|^{T’})$种。这些输出序列中所有特殊符号“&lt;eos&gt;”后面的子序列将被舍弃。</p>
-<h3 id="穷举搜索-Exhaustive-Search"><a href="#穷举搜索-Exhaustive-Search" class="headerlink" title="穷举搜索 Exhaustive Search"></a>穷举搜索 Exhaustive Search</h3><p>我们在上一节描述解码器时提到，输出序列基于输入序列的条件概率是$\prod<em>{t’=1}^{T’} \mathbb{P}(y</em>{t’} \mid y<em>1, \ldots, y</em>{t’-1}, \boldsymbol{c})$。为了搜索该条件概率最大的输出序列，一种方法是穷举所有可能输出序列的条件概率，并输出条件概率最大的序列。我们将该序列称为最优序列，并将这种搜索方法称为穷举搜索（exhaustive search）。</p>
-<p>虽然穷举搜索可以得到最优序列，但它的计算开销$\mathcal{O}(\left|\mathcal{Y}\right|^{T’})$很容易过大。例如，当$|\mathcal{Y}|=10000$且$T’=10$时，我们将评估$10000^{10} = 10^{40}$个序列：这几乎不可能完成。</p>
-<h3 id="贪婪搜索-Greedy-Search"><a href="#贪婪搜索-Greedy-Search" class="headerlink" title="贪婪搜索 Greedy Search"></a>贪婪搜索 Greedy Search</h3><p>我们还可以使用贪婪搜索（greedy search）。也就是说，对于输出序列任一时间步$t’$，从$|\mathcal{Y}|$个词中搜索出输出词</p>
-<script type="math/tex; mode=display">y_{t'} = \text{argmax}_{y_{t'} \in \mathcal{Y}} \mathbb{P}(y_{t'} \mid y_1, \ldots, y_{t'-1}, \boldsymbol{c}),</script><p>且一旦搜索出“&lt;eos&gt;”符号即完成输出序列。贪婪搜索的计算开销是$\mathcal{O}(\left|\mathcal{Y}\right|T’)$。它比起穷举搜索的计算开销显著下降。例如，当$|\mathcal{Y}|=10000$且$T’=10$时，我们只需评估$10000\times10=1\times10^5$个序列。</p>
-<p>下面我们来看一个例子。假设输出词典里面有“A”、“B”、“C”和“&lt;eos&gt;”这四个词。图10.7中每个时间步下的四个数字分别代表了该时间步生成“A”、“B”、“C”和“&lt;eos&gt;”这四个词的条件概率。在每个时间步，贪婪搜索选取生成条件概率最大的词。因此，图10.7中将生成序列“ABC&lt;eos&gt;”。该输出序列的条件概率是$0.5\times0.4\times0.4\times0.6 = 0.048$。</p>
+<p>上一节里已经提到，在准备训练数据集时，我们通常会在样本的输入序列和输出序列后面分别附上一个特殊符号 “&lt;eos&gt;” 表示序列的终止。我们在接下来的讨论中也将沿用上一节的数学符号。为了便于讨论，假设解码器的输出是一段文本序列。设输出文本词典 $\mathcal{Y}$ (包含特殊符号“&lt;eos&gt;”) 的大小为 $\left|\mathcal{Y}\right|$ ，输出序列的最大长度为 $T’$ 。所有可能的输出序列一共有 $\mathcal{O}(\left|\mathcal{Y}\right|^{T’})$ 种。这些输出序列中所有特殊符号“&lt;eos&gt;”后面的子序列将被舍弃。</p>
+<h3 id="穷举搜索-Exhaustive-Search"><a href="#穷举搜索-Exhaustive-Search" class="headerlink" title="穷举搜索 Exhaustive Search"></a>穷举搜索 Exhaustive Search</h3><p>我们在上一节描述解码器时提到，输出序列基于输入序列的条件概率是 $\prod<em>{t’=1}^{T’} \mathbb{P}(y</em>{t’} \mid y<em>1, \ldots, y</em>{t’-1}, \boldsymbol{c})$ 。为了搜索该条件概率最大的输出序列，一种方法是穷举所有可能输出序列的条件概率，并输出条件概率最大的序列。我们将该序列称为最优序列，并将这种搜索方法称为穷举搜索 (exhaustive search)。</p>
+<p>虽然穷举搜索可以得到最优序列，但它的计算开销 $\mathcal{O}(\left|\mathcal{Y}\right|^{T’})$ 很容易过大。例如，当 $|\mathcal{Y}|=10000$ 且 $T’=10$ 时，我们将评估 $10000^{10} = 10^{40}$ 个序列：这几乎不可能完成。</p>
+<h3 id="贪婪搜索-Greedy-Search"><a href="#贪婪搜索-Greedy-Search" class="headerlink" title="贪婪搜索 Greedy Search"></a>贪婪搜索 Greedy Search</h3><p>我们还可以使用贪婪搜索 (greedy search) 。也就是说，对于输出序列任一时间步 $t’$，从 $|\mathcal{Y}|$ 个词中搜索出输出词</p>
+<script type="math/tex; mode=display">
+y_{t'} = \text{argmax}_{y_{t'} \in \mathcal{Y}} \mathbb{P}(y_{t'} \mid y_1, \ldots, y_{t'-1}, \boldsymbol{c})</script><p>且一旦搜索出 “&lt;eos&gt;” 符号即完成输出序列。贪婪搜索的计算开销是 $\mathcal{O}(\left|\mathcal{Y}\right|T’)$。它比起穷举搜索的计算开销显著下降。例如，当 $|\mathcal{Y}|=10000$ 且 $T’=10$ 时，我们只需评估 $10000\times10=1\times10^5$ 个序列。</p>
+<p>下面我们来看一个例子。假设输出词典里面有 “A”、“B”、“C”和 “&lt;eos&gt;” 这四个词。下图中每个时间步下的四个数字分别代表了该时间步生成 “A”、“B”、“C”和 “&lt;eos&gt;” 这四个词的条件概率。在每个时间步，贪婪搜索选取生成条件概率最大的词。因此，将生成序列 “ABC&lt;eos&gt;” 。该输出序列的条件概率是 $0.5\times0.4\times0.4\times0.6 = 0.048$。</p>
 <p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob1.png" alt="每个时间步下的四个数字分别代表了该时间步生成“A”、“B”、“C”和“&lt;eos&gt;”这四个词的条件概率。在每个时间步，贪婪搜索选取生成条件概率最大的词。"></p>
-<p>正如绝大部分贪婪算法不能保证最优解一样，贪婪搜索也无法保证找出条件概率最大的最优序列。图10.8演示了这样的一个例子。与图10.7中不同，图10.8在时间步2中选取了条件概率第二大的“C”。由于时间步3所基于的时间步1和2的输出子序列由图10.7中的“AB”变为了图10.8中的“AC”，图10.8中时间步3生成各个词的条件概率发生了变化。我们选取条件概率最大的“B”。此时时间步4所基于的前三个时间步的输出子序列为“ACB”，与图10.7中的“ABC”不同。因此图10.8中时间步4生成各个词的条件概率也与图10.7中的不同。我们发现，此时的输出序列“ACB&lt;eos&gt;”的条件概率是$0.5\times0.3\times0.6\times0.6=0.054$，大于贪婪搜索得到的输出序列的条件概率。因此，贪婪搜索得到的输出序列“ABC&lt;eos&gt;”并非最优序列。</p>
+<p>正如绝大部分贪婪算法不能保证最优解一样，贪婪搜索也无法保证找出条件概率最大的最优序列。下图演示了这样的一个例子。与上图中不同，下图在时间步2中选取了条件概率第二大的 “C” 。由于时间步3所基于的时间步1和2的输出子序列由上图中的 “AB” 变为了下图中的 “AC”，下图中时间步3生成各个词的条件概率发生了变化。我们选取条件概率最大的 “B”。此时时间步4所基于的前三个时间步的输出子序列为 “ACB”，与上图中的 “ABC” 不同。因此下图时间步4生成各个词的条件概率也与上图中的不同。我们发现，此时的输出序列 “ACB&lt;eos&gt;” 的条件概率是$0.5\times0.3\times0.6\times0.6=0.054$，大于贪婪搜索得到的输出序列的条件概率。因此，贪婪搜索得到的输出序列 “ABC&lt;eos&gt;” 并非最优序列。</p>
 <p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob2.png" alt="每个时间步下的四个数字分别代表了该时间步生成“A”、“B”、“C”和“&lt;eos&gt;”这四个词的条件概率。在时间步2选取条件概率第二大的“C”。"></p>
-<h3 id="束搜索-Beam-Search"><a href="#束搜索-Beam-Search" class="headerlink" title="束搜索 Beam Search"></a>束搜索 Beam Search</h3><p>束搜索（beam search）是比贪婪搜索更加广义的搜索算法。它有一个束宽（beam size）超参数。我们将它设为$k$。在时间步1时，选取当前时间步生成条件概率最大的$k$个词，分别组成$k$个候选输出序列的首词。在之后的每个时间步，基于上个时间步的$k$个候选输出序列，从$k\left|\mathcal{Y}\right|$个可能的输出序列中选取生成条件概率最大的$k$个，作为该时间步的候选输出序列。<br>最终，我们在各个时间步的候选输出序列中筛选出包含特殊符号“&lt;eos&gt;”的序列，并将它们中所有特殊符号“&lt;eos&gt;”后面的子序列舍弃，得到最终候选输出序列。在这些最终候选输出序列中，取以下分数最高的序列作为输出序列：</p>
-<script type="math/tex; mode=display">\frac{1}{L^\alpha} \log \mathbb{P}(y_1, \ldots, y_{L}) = \frac{1}{L^\alpha} \sum_{t'=1}^L \log \mathbb{P}(y_{t'} \mid y_1, \ldots, y_{t'-1}, \boldsymbol{c}),</script><p>其中$L$为最终候选序列长度，$\alpha$一般可选为0.75。分母上的$L^\alpha$是为了惩罚较长序列在以上分数中较多的对数相加项。分析可得，束搜索的计算开销为$\mathcal{O}(k\left|\mathcal{Y}\right|T’)$。这介于穷举搜索和贪婪搜索的计算开销之间。</p>
+<h3 id="束搜索-Beam-Search"><a href="#束搜索-Beam-Search" class="headerlink" title="束搜索 Beam Search"></a>束搜索 Beam Search</h3><p>束搜索 (beam search) 是比贪婪搜索更加广义的搜索算法。它有一个束宽 (beam size) 超参数。我们将它设为 $k$。在时间步1时，选取当前时间步生成条件概率最大的 $k$ 个词，分别组成 $k$ 个候选输出序列的首词。在之后的每个时间步，基于上个时间步的 $k$ 个候选输出序列，从 $k\left|\mathcal{Y}\right|$ 个可能的输出序列中选取生成条件概率最大的 $k$ 个，作为该时间步的候选输出序列。<br>最终，我们在各个时间步的候选输出序列中筛选出包含特殊符号 “&lt;eos&gt;” 的序列，并将它们中所有特殊符号 “&lt;eos&gt;” 后面的子序列舍弃，得到最终候选输出序列。在这些最终候选输出序列中，取以下分数最高的序列作为输出序列：</p>
+<script type="math/tex; mode=display">
+\frac{1}{L^\alpha} \log \mathbb{P}(y_1, \ldots, y_{L}) = \frac{1}{L^\alpha} \sum_{t'=1}^L \log \mathbb{P}(y_{t'} \mid y_1, \ldots, y_{t'-1}, \boldsymbol{c})</script><p>其中 $L$ 为最终候选序列长度，$\alpha$ 一般可选为0.75。分母上的 $L^\alpha$ 是为了惩罚较长序列在以上分数中较多的对数相加项。分析可得，束搜索的计算开销为 $\mathcal{O}(k\left|\mathcal{Y}\right|T’)$。这介于穷举搜索和贪婪搜索的计算开销之间。</p>
 <p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/beam_search.png" alt="束搜索的过程。束宽为2，输出序列最大长度为3。候选输出序列有$A$、$C$、$AB$、$CE$、$ABD$和$CED$。"></p>
-<p>图10.9通过一个例子演示了束搜索的过程。假设输出序列的词典中只包含五个元素：$\mathcal{Y} = {A, B, C, D, E}$，且其中一个为特殊符号“&lt;eos&gt;”。设束搜索的束宽等于2，输出序列最大长度为3。在输出序列的时间步1时，假设条件概率$\mathbb{P}(y_1 \mid \boldsymbol{c})$最大的两个词为$A$和$C$。我们在时间步2时将对所有的$y_2 \in \mathcal{Y}$都分别计算$\mathbb{P}(y_2 \mid A, \boldsymbol{c})$和$\mathbb{P}(y_2 \mid C, \boldsymbol{c})$，并从计算出的10个条件概率中取最大的两个：假设为$\mathbb{P}(B \mid A, \boldsymbol{c})$和$\mathbb{P}(E \mid C, \boldsymbol{c})$。那么，我们在时间步3时将对所有的$y_3 \in \mathcal{Y}$都分别计算$\mathbb{P}(y_3 \mid A, B, \boldsymbol{c})$和$\mathbb{P}(y_3 \mid C, E, \boldsymbol{c})$，并从计算出的10个条件概率中取最大的两个：假设为$\mathbb{P}(D \mid A, B, \boldsymbol{c})$和$\mathbb{P}(D \mid C, E, \boldsymbol{c})$。接下来，我们可以在6个候选输出序列：$A$、$C$、$AB$、$CE$、$ABD$和$CED$中筛选出包含特殊符号“&lt;eos&gt;”的序列，并将它们中所有特殊符号“&lt;eos&gt;”后面的子序列舍弃，得到最终候选输出序列。我们可以在最终候选输出序列中取分数最高的序列作为输出序列。</p>
-<p>贪婪搜索可看作是束宽为1的束搜索。束搜索通过更灵活的束宽$k$来权衡计算开销和搜索质量。</p>
+<p>上图通过一个例子演示了束搜索的过程。假设输出序列的词典中只包含五个元素：$\mathcal{Y} = {A, B, C, D, E}$，且其中一个为特殊符号 “&lt;eos&gt;”。设束搜索的束宽等于2，输出序列最大长度为3。在输出序列的时间步1时，假设条件概率 $\mathbb{P}(y_1 \mid \boldsymbol{c})$ 最大的两个词为 $A$ 和 $C$。我们在时间步2时将对所有的 $y_2 \in \mathcal{Y}$ 都分别计算 $\mathbb{P}(y_2 \mid A, \boldsymbol{c})$ 和 $\mathbb{P}(y_2 \mid C, \boldsymbol{c})$，并从计算出的10个条件概率中取最大的两个：假设为 $\mathbb{P}(B \mid A, \boldsymbol{c})$ 和$\mathbb{P}(E \mid C, \boldsymbol{c})$。那么，我们在时间步3时将对所有的 $y_3 \in \mathcal{Y}$ 都分别计算 $\mathbb{P}(y_3 \mid A, B, \boldsymbol{c})$ 和 $\mathbb{P}(y_3 \mid C, E, \boldsymbol{c})$，并从计算出的10个条件概率中取最大的两个：假设为 $\mathbb{P}(D \mid A, B, \boldsymbol{c})$ 和 $\mathbb{P}(D \mid C, E, \boldsymbol{c})$。接下来，我们可以在6个候选输出序列：$A$、$C$、$AB$、$CE$、$ABD$和$CED$中筛选出包含特殊符号“&lt;eos&gt;”的序列，并将它们中所有特殊符号“&lt;eos&gt;”后面的子序列舍弃，得到最终候选输出序列。我们可以在最终候选输出序列中取分数最高的序列作为输出序列。</p>
+<p>贪婪搜索可看作是束宽为1的束搜索。束搜索通过更灵活的束宽 $k$ 来权衡计算开销和搜索质量。</p>
 <hr>
-<h1 id="注意力机制-Attention-Mechanism"><a href="#注意力机制-Attention-Mechanism" class="headerlink" title="注意力机制 Attention Mechanism"></a>注意力机制 Attention Mechanism</h1><p>在”编码器—解码器”一节里的解码器设计中，输出序列的各个时间步使用了相同的背景变量。如果解码器的不同时间步可以使用不同的背景变量呢？这样做有什么好处？</p>
-<h2 id="动机-Motivation"><a href="#动机-Motivation" class="headerlink" title="动机 Motivation"></a>动机 Motivation</h2><p>以英语-法语翻译为例，给定一对英语输入序列“They”、“are”、“watching”、“.”和法语输出序列“Ils”、“regardent”、“.”。解码器可以在输出序列的时间步1使用更集中编码了“They”、“are”信息的背景变量来生成“Ils”，在时间步2使用更集中编码了“watching”信息的背景变量来生成“regardent”，在时间步3使用更集中编码了“.”信息的背景变量来生成“.”。这看上去就像是在解码器的每一时间步对输入序列中不同时间步编码的信息分配不同的注意力。这也是注意力机制的由来。它最早由Bahanau等提出 [1]。</p>
+<h1 id="注意力机制-Attention-Mechanism"><a href="#注意力机制-Attention-Mechanism" class="headerlink" title="注意力机制 Attention Mechanism"></a>注意力机制 Attention Mechanism</h1><p>在”编码器—解码器”一节里的解码器设计中，输出序列的各个时间步使用了相同的上下文变量。如果解码器的不同时间步可以使用不同的上下文变量呢？这样做有什么好处？</p>
+<h2 id="动机-Motivation"><a href="#动机-Motivation" class="headerlink" title="动机 Motivation"></a>动机 Motivation</h2><p>以英语-法语翻译为例，给定一对英语输入序列 “They”、“are”、“watching”、“.” 和法语输出序列 “Ils”、“regardent”、“.”。解码器可以在输出序列的时间步1使用更集中编码了 “They”、“are” 信息的上下文变量来生成 “Ils”，在时间步2使用更集中编码了 “watching” 信息的上下文变量来生成“regardent”，在时间步3使用更集中编码了 “.” 信息的上下文变量来生成 “.”。这看上去就像是在解码器的每一时间步对输入序列中不同时间步编码的信息分配不同的注意力。这也是注意力机制的由来。它最早由 Bahanau 等提出。</p>
 <h2 id="设计-Design"><a href="#设计-Design" class="headerlink" title="设计 Design"></a>设计 Design</h2><p>本节沿用”编码器—解码器”一节里的数学符号。</p>
-<p>我们对”编码器—解码器”一节里的解码器稍作修改。在时间步$t’$，设解码器的背景变量为$\boldsymbol{c}<em>{t’}$，输出$y</em>{t’}$的特征向量为$\boldsymbol{y}_{t’}$。<br>和输入的特征向量一样，这里每个输出的特征向量也是模型参数。解码器在时间步$t’$的隐藏状态</p>
+<p>我们对”编码器—解码器”一节里的解码器稍作修改。在时间步 $t’$，设解码器的背景变量为 $\boldsymbol{c}<em>{t’}$，输出 $y</em>{t’}$ 的特征向量为 $\boldsymbol{y}_{t’}$。</p>
+<p>和输入的特征向量一样，这里每个输出的特征向量也是模型参数。解码器在时间步 $t’$ 的隐藏状态</p>
 <script type="math/tex; mode=display">
-\boldsymbol{s}_{t'} = g(\boldsymbol{y}_{t'-1}, \boldsymbol{c}_{t'}, \boldsymbol{s}_{t'-1})</script><p>令编码器在时间步$t$的隐藏状态为$\boldsymbol{h}_t$，且总时间步数为$T$。解码器在时间步$t’$的背景变量为</p>
+\boldsymbol{s}_{t'} = g(\boldsymbol{y}_{t'-1}, \boldsymbol{c}_{t'}, \boldsymbol{s}_{t'-1})</script><p>令编码器在时间步$t$的隐藏状态为 $\boldsymbol{h}_t$，且总时间步数为 $T$。解码器在时间步 $t’$ 的背景变量为</p>
 <script type="math/tex; mode=display">
-\boldsymbol{c}_{t'} = \sum_{t=1}^T \alpha_{t' t} \boldsymbol{h}_t</script><p>其中$\alpha_{t’ t}$是权值。也就是说，给定解码器的当前时间步$t’$，我们需要对编码器中不同时间步$t$的隐藏状态求加权平均。这里的权值也称注意力权重。它的计算公式是</p>
+\boldsymbol{c}_{t'} = \sum_{t=1}^T \alpha_{t' t} \boldsymbol{h}_t</script><p>其中 $\alpha_{t’ t}$ 是权值。也就是说，给定解码器的当前时间步 $t’$，我们需要对编码器中不同时间步 $t$ 的隐藏状态求加权平均。这里的权值也称注意力权重。它的计算公式是</p>
 <script type="math/tex; mode=display">
-\alpha_{t' t} = \frac{\exp(e_{t' t})}{ \sum_{k=1}^T \exp(e_{t' k}) }</script><p>其中$e_{t’ t} \in \mathbb{R}$的计算为</p>
+\alpha_{t' t} = \frac{\exp(e_{t' t})}{ \sum_{k=1}^T \exp(e_{t' k}) }</script><p>其中 $e_{t’ t} \in \mathbb{R}$ 的计算为</p>
 <script type="math/tex; mode=display">
-e_{t' t} = a(\boldsymbol{s}_{t' - 1}, \boldsymbol{h}_t)</script><p>上式中的函数$a$有多种设计方法。Bahanau等使用了多层感知机：</p>
+e_{t' t} = a(\boldsymbol{s}_{t' - 1}, \boldsymbol{h}_t)</script><p>上式中的函数 $a$ 有多种设计方法。Bahanau 等使用了多层感知机：</p>
 <script type="math/tex; mode=display">
-e_{t' t} = \boldsymbol{v}^\top \tanh(\boldsymbol{W}_s \boldsymbol{s}_{t' - 1} + \boldsymbol{W}_h \boldsymbol{h}_t)</script><p>其中$\boldsymbol{v}$、$\boldsymbol{W}_s$、$\boldsymbol{W}_h$以及编码器与解码器中的各个权重和偏差都是模型参数 [1]。</p>
-<p>Bahanau等在编码器和解码器中分别使用了门控循环单元 [1]。在解码器中，我们需要对门控循环单元的设计稍作修改。解码器在$t’ $时间步的隐藏状态为</p>
+e_{t' t} = \boldsymbol{v}^\top \tanh(\boldsymbol{W}_s \boldsymbol{s}_{t' - 1} + \boldsymbol{W}_h \boldsymbol{h}_t)</script><p>其中 $\boldsymbol{v}$、$\boldsymbol{W}_s$、$\boldsymbol{W}_h$ 以及编码器与解码器中的各个权重和偏差都是模型参数。</p>
+<p>Bahanau 等在编码器和解码器中分别使用了门控循环单元 GRU。在解码器中，我们需要对门控循环单元的设计稍作修改。解码器在 $t’ $ 时间步的隐藏状态为</p>
 <script type="math/tex; mode=display">
 \boldsymbol{s}_{t'} = \boldsymbol{z}_{t'} \odot \boldsymbol{s}_{t'-1}  + (1 - \boldsymbol{z}_{t'}) \odot \tilde{\boldsymbol{s}}_{t'}</script><p>其中的重置门、更新门和候选隐含状态分别为</p>
 <script type="math/tex; mode=display">
