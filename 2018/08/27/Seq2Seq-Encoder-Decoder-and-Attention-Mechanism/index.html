@@ -110,7 +110,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/beam_search.png">
-<meta property="og:updated_time" content="2018-08-27T08:50:54.017Z">
+<meta property="og:updated_time" content="2018-08-27T08:53:04.518Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Seq2Seq (Encoder-Decoder) and Attention Mechanism">
 <meta name="twitter:description" content="在很多 NLP 应用中，输入和输出都可以是不定长序列。当输入输出都是不定长序列时，我们可以使用编码器-解码器 (encoder-decoder) 来对序列数据进行建模。">
@@ -505,7 +505,7 @@
 <p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/seq2seq.png" alt="使用编码器—解码器将句子由英语翻译成法语。编码器和解码器分别为循环神经网络。"></p>
 <p>接下来我们介绍编码器和解码器的定义。</p>
 <h2 id="编码器-Encoder"><a href="#编码器-Encoder" class="headerlink" title="编码器 Encoder"></a>编码器 Encoder</h2><p>编码器的作用是把一个不定长的输入序列变换成一个定长的上下文变量 $\boldsymbol{c}$，并在该上下文变量中编码输入序列信息。常用的编码器是循环神经网络。</p>
-<p>让我们考虑批量大小为1的时序数据样本。假设输入序列是 <script type="math/tex">x_1, \ldots, x_T</script>，例如 <script type="math/tex">x_i</script> 是输入句子中的第 $i$ 个词。在时间步 $t$，循环神经网络将输入 <script type="math/tex">x_t</script> 的特征向量 $\boldsymbol{x}<em>t$ 和上个时间步的隐藏状态 $$\boldsymbol{h}</em>{t-1}<script type="math/tex">变换为当前时间步的隐藏状态</script>\boldsymbol{h}_t$$ 。我们可以用函数 $f$ 表达循环神经网络隐藏层的变换：</p>
+<p>让我们考虑批量大小为1的时序数据样本。假设输入序列是 <script type="math/tex">x_1, \ldots, x_T</script>，例如 <script type="math/tex">x_i</script> 是输入句子中的第 $i$ 个词。在时间步 $t$，循环神经网络将输入 <script type="math/tex">x_t</script> 的特征向量 <script type="math/tex">\boldsymbol{x}_t</script> 和上个时间步的隐藏状态 <script type="math/tex">\boldsymbol{h}_{t-1}</script> 变换为当前时间步的隐藏状态 <script type="math/tex">\boldsymbol{h}_t</script> 。我们可以用函数 <script type="math/tex">f</script> 表达循环神经网络隐藏层的变换：</p>
 <script type="math/tex; mode=display">
 \boldsymbol{h}_t = f(\boldsymbol{x}_t, \boldsymbol{h}_{t-1})</script><p>这里特征向量 $\boldsymbol{x}_t$ 既可以是需要学习的词向量，也可以是预训练的词向量。假设输入序列的总时间步数为 $T$ 。接下来编码器通过自定义函数 $q$ 将各个时间步的隐藏状态变换为上下文变量</p>
 <script type="math/tex; mode=display">
