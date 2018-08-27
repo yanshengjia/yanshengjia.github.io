@@ -110,7 +110,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/beam_search.png">
-<meta property="og:updated_time" content="2018-08-27T08:25:07.615Z">
+<meta property="og:updated_time" content="2018-08-27T08:38:41.212Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Seq2Seq (Encoder-Decoder) and Attention Mechanism">
 <meta name="twitter:description" content="在很多 NLP 应用中，输入和输出都可以是不定长序列。当输入输出都是不定长序列时，我们可以使用编码器-解码器 (encoder-decoder) 来对序列数据进行建模。">
@@ -527,7 +527,7 @@
 \log\mathbb{P}(y_1, \ldots, y_{T'} \mid x_1, \ldots, x_T) = -\sum_{t'=1}^{T'} \log \mathbb{P}(y_{t'} \mid y_1, \ldots, y_{t'-1}, \boldsymbol{c})</script><p>在模型训练中，我们通过最小化这个损失函数来得到模型参数。</p>
 <h2 id="模型预测-Model-Prediction"><a href="#模型预测-Model-Prediction" class="headerlink" title="模型预测 Model Prediction"></a>模型预测 Model Prediction</h2><p>上一节介绍了如何训练输入输出均为不定长序列的编码器—解码器，这一节我们介绍如何使用编码器—解码器来预测不定长的序列。</p>
 <p>上一节里已经提到，在准备训练数据集时，我们通常会在样本的输入序列和输出序列后面分别附上一个特殊符号 “&lt;eos&gt;” 表示序列的终止。我们在接下来的讨论中也将沿用上一节的数学符号。为了便于讨论，假设解码器的输出是一段文本序列。设输出文本词典 $\mathcal{Y}$ (包含特殊符号“&lt;eos&gt;”) 的大小为 $\left|\mathcal{Y}\right|$ ，输出序列的最大长度为 $T’$ 。所有可能的输出序列一共有 $\mathcal{O}(\left|\mathcal{Y}\right|^{T’})$ 种。这些输出序列中所有特殊符号“&lt;eos&gt;”后面的子序列将被舍弃。</p>
-<h3 id="穷举搜索-Exhaustive-Search"><a href="#穷举搜索-Exhaustive-Search" class="headerlink" title="穷举搜索 Exhaustive Search"></a>穷举搜索 Exhaustive Search</h3><p>我们在上一节描述解码器时提到，输出序列基于输入序列的条件概率是 $\prod<em>{t’=1}^{T’} \mathbb{P}(y</em>{t’} \mid y<em>1, \ldots, y</em>{t’-1}, \boldsymbol{c})$ 。为了搜索该条件概率最大的输出序列，一种方法是穷举所有可能输出序列的条件概率，并输出条件概率最大的序列。我们将该序列称为最优序列，并将这种搜索方法称为穷举搜索 (exhaustive search)。</p>
+<h3 id="穷举搜索-Exhaustive-Search"><a href="#穷举搜索-Exhaustive-Search" class="headerlink" title="穷举搜索 Exhaustive Search"></a>穷举搜索 Exhaustive Search</h3><p>我们在上一节描述解码器时提到，输出序列基于输入序列的条件概率是 <script type="math/tex">\prod_{t'=1}^{T'} \mathbb{P}(y_{t'} \mid y_1, \ldots, y_{t'-1}, \boldsymbol{c})</script> 。为了搜索该条件概率最大的输出序列，一种方法是穷举所有可能输出序列的条件概率，并输出条件概率最大的序列。我们将该序列称为最优序列，并将这种搜索方法称为穷举搜索 (exhaustive search)。</p>
 <p>虽然穷举搜索可以得到最优序列，但它的计算开销 $\mathcal{O}(\left|\mathcal{Y}\right|^{T’})$ 很容易过大。例如，当 $|\mathcal{Y}|=10000$ 且 $T’=10$ 时，我们将评估 $10000^{10} = 10^{40}$ 个序列：这几乎不可能完成。</p>
 <h3 id="贪婪搜索-Greedy-Search"><a href="#贪婪搜索-Greedy-Search" class="headerlink" title="贪婪搜索 Greedy Search"></a>贪婪搜索 Greedy Search</h3><p>我们还可以使用贪婪搜索 (greedy search) 。也就是说，对于输出序列任一时间步 $t’$，从 $|\mathcal{Y}|$ 个词中搜索出输出词</p>
 <script type="math/tex; mode=display">
@@ -546,7 +546,7 @@ y_{t'} = \text{argmax}_{y_{t'} \in \mathcal{Y}} \mathbb{P}(y_{t'} \mid y_1, \ldo
 <h1 id="注意力机制-Attention-Mechanism"><a href="#注意力机制-Attention-Mechanism" class="headerlink" title="注意力机制 Attention Mechanism"></a>注意力机制 Attention Mechanism</h1><p>在”编码器—解码器”一节里的解码器设计中，输出序列的各个时间步使用了相同的上下文变量。如果解码器的不同时间步可以使用不同的上下文变量呢？这样做有什么好处？</p>
 <h2 id="动机-Motivation"><a href="#动机-Motivation" class="headerlink" title="动机 Motivation"></a>动机 Motivation</h2><p>以英语-法语翻译为例，给定一对英语输入序列 “They”、“are”、“watching”、“.” 和法语输出序列 “Ils”、“regardent”、“.”。解码器可以在输出序列的时间步1使用更集中编码了 “They”、“are” 信息的上下文变量来生成 “Ils”，在时间步2使用更集中编码了 “watching” 信息的上下文变量来生成“regardent”，在时间步3使用更集中编码了 “.” 信息的上下文变量来生成 “.”。这看上去就像是在解码器的每一时间步对输入序列中不同时间步编码的信息分配不同的注意力。这也是注意力机制的由来。它最早由 Bahanau 等提出。</p>
 <h2 id="设计-Design"><a href="#设计-Design" class="headerlink" title="设计 Design"></a>设计 Design</h2><p>本节沿用”编码器—解码器”一节里的数学符号。</p>
-<p>我们对”编码器—解码器”一节里的解码器稍作修改。在时间步 $t’$，设解码器的背景变量为 $\boldsymbol{c<em>{t’}}$，输出 $y</em>{t’}$ 的特征向量为 $\boldsymbol{y_{t’}}$。</p>
+<p>我们对”编码器—解码器”一节里的解码器稍作修改。在时间步 $t’$，设解码器的上下文变量为 <script type="math/tex">\boldsymbol{c}_{t'}</script>，输出 $y<em>{t’}$ 的特征向量为 $$\boldsymbol{y}</em>{t’}$$。</p>
 <p>和输入的特征向量一样，这里每个输出的特征向量也是模型参数。解码器在时间步 $t’​$ 的隐藏状态</p>
 <script type="math/tex; mode=display">
 \boldsymbol{s}_{t'} = g(\boldsymbol{y}_{t'-1}, \boldsymbol{c}_{t'}, \boldsymbol{s}_{t'-1})</script><p>令编码器在时间步$t$的隐藏状态为 $\boldsymbol{h}_t$，且总时间步数为 $T$。解码器在时间步 $t’$ 的背景变量为</p>
