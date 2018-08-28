@@ -110,7 +110,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/beam_search.png">
-<meta property="og:updated_time" content="2018-08-28T02:24:24.196Z">
+<meta property="og:updated_time" content="2018-08-28T05:47:34.912Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Seq2Seq (Encoder-Decoder) and Attention Mechanism">
 <meta name="twitter:description" content="对于循环神经网络，它的输入是一段不定长的序列，输出却是定长的。然而，很多问题的输出也是不定长的序列，比如机器翻译。当输入输出都是不定长序列时，我们可以使用编码器-解码器 (encoder-decoder) 来对其进行建模。">
@@ -468,7 +468,7 @@
 <li>Sutskever et al., Sequence to Sequence Learning with Neural Networks</li>
 </ul>
 <p>Cho 是 Yoshua Bengio 团队的，论文中 RNN Cell 使用的是 GRU，这也是 GRU 首次被提出！Sutskever 是谷歌团队的，论文中 RNN Cell 用的是 LSTM。RNN Cell 的不同是这两篇论文的主要区别。</p>
-<p>这两个工作几乎是同时提出，本质上都用到了2个循环神经网络 (RNN)，分别叫做编码器 (Encoder) 和解码器 (Decoder)。编码器对应于输入序列，将输入序列的信息编码到上下文变量 (context variable) 中；解码器对应输出序列，将上下文变量解码成输出序列。上下文变量</p>
+<p>这两个工作几乎是同时提出，本质上都用到了2个循环神经网络 (RNN)，分别叫做编码器 (Encoder) 和解码器 (Decoder)。编码器对应于输入序列，将输入序列的信息编码到上下文变量 (context variable) 中；解码器对应输出序列，将上下文变量解码成输出序列。上下文变量可以认为是输入序列的语义表达，但它不对输入序列直接编码，而是对输入序列对应的隐藏状态编码。</p>
 <p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/encoder_decoder.png" alt="encoder-decoder"></p>
 <p>在普通的编码器-解码器模型中，有一个很大的局限性。那就是上下文变量对于 Decoding 阶段每个时间步都是一样的，这可能是模型性能的一个瓶颈。我们希望不同时间步的解码能够依赖于与之更相关的上下文信息，换句话说，Decoding 往往并不需要整个输入序列的信息，要有所侧重。于是，Bengio 团队的 Bahdanau 在 2014年首次在编码器-解码器模型中引入了注意力机制 (Attention Mechanism)。</p>
 <ul>
