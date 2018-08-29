@@ -110,7 +110,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/beam_search.png">
-<meta property="og:updated_time" content="2018-08-28T06:24:00.150Z">
+<meta property="og:updated_time" content="2018-08-28T09:53:25.525Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Seq2Seq (Encoder-Decoder) and Attention Mechanism">
 <meta name="twitter:description" content="对于循环神经网络，它的输入是一段不定长的序列，输出却是定长的。然而，很多问题的输出也是不定长的序列，比如机器翻译。当输入输出都是不定长序列时，我们可以使用编码器-解码器 (encoder-decoder) 来对其进行建模。">
@@ -501,7 +501,8 @@
 <p>法语输出：“Ils”、“regardent”、“.”</p>
 </blockquote>
 <p>当输入输出都是不定长序列时，我们可以使用编码器—解码器 (encoder-decoder) 或者 seq2seq 模型。这两个模型本质上都用到了两个循环神经网络，分别叫做编码器和解码器。编码器对应输入序列，解码器对应输出序列。</p>
-<p>下图描述了使用编码器—解码器将上述英语句子翻译成法语句子的一种方法。在训练数据集中，我们可以在每个句子后附上特殊符号 “&lt;eos&gt;” (end of sequence) 表示序列的终止。编码器每个时间步的输入依次为英语句子中的单词、标点和特殊符号 “&lt;eos&gt;”。下图使用了编码器在最终时间步的隐藏状态作为输入句子的编码信息。解码器在各个时间步中使用输入句子的编码信息和上个时间步的输出以及隐藏状态作为输入。<br>我们希望解码器在各个时间步能正确依次输出翻译后的法语单词、标点和特殊符号 “&lt;eos&gt;”。<br>需要注意的是，解码器在最初时间步的输入用到了一个表示序列开始的特殊符号 “&lt;bos&gt;” (beginning of sequence) 。</p>
+<p>下图描述了使用编码器—解码器将上述英语句子翻译成法语句子的一种方法。在训练数据集中，我们可以在每个句子后附上特殊符号 “&lt;eos&gt;” (end of sequence) 表示序列的终止。编码器每个时间步的输入依次为英语句子中的单词、标点和特殊符号 “&lt;eos&gt;”。下图使用了编码器在最终时间步的隐藏状态作为输入句子的编码信息。解码器在各个时间步中使用输入句子的编码信息和上个时间步的输出以及隐藏状态作为输入。</p>
+<p>我们希望解码器在各个时间步能正确依次输出翻译后的法语单词、标点和特殊符号 “&lt;eos&gt;”。<br>需要注意的是，解码器在最初时间步的输入用到了一个表示序列开始的特殊符号 “&lt;bos&gt;” (beginning of sequence) 。</p>
 <p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/seq2seq.png" alt="使用编码器—解码器将句子由英语翻译成法语。编码器和解码器分别为循环神经网络。"></p>
 <p>接下来我们介绍编码器和解码器的定义。</p>
 <h2 id="编码器-Encoder"><a href="#编码器-Encoder" class="headerlink" title="编码器 Encoder"></a>编码器 Encoder</h2><p>编码器的作用是把一个不定长的输入序列变换成一个定长的上下文变量 $\boldsymbol{c}$，并在该上下文变量中编码输入序列信息。常用的编码器是循环神经网络。</p>
@@ -546,7 +547,7 @@ y_{t'} = \text{argmax}_{y_{t'} \in \mathcal{Y}} \mathbb{P}(y_{t'} \mid y_1, \ldo
 <h1 id="注意力机制-Attention-Mechanism"><a href="#注意力机制-Attention-Mechanism" class="headerlink" title="注意力机制 Attention Mechanism"></a>注意力机制 Attention Mechanism</h1><p>在”编码器—解码器”一节里的解码器设计中，输出序列的各个时间步使用了相同的上下文变量。如果解码器的不同时间步可以使用不同的上下文变量呢？这样做有什么好处？</p>
 <h2 id="动机-Motivation"><a href="#动机-Motivation" class="headerlink" title="动机 Motivation"></a>动机 Motivation</h2><p>以英语-法语翻译为例，给定一对英语输入序列 “They”、“are”、“watching”、“.” 和法语输出序列 “Ils”、“regardent”、“.”。解码器可以在输出序列的时间步1使用更集中编码了 “They”、“are” 信息的上下文变量来生成 “Ils”，在时间步2使用更集中编码了 “watching” 信息的上下文变量来生成“regardent”，在时间步3使用更集中编码了 “.” 信息的上下文变量来生成 “.”。这看上去就像是在解码器的每一时间步对输入序列中不同时间步编码的信息分配不同的注意力。这也是注意力机制的由来。它最早由 Bahanau 等提出。</p>
 <h2 id="设计-Design"><a href="#设计-Design" class="headerlink" title="设计 Design"></a>设计 Design</h2><p>本节沿用”编码器—解码器”一节里的数学符号。</p>
-<p>我们对”编码器—解码器”一节里的解码器稍作修改。在时间步 $t’$，设解码器的上下文变量为 <script type="math/tex">\boldsymbol{c}_{t'}</script>，输出 <script type="math/tex">y_{t'}</script> 的特征向量为 <script type="math/tex">\boldsymbol{y}_{t'}</script>。</p>
+<p>我们对”编码器—解码器”一节里的解码器稍作修改。在时间步 $t’​$，设解码器的上下文变量为 <script type="math/tex">\boldsymbol{c}_{t'}​</script>，输出 <script type="math/tex">y_{t'}​</script> 的特征向量为 <script type="math/tex">\boldsymbol{y}_{t'} ​</script>。</p>
 <p>和输入的特征向量一样，这里每个输出的特征向量也是模型参数。解码器在时间步 $t’$ 的隐藏状态</p>
 <script type="math/tex; mode=display">
 \boldsymbol{s}_{t'} = g(\boldsymbol{y}_{t'-1}, \boldsymbol{c}_{t'}, \boldsymbol{s}_{t'-1})</script><p>令编码器在时间步$t$的隐藏状态为 $\boldsymbol{h}_t$，且总时间步数为 $T$。解码器在时间步 $t’$ 的背景变量为</p>
@@ -582,7 +583,7 @@ e_{t' t} = \boldsymbol{v}^\top \tanh(\boldsymbol{W}_s \boldsymbol{s}_{t' - 1} + 
 <p>Seq2Seq 主要可以用于自然语言生成。</p>
 <p>自然语言生成 (NLG) 是一个非常有意思的研究领域，简单地说就是解决一个条件概率 P(output | context) 的建模问题，根据上下文来生成文本，这里的 context 可以做很多文章，对于生成文本的控制 (Seq2Seq 中的 Decoding 部分) 也可以做很多文章，anyway，利用 Seq2Seq 可以实现很多有趣的工作。</p>
 <p>2.有哪些方法可以设计解码器的输出层？</p>
-<p>答：最简单就是 RNN 每个节点的输出 + Softmax</p>
+<p>答：最简单就是 RNN 每个隐层节点的输出 + Softmax</p>
 <p>3.为什么 seq2seq 的 loss function 选择交叉熵损失函数？除了交叉熵损失函数，还可以有哪些选择？</p>
 <p>答：seq2seq 在生成输出序列的时候是一个时刻生成一项，换句话说，在每个时间步他在解决一个分类问题。</p>
 <p>而交叉熵损失函数是分类问题中最常用的损失函数，当然，如果 seq2seq 试图解决一个回归问题，我们可以使用别的损失函数，比如 L2 loss。</p>
