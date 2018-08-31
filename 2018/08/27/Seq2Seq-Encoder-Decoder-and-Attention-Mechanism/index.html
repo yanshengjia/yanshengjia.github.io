@@ -110,7 +110,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/beam_search.png">
-<meta property="og:updated_time" content="2018-08-28T09:53:25.525Z">
+<meta property="og:updated_time" content="2018-08-31T06:57:24.651Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Seq2Seq (Encoder-Decoder) and Attention Mechanism">
 <meta name="twitter:description" content="对于循环神经网络，它的输入是一段不定长的序列，输出却是定长的。然而，很多问题的输出也是不定长的序列，比如机器翻译。当输入输出都是不定长序列时，我们可以使用编码器-解码器 (encoder-decoder) 来对其进行建模。">
@@ -588,7 +588,7 @@ e_{t' t} = \boldsymbol{v}^\top \tanh(\boldsymbol{W}_s \boldsymbol{s}_{t' - 1} + 
 <p>答：seq2seq 在生成输出序列的时候是一个时刻生成一项，换句话说，在每个时间步他在解决一个分类问题。</p>
 <p>而交叉熵损失函数是分类问题中最常用的损失函数，当然，如果 seq2seq 试图解决一个回归问题，我们可以使用别的损失函数，比如 L2 loss。</p>
 <p>4.穷举搜索可否看做是特殊束宽的束搜索？为什么？</p>
-<p>答：可以。束宽是词典的大小。</p>
+<p>答：不能。穷举搜索在每个时间步并没有一个“束宽”来限制候选项的个数。</p>
 <p>5.除了自然语言处理，注意力机制还可以应用在哪些地方？</p>
 <p>答：CV, Speech 等领域。</p>
 <p>Attention 机制的思想在于给模型引入了新的非线性操作。</p>
