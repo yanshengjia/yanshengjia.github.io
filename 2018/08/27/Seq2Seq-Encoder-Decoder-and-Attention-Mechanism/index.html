@@ -110,7 +110,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/beam_search.png">
-<meta property="og:updated_time" content="2018-08-31T06:57:24.651Z">
+<meta property="og:updated_time" content="2018-09-05T03:22:24.326Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Seq2Seq (Encoder-Decoder) and Attention Mechanism">
 <meta name="twitter:description" content="对于循环神经网络，它的输入是一段不定长的序列，输出却是定长的。然而，很多问题的输出也是不定长的序列，比如机器翻译。当输入输出都是不定长序列时，我们可以使用编码器-解码器 (encoder-decoder) 来对其进行建模。">
@@ -468,7 +468,7 @@
 <li>Sutskever et al., Sequence to Sequence Learning with Neural Networks</li>
 </ul>
 <p>Cho 是 Yoshua Bengio 团队的，论文中 RNN Cell 使用的是 GRU，这也是 GRU 首次被提出！Sutskever 是谷歌团队的，论文中 RNN Cell 用的是 LSTM。RNN Cell 的不同是这两篇论文的主要区别。</p>
-<p>这两个工作几乎是同时提出，本质上都用到了2个循环神经网络 (RNN)，分别叫做编码器 (Encoder) 和解码器 (Decoder)。编码器对应于输入序列，将输入序列的信息编码到上下文变量 (context variable) 中；解码器对应输出序列，将上下文变量解码成输出序列。上下文变量可以认为是输入序列的语义表达，但它不对输入序列直接编码，而是对输入序列对应的隐藏状态编码。</p>
+<p>这两个工作几乎是同时提出，本质上都用到了2个循环神经网络 (RNN)，分别叫做编码器 (Encoder) 和解码器 (Decoder)。编码器对应于输入序列，将输入序列的信息编码到上下文变量 (context variable) 中；解码器对应输出序列，将上下文变量解码成输出序列。</p>
 <p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/encoder_decoder.png" alt="encoder-decoder"></p>
 <p>在普通的编码器-解码器模型中，有一个很大的局限性。那就是上下文变量对于 Decoding 阶段每个时间步都是一样的，这可能是模型性能的一个瓶颈。我们希望不同时间步的解码能够依赖于与之更相关的上下文信息，换句话说，Decoding 往往并不需要整个输入序列的信息，要有所侧重。于是，Bengio 团队的 Bahdanau 在 2014年首次在编码器-解码器模型中引入了注意力机制 (Attention Mechanism)。</p>
 <ul>
@@ -494,6 +494,7 @@
 <p>我们注意到在每一个案例中，都没有对序列长度进行预先特定约束，因为递归变换 (绿色部分) 是固定的，而且我们可以根据需要多次使用。</p>
 <p>在近些年，人们利用 RNN 不可思议地解决了各种各样的问题：语音识别，语言模型，翻译，图像描述，等等。关于 RNN 在这些方面取得的惊人成功，我们可以看 Andrej Karpathy 的博文：<a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank" rel="noopener">The Unreasonable Effectiveness of Recurrent Neural Networks</a>.</p>
 <p>RNN 之所以能够取得这样的成功，主要是因为 LSTM / GRU 的使用。他们都是带门控 (gate) 的 RNN 单元，用于解决长期依赖 (long-term dependencies) 的问题，对于很多任务，比普通的 RNN 单元效果要好很多！基本上现在所使用的循环神经网络用的都是 LSTM / GRU 单元。</p>
+<p>介绍完了 RNN，让我们回到这篇文章的主题，编码器-解码器。编码器和解码器都是 RNN，上下文变量为二者搭建起了信息传递的桥梁，编码器将输入序列的信息编码到上下文变量中，解码器将上下文变量中的信息解码生成输出序列。编码器-解码器的设计是多种多样的，需要根据具体问题具体分析。</p>
 <hr>
 <h1 id="编码器-解码器-Encoder-Decoder"><a href="#编码器-解码器-Encoder-Decoder" class="headerlink" title="编码器-解码器 Encoder-Decoder"></a>编码器-解码器 Encoder-Decoder</h1><p>在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如</p>
 <blockquote>
@@ -506,12 +507,22 @@
 <p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/seq2seq.png" alt="使用编码器—解码器将句子由英语翻译成法语。编码器和解码器分别为循环神经网络。"></p>
 <p>接下来我们介绍编码器和解码器的定义。</p>
 <h2 id="编码器-Encoder"><a href="#编码器-Encoder" class="headerlink" title="编码器 Encoder"></a>编码器 Encoder</h2><p>编码器的作用是把一个不定长的输入序列变换成一个定长的上下文变量 $\boldsymbol{c}$，并在该上下文变量中编码输入序列信息。常用的编码器是循环神经网络。</p>
-<p>让我们考虑批量大小为1的时序数据样本。假设输入序列是 <script type="math/tex">x_1, \ldots, x_T</script>，例如 <script type="math/tex">x_i</script> 是输入句子中的第 $i$ 个词。在时间步 $t$，循环神经网络将输入 <script type="math/tex">x_t</script> 的特征向量 <script type="math/tex">\boldsymbol{x}_t</script> 和上个时间步的隐藏状态 <script type="math/tex">\boldsymbol{h}_{t-1}</script> 变换为当前时间步的隐藏状态 <script type="math/tex">\boldsymbol{h}_t</script> 。我们可以用函数 <script type="math/tex">f</script> 表达循环神经网络隐藏层的变换：</p>
+<p>现在来看一下上一节的示意图中的编码器部分，”They are watching . &lt;eos&gt;” 是输入序列，由右箭头连起来的蓝色方块序列就是 RNN，蓝色方块是 RNN 的隐层节点 (包含了当前时间步的 hidden state)。</p>
+<p>让我们考虑批量大小为1的时序数据样本。假设输入序列是 <script type="math/tex">x_1, \ldots, x_T</script>，例如 <script type="math/tex">x_i</script> 是输入句子中的第 $i$ 个词。在每一个时间步，输入单词 <script type="math/tex">x_t</script> 的词向量 <script type="math/tex">\boldsymbol{x}_t</script> 会做一次矩阵投影 (matrix projection) 加上偏置项，然后用激活函数激活，得到当前时间步的隐藏状态 <script type="math/tex">\boldsymbol{h}_t</script>。我们可以用下面的公式表达编码器中时间步 $t$ 的隐藏状态 (假设使用 sigmoid 激活函数)：</p>
 <script type="math/tex; mode=display">
-\boldsymbol{h}_t = f(\boldsymbol{x}_t, \boldsymbol{h}_{t-1})</script><p>这里特征向量 $\boldsymbol{x}_t$ 既可以是需要学习的词向量，也可以是预训练的词向量。假设输入序列的总时间步数为 $T$ 。接下来编码器通过自定义函数 $q$ 将各个时间步的隐藏状态变换为上下文变量</p>
+\boldsymbol{h}_t = \sigma(W\boldsymbol{x}_t + b)</script><p>在时间步 $t$，循环神经网络将输入 <script type="math/tex">x_t</script> 的特征向量 <script type="math/tex">\boldsymbol{x}_t</script> 和上个时间步的隐藏状态 <script type="math/tex">\boldsymbol{h}_{t-1}</script> 变换为当前时间步的隐藏状态 <script type="math/tex">\boldsymbol{h}_t</script> 。我们可以用函数 <script type="math/tex">f</script> 表达循环神经网络隐藏层的变换：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{h}_t = f(\boldsymbol{x}_t, \boldsymbol{h}_{t-1})</script><p>这里特征向量 $\boldsymbol{x}_t$ 既可以是需要学习的词向量，也可以是预训练的词向量。如果使用的是预训练的词向量，我们可以对输入 <script type="math/tex">x_t</script> 的特征向量 <script type="math/tex">\boldsymbol{x}_t</script> 进行 one-hot 编码，直接从预训练的词向量矩阵 <script type="math/tex">\boldsymbol{E}</script> 读出相应编号的行向量。这也是为什么 Embedding layer 被称为 lookup table 的原因；如果想去学习特征向量 $\boldsymbol{x}_t$ 的词向量，定好词向量矩阵 <script type="math/tex">\boldsymbol{E}</script> 的维度，把它当做模型参数去学。</p>
+<p>假设输入序列的总时间步数为 $T$ 。接下来编码器通过自定义函数 $q$ 将各个时间步的隐藏状态变换为上下文变量</p>
 <script type="math/tex; mode=display">
 \boldsymbol{c} =  q(\boldsymbol{h}_1, \ldots, \boldsymbol{h}_T)</script><p>例如，当选择 $q(\boldsymbol{h}_1, \ldots, \boldsymbol{h}_T) = \boldsymbol{h}_T$ 时，上下文变量是输入序列最终时间步的隐藏状态 $\boldsymbol{h}_T$ 。</p>
-<p>以上描述的编码器是一个单向的循环神经网络，每个时间步的隐藏状态只取决于该时间步及之前的输入子序列。我们也可以使用双向循环神经网络构造编码器。这种情况下，编码器每个时间步的隐藏状态同时取决于该时间步之前和之后的子序列 (包括当前时间步的输入) ，并编码了整个序列的信息。</p>
+<p>上下文变量 $\boldsymbol{c}$ 可以认为是输入序列的语义表达，它总结了输入序列的信息，但它不对输入序列直接编码，而是对输入序列对应的隐含状态编码。</p>
+<p>上下文变量 <script type="math/tex">\boldsymbol{c}</script> 编码的方式是多种多样的，直接选择最终时间步的隐藏状态是最简单粗暴的，这样的 Encoder 中其实使用了一个正向的 RNN，每个时间步的隐藏状态只取决于该时间步及之前的输入子序列。我们可以用下面的公式来表达正向的 RNN：</p>
+<script type="math/tex; mode=display">
+\vec{\boldsymbol{h}_t} = f(\boldsymbol{x}_t, \vec{\boldsymbol{h}_{t-1}})</script><p>除了正向的 RNN，Encoder 中还可以使用反向的 RNN，每个时间步的隐藏状态只取决于该时间步及之后的输入子序列，上下文编码 <script type="math/tex">\boldsymbol{c}</script> 取第一个时间步的隐藏状态。形象地说，假如我们认为向右是正向的话，正向的 RNN 是从左向右扫一遍，反向的 RNN 是从右向左扫一遍。我们可以用下面的公式来表达反向的 RNN：</p>
+<script type="math/tex; mode=display">
+\overleftarrow{\boldsymbol{h}_t} = f(\boldsymbol{x}_t, \overleftarrow{\boldsymbol{h}_{t+1}})</script><p>我们也可以使用双向循环神经网络构造编码器。这种情况下，编码器每个时间步的隐藏状态同时取决于该时间步之前和之后的子序列 (包括当前时间步的输入) ，并编码了整个序列的信息。</p>
+<p>总之，Encoder 的设计是多种多样的。</p>
 <h2 id="解码器-Decoder"><a href="#解码器-Decoder" class="headerlink" title="解码器 Decoder"></a>解码器 Decoder</h2><p>刚刚已经介绍，编码器输出的上下文变量 $\boldsymbol{c}$ 编码了整个输入序列 <script type="math/tex">x_1, \ldots, x_T</script> 的信息。给定训练样本中的输出序列 <script type="math/tex">y_1, y_2, \ldots, y_{T'}</script> ，对每个时间步 $t’$ ，解码器输出 <script type="math/tex">y_{t'}</script> 的条件概率将基于之前的输出序列 <script type="math/tex">y_1, \ldots, y_{t'-1}</script> 和上下文变量 $\boldsymbol{c}$ ，即 <script type="math/tex">\mathbb{P}(y_{t'} \mid y_1, \ldots, y_{t'-1}, \boldsymbol{c})</script> 。</p>
 <p>为此，我们可以使用另一个循环神经网络作为解码器。</p>
 <p>在输出序列的时间步 $t^\prime$ ，解码器将上一时间步的输出 <script type="math/tex">y_{t^\prime-1}</script> 以及上下文变量 <script type="math/tex">\boldsymbol{c}</script> 作为输入，并将它们与上一时间步的隐藏状态 <script type="math/tex">\boldsymbol{s}_{t^\prime-1}</script> 变换为当前时间步的隐藏状态 <script type="math/tex">\boldsymbol{s}_{t^\prime}</script> 。因此，我们可以用函数 <script type="math/tex">g</script> 表达解码器隐藏层的变换：</p>
@@ -526,7 +537,7 @@
 \end{aligned}</script><p>并得到该输出序列的损失</p>
 <script type="math/tex; mode=display">
 \log\mathbb{P}(y_1, \ldots, y_{T'} \mid x_1, \ldots, x_T) = -\sum_{t'=1}^{T'} \log \mathbb{P}(y_{t'} \mid y_1, \ldots, y_{t'-1}, \boldsymbol{c})</script><p>在模型训练中，我们通过最小化这个损失函数来得到模型参数。</p>
-<h2 id="模型预测-Model-Prediction"><a href="#模型预测-Model-Prediction" class="headerlink" title="模型预测 Model Prediction"></a>模型预测 Model Prediction</h2><p>上一节介绍了如何训练输入输出均为不定长序列的编码器—解码器，这一节我们介绍如何使用编码器—解码器来预测不定长的序列。</p>
+<h3 id="训练技巧-Tricks"><a href="#训练技巧-Tricks" class="headerlink" title="训练技巧 Tricks"></a>训练技巧 Tricks</h3><h2 id="模型预测-Model-Prediction"><a href="#模型预测-Model-Prediction" class="headerlink" title="模型预测 Model Prediction"></a>模型预测 Model Prediction</h2><p>上一节介绍了如何训练输入输出均为不定长序列的编码器—解码器，这一节我们介绍如何使用编码器—解码器来预测不定长的序列。</p>
 <p>上一节里已经提到，在准备训练数据集时，我们通常会在样本的输入序列和输出序列后面分别附上一个特殊符号 “&lt;eos&gt;” 表示序列的终止。我们在接下来的讨论中也将沿用上一节的数学符号。为了便于讨论，假设解码器的输出是一段文本序列。设输出文本词典 $\mathcal{Y}$ (包含特殊符号“&lt;eos&gt;”) 的大小为 $\left|\mathcal{Y}\right|$ ，输出序列的最大长度为 $T’$ 。所有可能的输出序列一共有 $\mathcal{O}(\left|\mathcal{Y}\right|^{T’})$ 种。这些输出序列中所有特殊符号“&lt;eos&gt;”后面的子序列将被舍弃。</p>
 <h3 id="穷举搜索-Exhaustive-Search"><a href="#穷举搜索-Exhaustive-Search" class="headerlink" title="穷举搜索 Exhaustive Search"></a>穷举搜索 Exhaustive Search</h3><p>我们在上一节描述解码器时提到，输出序列基于输入序列的条件概率是 <script type="math/tex">\prod_{t'=1}^{T'} \mathbb{P}(y_{t'} \mid y_1, \ldots, y_{t'-1}, \boldsymbol{c})</script> 。为了搜索该条件概率最大的输出序列，一种方法是穷举所有可能输出序列的条件概率，并输出条件概率最大的序列。我们将该序列称为最优序列，并将这种搜索方法称为穷举搜索 (exhaustive search)。</p>
 <p>虽然穷举搜索可以得到最优序列，但它的计算开销 $\mathcal{O}(\left|\mathcal{Y}\right|^{T’})$ 很容易过大。例如，当 $|\mathcal{Y}|=10000$ 且 $T’=10$ 时，我们将评估 $10000^{10} = 10^{40}$ 个序列：这几乎不可能完成。</p>
@@ -545,7 +556,7 @@ y_{t'} = \text{argmax}_{y_{t'} \in \mathcal{Y}} \mathbb{P}(y_{t'} \mid y_1, \ldo
 <p>贪婪搜索可看作是束宽为1的束搜索。束搜索通过更灵活的束宽 $k$ 来权衡计算开销和搜索质量。</p>
 <hr>
 <h1 id="注意力机制-Attention-Mechanism"><a href="#注意力机制-Attention-Mechanism" class="headerlink" title="注意力机制 Attention Mechanism"></a>注意力机制 Attention Mechanism</h1><p>在”编码器—解码器”一节里的解码器设计中，输出序列的各个时间步使用了相同的上下文变量。如果解码器的不同时间步可以使用不同的上下文变量呢？这样做有什么好处？</p>
-<h2 id="动机-Motivation"><a href="#动机-Motivation" class="headerlink" title="动机 Motivation"></a>动机 Motivation</h2><p>以英语-法语翻译为例，给定一对英语输入序列 “They”、“are”、“watching”、“.” 和法语输出序列 “Ils”、“regardent”、“.”。解码器可以在输出序列的时间步1使用更集中编码了 “They”、“are” 信息的上下文变量来生成 “Ils”，在时间步2使用更集中编码了 “watching” 信息的上下文变量来生成“regardent”，在时间步3使用更集中编码了 “.” 信息的上下文变量来生成 “.”。这看上去就像是在解码器的每一时间步对输入序列中不同时间步编码的信息分配不同的注意力。这也是注意力机制的由来。它最早由 Bahanau 等提出。</p>
+<h2 id="动机-Motivation"><a href="#动机-Motivation" class="headerlink" title="动机 Motivation"></a>动机 Motivation</h2><p>以英语-法语翻译为例，给定一对英语输入序列 “They”、“are”、“watching”、“.” 和法语输出序列 “Ils”、“regardent”、“.”。解码器可以在输出序列的时间步1使用更集中编码了 “They”、“are” 信息的上下文变量来生成 “Ils”，在时间步2使用更集中编码了 “watching” 信息的上下文变量来生成“regardent”，在时间步3使用更集中编码了 “.” 信息的上下文变量来生成 “.”。这看上去就像是在解码器的每一时间步对输入序列中不同时间步编码的信息分配不同的注意力。这也是注意力机制的由来。它最早由 Bahanau 等人提出。</p>
 <h2 id="设计-Design"><a href="#设计-Design" class="headerlink" title="设计 Design"></a>设计 Design</h2><p>本节沿用”编码器—解码器”一节里的数学符号。</p>
 <p>我们对”编码器—解码器”一节里的解码器稍作修改。在时间步 $t’​$，设解码器的上下文变量为 <script type="math/tex">\boldsymbol{c}_{t'}​</script>，输出 <script type="math/tex">y_{t'}​</script> 的特征向量为 <script type="math/tex">\boldsymbol{y}_{t'} ​</script>。</p>
 <p>和输入的特征向量一样，这里每个输出的特征向量也是模型参数。解码器在时间步 $t’$ 的隐藏状态</p>
@@ -590,7 +601,7 @@ e_{t' t} = \boldsymbol{v}^\top \tanh(\boldsymbol{W}_s \boldsymbol{s}_{t' - 1} + 
 <p>4.穷举搜索可否看做是特殊束宽的束搜索？为什么？</p>
 <p>答：不能。穷举搜索在每个时间步并没有一个“束宽”来限制候选项的个数。</p>
 <p>5.除了自然语言处理，注意力机制还可以应用在哪些地方？</p>
-<p>答：CV, Speech 等领域。</p>
+<p>答：CV, Speech and More。</p>
 <p>Attention 机制的思想在于给模型引入了新的非线性操作。</p>
 <p>传统 CNN 架构里非线性操作只有 max pooling 和非线性激活函数。虽说理论上只用这俩去拟合复杂函数仍然是可行的，但是会比较困难，且参数量巨大。相反，如果直接给一个与目标函数相近的非线性函数来作为函数线性组合的一个基，就方便很多了。</p>
 <hr>
@@ -920,7 +931,7 @@ e_{t' t} = \boldsymbol{v}^\top \tanh(\boldsymbol{W}_s \boldsymbol{s}_{t' - 1} + 
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍-Introduction"><span class="nav-number">1.</span> <span class="nav-text">介绍 Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#循环神经网络-RNN"><span class="nav-number">2.</span> <span class="nav-text">循环神经网络 RNN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编码器-解码器-Encoder-Decoder"><span class="nav-number">3.</span> <span class="nav-text">编码器-解码器 Encoder-Decoder</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编码器-Encoder"><span class="nav-number">3.1.</span> <span class="nav-text">编码器 Encoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解码器-Decoder"><span class="nav-number">3.2.</span> <span class="nav-text">解码器 Decoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型训练-Model-Training"><span class="nav-number">3.3.</span> <span class="nav-text">模型训练 Model Training</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型预测-Model-Prediction"><span class="nav-number">3.4.</span> <span class="nav-text">模型预测 Model Prediction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#穷举搜索-Exhaustive-Search"><span class="nav-number">3.4.1.</span> <span class="nav-text">穷举搜索 Exhaustive Search</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#贪婪搜索-Greedy-Search"><span class="nav-number">3.4.2.</span> <span class="nav-text">贪婪搜索 Greedy Search</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#束搜索-Beam-Search"><span class="nav-number">3.4.3.</span> <span class="nav-text">束搜索 Beam Search</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注意力机制-Attention-Mechanism"><span class="nav-number">4.</span> <span class="nav-text">注意力机制 Attention Mechanism</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#动机-Motivation"><span class="nav-number">4.1.</span> <span class="nav-text">动机 Motivation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计-Design"><span class="nav-number">4.2.</span> <span class="nav-text">设计 Design</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思考题"><span class="nav-number">5.</span> <span class="nav-text">思考题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">6.</span> <span class="nav-text">References</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍-Introduction"><span class="nav-number">1.</span> <span class="nav-text">介绍 Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#循环神经网络-RNN"><span class="nav-number">2.</span> <span class="nav-text">循环神经网络 RNN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编码器-解码器-Encoder-Decoder"><span class="nav-number">3.</span> <span class="nav-text">编码器-解码器 Encoder-Decoder</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编码器-Encoder"><span class="nav-number">3.1.</span> <span class="nav-text">编码器 Encoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解码器-Decoder"><span class="nav-number">3.2.</span> <span class="nav-text">解码器 Decoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型训练-Model-Training"><span class="nav-number">3.3.</span> <span class="nav-text">模型训练 Model Training</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#训练技巧-Tricks"><span class="nav-number">3.3.1.</span> <span class="nav-text">训练技巧 Tricks</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型预测-Model-Prediction"><span class="nav-number">3.4.</span> <span class="nav-text">模型预测 Model Prediction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#穷举搜索-Exhaustive-Search"><span class="nav-number">3.4.1.</span> <span class="nav-text">穷举搜索 Exhaustive Search</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#贪婪搜索-Greedy-Search"><span class="nav-number">3.4.2.</span> <span class="nav-text">贪婪搜索 Greedy Search</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#束搜索-Beam-Search"><span class="nav-number">3.4.3.</span> <span class="nav-text">束搜索 Beam Search</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注意力机制-Attention-Mechanism"><span class="nav-number">4.</span> <span class="nav-text">注意力机制 Attention Mechanism</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#动机-Motivation"><span class="nav-number">4.1.</span> <span class="nav-text">动机 Motivation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计-Design"><span class="nav-number">4.2.</span> <span class="nav-text">设计 Design</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思考题"><span class="nav-number">5.</span> <span class="nav-text">思考题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">6.</span> <span class="nav-text">References</span></a></li></ol></div>
             
 
           </div>
