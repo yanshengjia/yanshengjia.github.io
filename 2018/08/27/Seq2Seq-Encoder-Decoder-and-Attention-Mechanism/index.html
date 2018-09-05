@@ -111,7 +111,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/s2s_prob2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/beam_search.png">
-<meta property="og:updated_time" content="2018-09-05T07:37:35.177Z">
+<meta property="og:updated_time" content="2018-09-05T08:13:14.663Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Seq2Seq (Encoder-Decoder) and Attention Mechanism">
 <meta name="twitter:description" content="对于循环神经网络，它的输入是一段不定长的序列，输出却是定长的。然而，很多问题的输出也是不定长的序列，比如机器翻译。当输入输出都是不定长序列时，我们可以使用编码器-解码器 (encoder-decoder) 来对其进行建模。">
@@ -541,7 +541,7 @@
 \mathbb{P}(y_{t'} \mid y_1, \ldots, y_{t'-1}, \boldsymbol{c}) = p(y_{t^\prime-1}, \boldsymbol{s}_{t^\prime}, \boldsymbol{c})</script><p>将上一时间步的隐藏状态 <script type="math/tex">\boldsymbol{s}_{t^\prime-1}</script> 做一个矩阵投影 (projection) 再做一次 softmax 即可得到上一时间步的输出 <script type="math/tex">y_{t^\prime-1}</script>，上下文变量 <script type="math/tex">\boldsymbol{c}</script> 的构造在编码器一节已经讲了，那么解码器中的隐藏状态 <script type="math/tex">\boldsymbol{s}_{t^\prime}</script> 如何得到呢？</p>
 <p>在输出序列的时间步 $t^\prime$ ，解码器将上一时间步的输出 <script type="math/tex">y_{t^\prime-1}</script> 以及上下文变量 <script type="math/tex">\boldsymbol{c}</script> 作为输入，并将它们与上一时间步的隐藏状态 <script type="math/tex">\boldsymbol{s}_{t^\prime-1}</script> 变换为当前时间步的隐藏状态 <script type="math/tex">\boldsymbol{s}_{t^\prime}</script> 。因此，我们可以用函数 <script type="math/tex">g</script> 表达解码器隐藏层的变换：</p>
 <script type="math/tex; mode=display">
-\boldsymbol{s}_{t^\prime} = g(y_{t^\prime-1}, \boldsymbol{c}, \boldsymbol{s}_{t^\prime-1})</script><p>现在，<script type="math/tex">g</script> 函数的设计变成了解码器设计的关键，在 Bahanau 等人的第一篇关于注意力机制的论文中这个 <script type="math/tex">g</script> 函数就是 GRU。</p>
+\boldsymbol{s}_{t^\prime} = g(y_{t^\prime-1}, \boldsymbol{c}, \boldsymbol{s}_{t^\prime-1})</script><p>现在，<script type="math/tex">g</script> 函数的设计变成了解码器设计的关键，在 Bahanau 等人的第一篇关于注意力机制的论文中这个 <script type="math/tex">g</script> 函数就是 GRU，它的具体实现会在后面的注意力机制一节中给出一个案例。</p>
 <p>有了解码器的隐藏状态后，我们可以使用自定义的输出层和 softmax 运算来计算 <script type="math/tex">\mathbb{P}(y_{t^\prime} \mid y_1, \ldots, y_{t^\prime-1}, \boldsymbol{c})</script> ，就像之前提到的基于当前时间步的解码器隐藏状态 <script type="math/tex">\boldsymbol{s}_{t^\prime}</script>、上一时间步的输出 <script type="math/tex">y_{t^\prime-1}</script> 以及上下文变量 <script type="math/tex">\boldsymbol{c}</script> 来计算当前时间步输出 <script type="math/tex">y_{t^\prime}</script> 的概率分布。</p>
 <h2 id="模型训练-Model-Training"><a href="#模型训练-Model-Training" class="headerlink" title="模型训练 Model Training"></a>模型训练 Model Training</h2><p>根据最大似然估计，我们可以最大化输出序列基于输入序列的条件概率</p>
 <script type="math/tex; mode=display">
@@ -594,21 +594,23 @@ y_{t'} = \text{argmax}_{y_{t'} \in \mathcal{Y}} \mathbb{P}(y_{t'} \mid y_1, \ldo
 <p>上图通过一个例子演示了束搜索的过程。假设输出序列的词典中只包含五个元素：$\mathcal{Y} = {A, B, C, D, E}$，且其中一个为特殊符号 “&lt;eos&gt;”。设束搜索的束宽等于2，输出序列最大长度为3。在输出序列的时间步1时，假设条件概率 $\mathbb{P}(y_1 \mid \boldsymbol{c})$ 最大的两个词为 $A$ 和 $C$。我们在时间步2时将对所有的 $y_2 \in \mathcal{Y}$ 都分别计算 $\mathbb{P}(y_2 \mid A, \boldsymbol{c})$ 和 $\mathbb{P}(y_2 \mid C, \boldsymbol{c})$，并从计算出的10个条件概率中取最大的两个：假设为 $\mathbb{P}(B \mid A, \boldsymbol{c})$ 和$\mathbb{P}(E \mid C, \boldsymbol{c})$。那么，我们在时间步3时将对所有的 $y_3 \in \mathcal{Y}$ 都分别计算 $\mathbb{P}(y_3 \mid A, B, \boldsymbol{c})$ 和 $\mathbb{P}(y_3 \mid C, E, \boldsymbol{c})$，并从计算出的10个条件概率中取最大的两个：假设为 $\mathbb{P}(D \mid A, B, \boldsymbol{c})$ 和 $\mathbb{P}(D \mid C, E, \boldsymbol{c})$。接下来，我们可以在6个候选输出序列：$A$、$C$、$AB$、$CE$、$ABD$和$CED$中筛选出包含特殊符号“&lt;eos&gt;”的序列，并将它们中所有特殊符号“&lt;eos&gt;”后面的子序列舍弃，得到最终候选输出序列。我们可以在最终候选输出序列中取分数最高的序列作为输出序列。</p>
 <p>贪婪搜索可看作是束宽为1的束搜索。束搜索通过更灵活的束宽 $k$ 来权衡计算开销和搜索质量。</p>
 <hr>
-<h1 id="注意力机制-Attention-Mechanism"><a href="#注意力机制-Attention-Mechanism" class="headerlink" title="注意力机制 Attention Mechanism"></a>注意力机制 Attention Mechanism</h1><p>在”编码器—解码器”一节里的解码器设计中，输出序列的各个时间步使用了相同的上下文变量。换句话说，解码阶段每个时间步看到的输入序列的信息都是一样的，这可能是模型的一个瓶颈。如果解码器的不同时间步可以使用不同的上下文变量呢？这样做有什么好处？</p>
+<h1 id="注意力机制-Attention-Mechanism"><a href="#注意力机制-Attention-Mechanism" class="headerlink" title="注意力机制 Attention Mechanism"></a>注意力机制 Attention Mechanism</h1><p>在”编码器—解码器”一节里的解码器设计中，输出序列的各个时间步使用了相同的上下文变量。换句话说，解码阶段不同时间步看到的输入序列的信息都是一样的，这可能是模型的一个瓶颈。如果解码器的不同时间步可以使用不同的上下文变量呢？这样做有什么好处？</p>
 <h2 id="动机-Motivation"><a href="#动机-Motivation" class="headerlink" title="动机 Motivation"></a>动机 Motivation</h2><p>以英语-法语翻译为例，给定一对英语输入序列 “They”、“are”、“watching”、“.” 和法语输出序列 “Ils”、“regardent”、“.”。解码器可以在输出序列的时间步1使用更集中编码了 “They”、“are” 信息的上下文变量来生成 “Ils”，在时间步2使用更集中编码了 “watching” 信息的上下文变量来生成“regardent”，在时间步3使用更集中编码了 “.” 信息的上下文变量来生成 “.”。这看上去就像是在解码器的每一时间步对输入序列中不同时间步编码的信息分配不同的注意力。这也是注意力机制的由来。它最早由 Bahanau 等人提出。</p>
 <h2 id="设计-Design"><a href="#设计-Design" class="headerlink" title="设计 Design"></a>设计 Design</h2><p>本节沿用”编码器—解码器”一节里的数学符号。</p>
-<p>我们对”编码器—解码器”一节里的解码器稍作修改。在时间步 $t’​$，设解码器的上下文变量为 <script type="math/tex">\boldsymbol{c}_{t'}​</script>，输出 <script type="math/tex">y_{t'}​</script> 的特征向量为 <script type="math/tex">\boldsymbol{y}_{t'} ​</script>。</p>
-<p>和输入的特征向量一样，这里每个输出的特征向量也是模型参数。解码器在时间步 $t’$ 的隐藏状态</p>
+<p>我们对”编码器—解码器”一节里的解码器稍作修改。在时间步 $t’$，解码器的上下文变量从原来的 <script type="math/tex">\boldsymbol{c}</script> 泛化了，设为 <script type="math/tex">\boldsymbol{c}_{t'}</script>，输出 <script type="math/tex">y_{t'}</script> 的特征向量为 <script type="math/tex">\boldsymbol{y}_{t'}</script>。</p>
+<p>和输入的特征向量一样，这里每个输出的特征向量也是模型参数。解码器在时间步 $t’$ 的隐藏状态的计算也发生了改变：</p>
 <script type="math/tex; mode=display">
-\boldsymbol{s}_{t'} = g(\boldsymbol{y}_{t'-1}, \boldsymbol{c}_{t'}, \boldsymbol{s}_{t'-1})</script><p>令编码器在时间步$t$的隐藏状态为 $\boldsymbol{h}_t$，且总时间步数为 $T$。解码器在时间步 $t’$ 的背景变量为</p>
+\boldsymbol{s}_{t'} = g(\boldsymbol{y}_{t'-1}, \boldsymbol{c}_{t'}, \boldsymbol{s}_{t'-1})</script><p>那么 <script type="math/tex">\boldsymbol{c}_{t'}</script> 如何设计？就像之前提到的，注意力机制的目标是让解码器在每一时间步对输入序列中不同时间步编码的信息分配不同的注意力。那么体现在上下文变量中，<script type="math/tex">\boldsymbol{c}_{t'}</script> 就是 Encoder 中不同时间步的隐藏状态的加权平均。</p>
+<p>令编码器在时间步 $t$ 的隐藏状态为 $\boldsymbol{h}_t$，且总时间步数为 $T$。解码器在时间步 $t’$ 的上下文变量为</p>
 <script type="math/tex; mode=display">
-\boldsymbol{c}_{t'} = \sum_{t=1}^T \alpha_{t' t} \boldsymbol{h}_t</script><p>其中 $\alpha_{t’ t}$ 是权值。也就是说，给定解码器的当前时间步 $t’$，我们需要对编码器中不同时间步 $t$ 的隐藏状态求加权平均。这里的权值也称注意力权重。它的计算公式是</p>
+\boldsymbol{c}_{t'} = \sum_{t=1}^T \alpha_{t' t} \boldsymbol{h}_t</script><p>其中 $\alpha_{t’ t}$ 是权值。也就是说，给定解码器的当前时间步 $t’$，我们需要对编码器中不同时间步 $t$ 的隐藏状态求加权平均。说到加权平均，我们很容易想到 softmax 函数。这里的权值也称注意力权重。它的计算公式是</p>
 <script type="math/tex; mode=display">
 \alpha_{t' t} = \frac{\exp(e_{t' t})}{ \sum_{k=1}^T \exp(e_{t' k}) }</script><p>其中 $e_{t’ t} \in \mathbb{R}$ 的计算为</p>
 <script type="math/tex; mode=display">
-e_{t' t} = a(\boldsymbol{s}_{t' - 1}, \boldsymbol{h}_t)</script><p>上式中的函数 $a$ 有多种设计方法。Bahanau 等使用了多层感知机：</p>
+e_{t' t} = a(\boldsymbol{s}_{t' - 1}, \boldsymbol{h}_t)</script><p>上式中的函数 $a$ 就是注意力函数，有多种设计方法。Bahanau 等使用了多层感知机：</p>
 <script type="math/tex; mode=display">
 e_{t' t} = \boldsymbol{v}^\top \tanh(\boldsymbol{W}_s \boldsymbol{s}_{t' - 1} + \boldsymbol{W}_h \boldsymbol{h}_t)</script><p>其中 $\boldsymbol{v}$、$\boldsymbol{W}_s$、$\boldsymbol{W}_h$ 以及编码器与解码器中的各个权重和偏差都是模型参数。</p>
+<p>在解码器一节中，讲到了解码器设计的关键就在于那个 <script type="math/tex">g</script> 函数，<script type="math/tex">g</script> 函数的三个输入参数 <script type="math/tex">\boldsymbol{y}_{t'-1}, \boldsymbol{c}_{t'}, \boldsymbol{s}_{t'-1}</script> 如何描述？现在我们来看它的一个具体设计，变种 RNN：GRU。</p>
 <p>Bahanau 等在编码器和解码器中分别使用了门控循环单元 GRU。在解码器中，我们需要对门控循环单元的设计稍作修改。解码器在 $t’ $ 时间步的隐藏状态为</p>
 <script type="math/tex; mode=display">
 \boldsymbol{s}_{t'} = \boldsymbol{z}_{t'} \odot \boldsymbol{s}_{t'-1}  + (1 - \boldsymbol{z}_{t'}) \odot \tilde{\boldsymbol{s}}_{t'}</script><p>其中的重置门、更新门和候选隐含状态分别为</p>
@@ -617,7 +619,9 @@ e_{t' t} = \boldsymbol{v}^\top \tanh(\boldsymbol{W}_s \boldsymbol{s}_{t' - 1} + 
 \boldsymbol{r}_{t'} &= \sigma(\boldsymbol{W}_{yr} \boldsymbol{y}_{t'-1} + \boldsymbol{W}_{sr} \boldsymbol{s}_{t' - 1} + \boldsymbol{W}_{cr} \boldsymbol{c}_{t'} + \boldsymbol{b}_r),\\
 \boldsymbol{z}_{t'} &= \sigma(\boldsymbol{W}_{yz} \boldsymbol{y}_{t'-1} + \boldsymbol{W}_{sz} \boldsymbol{s}_{t' - 1} + \boldsymbol{W}_{cz} \boldsymbol{c}_{t'} + \boldsymbol{b}_z),\\
 \tilde{\boldsymbol{s}}_{t'} &= \text{tanh}(\boldsymbol{W}_{ys} \boldsymbol{y}_{t'-1} + \boldsymbol{W}_{ss} (\boldsymbol{s}_{t' - 1} \odot \boldsymbol{r}_{t'}) + \boldsymbol{W}_{cs} \boldsymbol{c}_{t'} + \boldsymbol{b}_s).
-\end{aligned}</script><hr>
+\end{aligned}</script><p>重置门和更新门中都体现了<script type="math/tex">g</script> 函数的三个输入参数，重置门用于控制隐藏状态的流动，换句话说，控制记忆。值得注意的是，候选隐藏含量中的 <script type="math/tex">\odot</script> 是逐点相乘器，上下文变量 <script type="math/tex">\boldsymbol{c}_{t'}</script> 并不参与门控。有了候选隐含变量 <script type="math/tex">\tilde{\boldsymbol{s}}_{t'}</script> 之后，通过更新门 <script type="math/tex">\boldsymbol{z}_{t'}</script> 控制信息，得到隐含变量 <script type="math/tex">\boldsymbol{s}_{t'}</script> 。</p>
+<p>到这里，Seq2Seq 和 Attention Mechanism 就讲完了！Seq2Seq (Encoder-Decoder) 模型的构思还是很巧妙的，能够处理输入序列和输出序列都是不定长的问题。</p>
+<hr>
 <h1 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h1><p>1.除了机器翻译 (Neural Machine Translation)，你还能想到 seq2seq 的哪些应用？</p>
 <p>答：</p>
 <ul>
