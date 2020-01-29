@@ -1,0 +1,1121 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Monaco:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Cross Validation," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="最近在写一个层次分类模型，为了更好地选择模型，用到了交叉验证，于是详细了解了一下。">
+<meta name="keywords" content="Cross Validation">
+<meta property="og:type" content="article">
+<meta property="og:title" content="交叉验证的原理及实现">
+<meta property="og:url" content="http://yanshengjia.com/2018/07/13/交叉验证的原理及实现/index.html">
+<meta property="og:site_name" content="WildPointer">
+<meta property="og:description" content="最近在写一个层次分类模型，为了更好地选择模型，用到了交叉验证，于是详细了解了一下。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/10_fold_cv.png">
+<meta property="og:updated_time" content="2019-12-26T16:23:40.876Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="交叉验证的原理及实现">
+<meta name="twitter:description" content="最近在写一个层次分类模型，为了更好地选择模型，用到了交叉验证，于是详细了解了一下。">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/10_fold_cv.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide","offset":12,"offset_float":0,"b2t":true,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: 'K1YPL7B54D',
+      apiKey: '7f22077ed5b2dfbd70cc761b8cf48112',
+      indexName: 'wildpointer',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yanshengjia.com/2018/07/13/交叉验证的原理及实现/"/>
+
+
+
+
+
+  <title> 交叉验证的原理及实现 | WildPointer </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">WildPointer</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Welcome to my world!</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Arc
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Cat
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tag
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-projects">
+          <a href="/projects" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-star"></i> <br />
+            
+            Proj
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tech">
+          <a href="/tech" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-code"></i> <br />
+            
+            Tech
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-donate">
+          <a href="/donate" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-usd"></i> <br />
+            
+            Donate
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-me">
+          <a href="/me" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            Me
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yanshengjia.com/2018/07/13/交叉验证的原理及实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shengjia Yan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WildPointer">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                交叉验证的原理及实现
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-13T16:24:42+08:00">
+                2018-07-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/13/交叉验证的原理及实现/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/07/13/交叉验证的原理及实现/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在写一个层次分类模型，为了更好地选择模型，用到了交叉验证，于是详细了解了一下。</p>
+<a id="more"></a>
+<hr>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>交叉验证一般应用于样本数据不充足的情况下，它的基本想法就是重复地使用数据：把给定的数据进行切分，将切分的数据集组合为训练集和测试集，在此基础上反复地进行训练、测试以及模型选择。</p>
+<p>交叉验证的目的是为了能有效地估计模型的泛化能力 (测试误差)，从而进行模型选择。</p>
+<hr>
+<h2 id="交叉验证方法"><a href="#交叉验证方法" class="headerlink" title="交叉验证方法"></a>交叉验证方法</h2><h3 id="保留交叉验证-hand-out-cross-validation"><a href="#保留交叉验证-hand-out-cross-validation" class="headerlink" title="保留交叉验证 hand-out cross validation"></a>保留交叉验证 hand-out cross validation</h3><p>首先随机地将已给数据分为两部分：训练集和测试集 (例如，70% 训练集，30% 测试集)；</p>
+<p>然后用训练集在各种条件下 (比如，不同的参数个数) 训练模型，从而得到不同的模型；</p>
+<p>在测试集上评价各个模型的测试误差，选出测试误差最小的模型。</p>
+<p>这种方式其实严格意义上并不能算是交叉验证，因为训练集的样本数始终是那么多，模型并没有看到更多的样本，没有体现交叉的思想。</p>
+<p>由于是随机的将原始数据分组，所以最后测试集上准确率的高低与原始数据的分组有很大的关系，所以这种方法得到的结果其实并不具有说服性。</p>
+<h3 id="k折交叉验证-k-fold-cross-validation"><a href="#k折交叉验证-k-fold-cross-validation" class="headerlink" title="k折交叉验证 k-fold cross validation"></a>k折交叉验证 k-fold cross validation</h3><p>这是应用最多的交叉验证方式。</p>
+<p>首先随机地将数据集切分为 k 个互不相交的大小相同的子集；</p>
+<p>然后将 k-1 个子集当成训练集训练模型，剩下的 (held out) 一个子集当测试集测试模型；</p>
+<p>将上一步对可能的 k 种选择重复进行 (每次挑一个不同的子集做测试集)；</p>
+<p>这样就训练了 k 个模型，每个模型都在相应的测试集上计算测试误差，得到了 k 个测试误差，对这 k 次的测试误差取平均便得到一个交叉验证误差。这便是交叉验证的过程。</p>
+<p>计算平均测试误差 (交叉验证误差) 来评估当前参数下的模型性能。</p>
+<p>在模型选择时，假设模型有许多 tuning parameter 可供调参，一组 tuning parameter 便确定一个模型，计算其交叉验证误差，最后选择使得交叉验证误差最小的那一组 tuning parameter。这便是模型选择过程。</p>
+<p>k 一般大于等于2，实际操作时一般从3开始取，只有在原始数据集样本数量小的时候才会尝试取2。</p>
+<p>k折交叉验证可以有效的避免过拟合以及欠拟合状态的发生，最后得到的结果也比较具有说服性。</p>
+<p>k折交叉验证最大的优点：</p>
+<ul>
+<li>所有数据都会参与到训练和预测中，有效避免过拟合，充分体现了交叉的思想</li>
+</ul>
+<p>交叉验证可能存在 bias 或者 variance。如果我们提高切分的数量 k，variance 会上升但 bias 可能会下降。相反得，如果降低 k，bias 可能会上升但 variance 会下降。bias-variance tradeoff 是一个有趣的问题，我们希望模型的 bias 和 variance 都很低，但有时候做不到，只好权衡利弊，选取他们二者的平衡点。</p>
+<p>通常使用10折交叉验证，当然这也取决于训练数据的样本数量。</p>
+<p>10-fold cross validation:</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/10_fold_cv.png" alt="10-fold cv"></p>
+<h3 id="留一交叉验证-leave-one-out-cross-validation"><a href="#留一交叉验证-leave-one-out-cross-validation" class="headerlink" title="留一交叉验证 leave-one-out cross validation"></a>留一交叉验证 leave-one-out cross validation</h3><p>k折交叉验证的特殊情况，k=N，N 是数据集的样本数量，往往在数据缺乏的情况下使用。</p>
+<p>留一交叉验证的优点是：</p>
+<ul>
+<li>每一回合中几乎所有的样本皆用于训练模型，因此最接近原始样本的分布，这样评估所得的结果比较可靠。</li>
+<li>实验过程中没有随机因素会影响实验数据，确保实验过程是可以被复制的。</li>
+</ul>
+<p>缺点是：</p>
+<ul>
+<li>计算成本高，因为需要建立的模型数量和原始数据集样本数量一致，尤其当样本数量很大的时候。可以考虑并行化训练模型减少训练时间。</li>
+</ul>
+<p>总之，交叉验证对于我们选择模型以及模型的参数都是很有帮助的。</p>
+<p>但以上交叉验证的方法都有一个问题，就是在数据分组的时候缺乏随机性，以 k折交叉验证 为例，每个数据样本只能固定属于 k 个子集中的一个，可能会造成对于最终结果的影响。于是有人提出了 bootstrapping。</p>
+<hr>
+<h2 id="Bootstrapping"><a href="#Bootstrapping" class="headerlink" title="Bootstrapping"></a>Bootstrapping</h2><p>cv 和 bootstrapping 都是重采样 (resampling) 的方法。机器学习中常用的 bagging 和 boosting 都是 bootstrapping 思想的应用。</p>
+<p>bootstrapping 的思想是依靠自己的资源，称为自助法，它是一种有放回的抽样方法。</p>
+<p>bootstrapping 的过程如下：</p>
+<ol>
+<li>数据假设要分成10组，则先设置一个采样比例，比如采样比例70%。则10组数据是每次从原始数据集中随机采样总数70%的数据构成训练集1，没有选中的样本作为测试集1；然后把数据放回，再随机采样总数70%的数据构成训练集2，没选中的作为测试集2……以此类推，放回式采样10组。</li>
+<li>训练生成10个模型</li>
+<li>计算平均测试误差来评估当前参数下的模型性能</li>
+</ol>
+<p>除此之外，bootstrapping 在集成学习方法中也很有用。比如我们可以用经过 bootstrapping 的多组数据集构建模型 (比如决策树)，然后将这些模型打包 (bag，就像随机森林)，最后使用这些模型的最大投票结果作为我们最终的输出。</p>
+<hr>
+<h2 id="用-sklearn-实现交叉验证"><a href="#用-sklearn-实现交叉验证" class="headerlink" title="用 sklearn 实现交叉验证"></a>用 sklearn 实现交叉验证</h2><p>莺尾花分类问题，使用5折交叉验证</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.neighbors <span class="keyword">import</span> KNeighborsClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.cross_validation <span class="keyword">import</span> cross_val_score</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cv_train</span><span class="params">()</span>:</span></span><br><span class="line">    iris = load_iris()</span><br><span class="line">    X = iris.data</span><br><span class="line">    y = iris.target</span><br><span class="line">    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">    knn = KNeighborsClassifier(n_neighbors=<span class="number">5</span>)</span><br><span class="line">    knn.fit(X_train, y_train)</span><br><span class="line">    scores = cross_val_score(knn, X, y, cv=<span class="number">5</span>, scoring=<span class="string">'accuracy'</span>)</span><br><span class="line">    print(scores)    <span class="comment"># [0.96666667 1.         0.93333333 0.96666667 1.        ]</span></span><br><span class="line">    print(scores.mean())    <span class="comment"># 0.9733333333333334</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    cv_train()</span><br></pre></td></tr></table></figure>
+<p>有了交叉验证，通过指定不同的模型参数 (上面的 knn 的参数就是 n_neighbors)，计算平均测试误差 (当然评估指标是根据问题的类型而定，acc 用于分类模型，mse 用于回归模型)，指标最好的模型对应的参数就是我们要选择的模型参数。</p>
+<p>对于一些复杂的自定义的模型，数据集的读取并不是 sklearn 风格的，比如我最近写的一个层次分类模型，每一个层中每一个分类器的数据读取都是要到特征配置文件中找到对应的特征组再去数据集中读出来，这样很难使用 sklearn 的接口，于是我自己写了一个切分数据集的函数，来进行交叉验证。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">kfold_split</span><span class="params">(dataset, k_splits)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Split the dataset into k folds</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        dataset: the list of sample features</span></span><br><span class="line"><span class="string">        k_splits: the number of folds</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">assert</span> len(dataset) &gt; <span class="number">0</span>, <span class="string">'Dataset is empty!'</span></span><br><span class="line">    cv_dataset_list = []    <span class="comment"># [(trainset_1, testset_1), ..., (trainset_k, testset_k)]</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># chunk the dataset into k folds</span></span><br><span class="line">    dataset_size = len(dataset)</span><br><span class="line">    fold_size = dataset_size / float(k_splits)</span><br><span class="line">    chunked_dataset = []</span><br><span class="line">    last = <span class="number">0.0</span></span><br><span class="line">    split_counter = <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> split_counter &lt;= k_splits:</span><br><span class="line">        chunked_dataset.append(dataset[int(last):int(last + fold_size)])</span><br><span class="line">        last += fold_size</span><br><span class="line">        split_counter += <span class="number">1</span></span><br><span class="line">    <span class="keyword">assert</span> len(chunked_dataset) == k_splits, <span class="string">'The size of chunked_dataset should be same as k_splits!'</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> range(k_splits):</span><br><span class="line">        testset = chunked_dataset[index]</span><br><span class="line">        trainset = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(k_splits):</span><br><span class="line">            <span class="keyword">if</span> i == index:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            trainset += chunked_dataset[i]</span><br><span class="line"></span><br><span class="line">        train_test = (trainset, testset)</span><br><span class="line">        cv_dataset_list.append(train_test)</span><br><span class="line">    <span class="keyword">return</span> cv_dataset_list</span><br></pre></td></tr></table></figure>
+<p>k 折切分数据集后，在包含 k 个 (训练集，测试集) 组的列表中逐一训练、测试模型，得到 k 个模型，最后计算这些模型的平均测试误差，这样就完成了一次交叉验证。</p>
+<hr>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li>李航，统计学习方法</li>
+<li>Cross Validation, Wikipedia</li>
+<li><a href="https://morvanzhou.github.io/tutorials/machine-learning/sklearn/3-2-cross-validation1/" target="_blank" rel="noopener">交叉验证</a>，莫烦Python</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>资磁一下？</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://raw.githubusercontent.com/yanshengjia/photo/master/wechatpay.jpg" alt="Shengjia Yan WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://raw.githubusercontent.com/yanshengjia/photo/master/alipay.jpg" alt="Shengjia Yan Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Cross-Validation/" rel="tag"># Cross Validation</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/25/Using-Contextual-Speller-Techniques-and-Language-Modeling-for-ESL-Error-Correction-Notes/" rel="next" title="Using Contextual Speller Techniques and Language Modeling for ESL Error Correction | Notes">
+                <i class="fa fa-chevron-left"></i> Using Contextual Speller Techniques and Language Modeling for ESL Error Correction | Notes
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/14/Introduction-to-LanguageTool/" rel="prev" title="Introduction to LanguageTool">
+                Introduction to LanguageTool <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-589f4a3205db1792" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png"
+               alt="Shengjia Yan" />
+          <p class="site-author-name" itemprop="name">Shengjia Yan</p>
+           
+              <p class="site-description motion-element" itemprop="description">职业码农 业余作家</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yanshengjia" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.linkedin.com/in/yanshengjia" target="_blank" title="Linkedin">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  Linkedin
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/yanshengjia" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-fw fa-book"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/sjyan1995" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/yanshengjia" target="_blank" title="Facebook">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                  Facebook
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/yanshengjia" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/yanshengjia/" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://space.bilibili.com/3838601/#!/index" target="_blank" title="Bilibili">
+                  
+                    <i class="fa fa-fw fa-beer"></i>
+                  
+                  Bilibili
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.youtube.com/channel/UCHAyaP2nrMgOfIHtjKeyJyA" target="_blank" title="YouTube">
+                  
+                    <i class="fa fa-fw fa-youtube-play"></i>
+                  
+                  YouTube
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yanshengjia.com/leetcode" title="LeetCode" target="_blank">LeetCode</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://wdxtub.com" title="小土刀" target="_blank">小土刀</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.shuang0420.com/" title="徐阿衡" target="_blank">徐阿衡</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.52nlp.cn/" title="52nlp" target="_blank">52nlp</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://nlp.stanford.edu/" title="Stanford NLP" target="_blank">Stanford NLP</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#交叉验证方法"><span class="nav-number">2.</span> <span class="nav-text">交叉验证方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#保留交叉验证-hand-out-cross-validation"><span class="nav-number">2.1.</span> <span class="nav-text">保留交叉验证 hand-out cross validation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#k折交叉验证-k-fold-cross-validation"><span class="nav-number">2.2.</span> <span class="nav-text">k折交叉验证 k-fold cross validation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#留一交叉验证-leave-one-out-cross-validation"><span class="nav-number">2.3.</span> <span class="nav-text">留一交叉验证 leave-one-out cross validation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bootstrapping"><span class="nav-number">3.</span> <span class="nav-text">Bootstrapping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用-sklearn-实现交叉验证"><span class="nav-number">4.</span> <span class="nav-text">用 sklearn 实现交叉验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">5.</span> <span class="nav-text">References</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shengjia Yan</span>
+</div>
+
+<!-- <div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div> -->
+
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span class="site-uv">
+    <i class="fa fa-user" aria-hidden="true"></i>  <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+  </span>
+  
+  <span class="site-pv">
+    <i class="fa fa-eye" aria-hidden="true"></i>  <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+  </span>
+</div>
+
+
+<div class="quote">
+  追随我心
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://yanshengjia.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yanshengjia.com/2018/07/13/交叉验证的原理及实现/';
+          this.page.identifier = '2018/07/13/交叉验证的原理及实现/';
+          this.page.title = '交叉验证的原理及实现';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://yanshengjia.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+</body>
+</html>
