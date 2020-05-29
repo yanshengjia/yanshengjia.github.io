@@ -104,7 +104,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/puzzle0.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/puzzle0.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/puzzle2.png">
-<meta property="og:updated_time" content="2019-12-26T16:23:40.872Z">
+<meta property="og:updated_time" content="2020-04-26T16:11:32.674Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="24 Puzzle Problem">
 <meta name="twitter:description" content="This article discusses about using A* Algorithm to solve 24 Puzzle Problem. 本文讲述了如何用A*算法解决24数码问题。">
@@ -499,8 +499,7 @@
 <h1 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h1><p>对于2种不同的目标状态，我们采用了2种不同启发式估计函数</p>
 <ul>
 <li>目标状态：普通 -&gt; $H$: 当前节点与目标节点的曼哈顿距离</li>
-<li>目标状态：螺旋 -&gt; $H$: Nilsson’s sequence score 尼尔森序列分数  $t = h + 3 × s$</li>
-<li><ul>
+<li>目标状态：螺旋 -&gt; $H$: Nilsson’s sequence score 尼尔森序列分数  $t = h + 3 × s$<ul>
 <li>假如当前棋盘中心和目标状态的中心不匹配，$s$ 得1分</li>
 <li>假如当前方块顺时针方向上的第一个方块不是目标状态中它顺时针方向上第一个方块，那么 $s$ 得2分</li>
 <li>$h$ 是当前节点与目标节点的曼哈顿距离</li>

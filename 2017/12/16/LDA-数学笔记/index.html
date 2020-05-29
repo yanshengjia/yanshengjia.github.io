@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda4.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda5.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda6.png">
-<meta property="og:updated_time" content="2019-12-26T16:23:40.873Z">
+<meta property="og:updated_time" content="2020-04-26T01:51:33.924Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LDA 数学笔记">
 <meta name="twitter:description" content="LDA 主题模型几乎是每一个 NLP 工程师的必修课，而她背后的数学与概率论知识却让她看起来有些高冷。 那么何为 LDA (Latent Dirichlet Allocation)？ 简单的说，L (Latent 隐含)，主题隐含在文档中；DA (Dirichlet Allocation 狄利克雷分布)，文档的主题服从 Dirichlet Distribution。 本文将站在一个初学者的角度来讲">
@@ -716,7 +716,7 @@ P(z, \theta, \varphi | w, \alpha, \beta) = \frac{P(z, \theta, \varphi | \alpha, 
 <li>对所有文档中的所有词进行遍历，假如当前文档 $m$ 的词 $t$ 对应主题为 $k$，则 $n^{(k)}_m-1, n_m-1, n^{(t)}_k-1, n_k-1$, 即先拿出当前词，之后根据 LDA 中 topic sample 的概率分布 sample 出新的主题，在对应的 $n^{(k)}_m, n_m, n^{(t)}_k, n_k$ 上分别 +1。</li>
 </ul>
 <script type="math/tex; mode=display">
-p(z_{i}=k|z_{-i},w) \propto \frac{(n_{k,-i}^{(t)} + \beta _{t})(n_{m,-i}^{(k)} + \alpha _{k})}{(\sum _{t=1}^{V}n_{k,-i}^{(t)} + \beta _{t})}</script><p>迭代完成后输出 主题-词矩阵 $\varphi​$ 和 文档-主题矩阵 $\theta​$</p>
+p(z_{i}=k|z_{-i},w) \propto \frac{(n_{k,-i}^{(t)} + \beta _{t})(n_{m,-i}^{(k)} + \alpha _{k})}{(\sum _{t=1}^{V}n_{k,-i}^{(t)} + \beta _{t})}</script><p>迭代完成后输出 主题-词矩阵 $\varphi$ 和 文档-主题矩阵 $\theta$</p>
 <script type="math/tex; mode=display">
 \phi _{k,t} = \frac{(n_{k}^{(t)} + \beta _{t})}{(n_{k} + \beta _{t})}</script><script type="math/tex; mode=display">
 \theta _{m,k} = \frac{(n_{m}^{(k)} + \alpha _{k})}{(n_{m} + \alpha _{k})}</script><hr>
