@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Langchain,ChatGPT," />
+  <meta name="keywords" content="LangChain,ChatGPT," />
 
 
 
@@ -93,18 +93,18 @@
 
 
 
-<meta name="description" content="Langchain 是一个利用大语言模型 (LLM) 构建应用程序的开源框架。它可以结合 LLM 和各种信息源比如 Google, Wikipedia，以创造出各式各样有趣的应用。而且，就像 Airflow 编排 ETL 数据管道一样，Langchain 能够编排多个 LLM 相关的任务进而组成 LLM 管道。">
-<meta name="keywords" content="Langchain,ChatGPT">
+<meta name="description" content="LangChain 是一个利用大语言模型 (LLM) 构建应用程序的开源框架。它可以结合 LLM 和各种信息源比如 Google Wikipedia，以创造出各式各样有趣的应用。而且，就像 Airflow 编排 ETL 数据管道一样，LangChain 能够编排多个 LLM 相关的任务进而组成 LLM 管道。">
+<meta name="keywords" content="LangChain,ChatGPT">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Langchain\:大语言模型界的 Airflow">
+<meta property="og:title" content="LangChain:大语言模型界的 Airflow">
 <meta property="og:url" content="http://yanshengjia.com/2023/06/09/Langchain-大语言模型界的Airflow/index.html">
 <meta property="og:site_name" content="WildPointer">
-<meta property="og:description" content="Langchain 是一个利用大语言模型 (LLM) 构建应用程序的开源框架。它可以结合 LLM 和各种信息源比如 Google, Wikipedia，以创造出各式各样有趣的应用。而且，就像 Airflow 编排 ETL 数据管道一样，Langchain 能够编排多个 LLM 相关的任务进而组成 LLM 管道。">
+<meta property="og:description" content="LangChain 是一个利用大语言模型 (LLM) 构建应用程序的开源框架。它可以结合 LLM 和各种信息源比如 Google Wikipedia，以创造出各式各样有趣的应用。而且，就像 Airflow 编排 ETL 数据管道一样，LangChain 能够编排多个 LLM 相关的任务进而组成 LLM 管道。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2023-06-10T02:49:55.728Z">
+<meta property="og:updated_time" content="2023-06-10T04:34:06.344Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Langchain\:大语言模型界的 Airflow">
-<meta name="twitter:description" content="Langchain 是一个利用大语言模型 (LLM) 构建应用程序的开源框架。它可以结合 LLM 和各种信息源比如 Google, Wikipedia，以创造出各式各样有趣的应用。而且，就像 Airflow 编排 ETL 数据管道一样，Langchain 能够编排多个 LLM 相关的任务进而组成 LLM 管道。">
+<meta name="twitter:title" content="LangChain:大语言模型界的 Airflow">
+<meta name="twitter:description" content="LangChain 是一个利用大语言模型 (LLM) 构建应用程序的开源框架。它可以结合 LLM 和各种信息源比如 Google Wikipedia，以创造出各式各样有趣的应用。而且，就像 Airflow 编排 ETL 数据管道一样，LangChain 能够编排多个 LLM 相关的任务进而组成 LLM 管道。">
 
 
 
@@ -138,7 +138,7 @@
 
 
 
-  <title> Langchain\:大语言模型界的 Airflow | WildPointer </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> LangChain:大语言模型界的 Airflow | WildPointer </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -356,7 +356,7 @@
             
             
               
-                Langchain\:大语言模型界的 Airflow
+                LangChain:大语言模型界的 Airflow
               
             
           </h1>
@@ -445,9 +445,46 @@
       
 
       
-        <p>Langchain 是一个利用大语言模型 (LLM) 构建应用程序的开源框架。它可以结合 LLM 和各种信息源比如 Google, Wikipedia，以创造出各式各样有趣的应用。而且，就像 Airflow 编排 ETL 数据管道一样，Langchain 能够编排多个 LLM 相关的任务进而组成 LLM 管道。</p>
+        <p>LangChain 是一个利用大语言模型 (LLM) 构建应用程序的开源框架。它可以结合 LLM 和各种信息源比如 Google Wikipedia，以创造出各式各样有趣的应用。而且，就像 Airflow 编排 ETL 数据管道一样，LangChain 能够编排多个 LLM 相关的任务进而组成 LLM 管道。</p>
 <a id="more"></a>
 <hr>
+<p>在这篇博客中，我将向大家介绍一款非常有趣的开源技术框架，它被称为 LangChain。LangChain 是一个智能代理系统，其主要目的是利用最先进的语言生成技术，协助软件研发人员、数据科学家以及其他技术从业者更高效地进行各种任务处理。</p>
+<p>首先，让我们来了解一下 LangChain 的核心功能之一：它具有一个强大的利用 LLM 进行决策的智能代理系统。通过这个系统，LangChain 能够分析各种场景，为用户提供实时的行动建议。为了确保准确性，该系统采用了大量的前期训练，使其能快速响应并作出最佳决策。</p>
+<p>此外，LangChain 提供了一个标准的接口，方便用户根据自己的需求选择合适的代理 (Agent)。通过这种方式，用户可以依照场景和个人喜好，快速选择出最适合的智能代理参与到工作中。需要注意的是，LangChain 还有一个强大的功能是示例库 (Prompt)，库中收藏有丰富的实际应用案例，可以供用户参考学习。</p>
+<p>当然，LangChain 的应用远不止于此。它还可以应用于各种涉及语言处理和分析的场景，这样的例子包括：自动回复电子邮件、生成报告或文章以及进行关键词提取等。而在语言生成方面，LangChain 也可以展现出令人惊叹的优势， 成为用户最佳的写作助手。 总的来说，LangChain 是为语言生成和智能语言处理创造的一款具有广泛实用价值的工具。</p>
+<p>确实，LangChain 通过发挥其智能代理和语言生成技术的优势，为我们的生活和工作带来了诸多便利。如果你正在寻找一个集成了最新技术和智能语言处理功能的工具，LangChain 无疑将是你的最佳选择。尝试一下 LangChain，并发掘其潜力，你会发现它将会为你带来惊喜。</p>
+<p><strong>注意</strong>：<em>以上内容由 ChatGPT 生成</em></p>
+<hr>
+<h2 id="LangChain-是什么？"><a href="#LangChain-是什么？" class="headerlink" title="LangChain 是什么？"></a>LangChain 是什么？</h2><p>LangChain 是一个利用大语言模型 (LLM) 来开发各种应用的开源框架。它由 Harrison Chase 创造，2022 年十月在 Github 发布，它的仓库地址位于 <a href="https://github.com/hwchase17/langchain" target="_blank" rel="noopener">https://github.com/hwchase17/langchain</a></p>
+<p>就像它的仓库简介说的那样，<em>Building applications with LLMs through composability</em>，LangChain 的特点就在于组合性，或者说连接性。LangChain 可以将大语言模型 (比如 OpenAI 和 HuggingFace Hub) 和外部信息源 (比如 Google, Baidu, Wikipedia) 连接起来，当然它也可以连接数据预处理管道，甚至你的机器学习模型。有了这种组合型，我们就可以用 LangChain 来编排各种与 LLM 相关的任务，比如 Prompt Engineering, Text Completion, Chat, Reasoning 和智能 AI 代理 (Agent)，有点类似于 Apache Airflow 编排各种数据处理的任务，数据工程师们肯定知道我在说什么。</p>
+<h2 id="LangChain-的关键功能"><a href="#LangChain-的关键功能" class="headerlink" title="LangChain 的关键功能"></a>LangChain 的关键功能</h2><p>LangChain 提供了一系列工具，比如 Chains, Agents, Prompt templates, Memory, Indexes，以便在文本输入和输出之间交互。LangChain 有以下 7 个关键模块：</p>
+<ol>
+<li>Models: 开源或闭源的大语言模型 (LLM)</li>
+<li>Prompts: 提示词模版，类似于 Python 的 format 函数。可以接收用户的输入变量来构建提示词</li>
+<li>Memory: 赋予 chains 和 agents 记忆能力，使其记住于用户的先前互动和历史对话内容</li>
+<li>Indexes: 向量化数据 (Embedding) 并存入向量数据库，默认使用 chromadb，然后可以根据用户的输入检索查询最相关的文本</li>
+<li>Chains: 将多个组件或其他 chains 组合在一个管道中的方法，LangChain 提供 chains 的标准接口</li>
+<li>Agents: 根据用户设定的目标，Agents 会自行思考可行的任务并执行它们，类似于 AutoGPT</li>
+<li>Callbacks: 回调函数，可以在 LLM 应用的不同阶段自动执行各种任务，比如 logging, monitoring, steaming 等等</li>
+</ol>
+<h2 id="LangChain-小试牛刀"><a href="#LangChain-小试牛刀" class="headerlink" title="LangChain 小试牛刀"></a>LangChain 小试牛刀</h2><p>光说不练假把式，让我们来实现 2 个简单基于 LangChain 的 LLM 应用吧。请注意，以下 2 个应用都是在 Python3.10 环境下写的。</p>
+<h3 id="Text-Generator"><a href="#Text-Generator" class="headerlink" title="Text Generator"></a>Text Generator</h3><p>最基本的 LLM 文本补全应用：用户提出一个问题，LLM 生成一个回答。<br>在这个应用中，我们会用到 LangChain 中的 Models 功能来调用 OpenAI 的 LLM。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> langchain.llms <span class="keyword">import</span> OpenAI</span><br><span class="line"></span><br><span class="line">os.environ[<span class="string">'OPENAI_API_KEY'</span>] = <span class="string">'your openai key'</span></span><br><span class="line"></span><br><span class="line">llm = OpenAI(temperature=<span class="number">0.7</span>) <span class="comment"># OpenAI LLM wrapper</span></span><br><span class="line">user_input = input(<span class="string">'Enter your question:'</span>)</span><br><span class="line">print(llm(user_input))</span><br></pre></td></tr></table></figure>
+<p>去掉引入 dependencies 和 OpenAI API Key, 一共 3 行代码就 LangChain 实现了一个简单问答应用，非常方便！</p>
+<h3 id="Blog-Outline-Creator"><a href="#Blog-Outline-Creator" class="headerlink" title="Blog Outline Creator"></a>Blog Outline Creator</h3><p>这个应用相比上一个相对而言稍微复杂一些，它的目的在于：根据用户输入的话题，生成博客文章的标题和提纲。<br>在这个应用中，我们会用到 LangChain 的 Prompt template 和 Chains 模块。</p>
+<p>首先，跟往常一样，先引入 dependencies 和 OpenAI Key<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> config <span class="keyword">import</span> OPENAI_KEY</span><br><span class="line"><span class="keyword">from</span> langchain.llms <span class="keyword">import</span> OpenAI</span><br><span class="line"><span class="keyword">from</span> langchain.prompts <span class="keyword">import</span> PromptTemplate</span><br><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> LLMChain</span><br><span class="line"></span><br><span class="line">os.environ[<span class="string">'OPENAI_API_KEY'</span>] = <span class="string">'your openai key'</span></span><br></pre></td></tr></table></figure></p>
+<p>创建两个 Prompt templates，一个是博客文章标题的提示词模版，另一个是博文提纲的提示词模版。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">title_template = PromptTemplate(</span><br><span class="line">    input_variables = [<span class="string">'topic'</span>], </span><br><span class="line">    template=<span class="string">'write me a blog article title about &#123;topic&#125;'</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">blog_outline_template = PromptTemplate(</span><br><span class="line">    input_variables = [<span class="string">'title'</span>], </span><br><span class="line">    template=<span class="string">'write me a blog outline based on this title TITLE: &#123;title&#125;'</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>调用 OpenAI 的 LLM 模型，并创建两个 LLM Chains。标题 Chain 的输入是标题的 Prompt，提纲 Chain 的输入是提纲的 Prompt。细心的观众可能已经发现了，这两个 Chains 是有先后顺序的，我们会先执行标题 Chain，有了 LLM 生成的标题之后，再执行提供 Chain。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">llm = OpenAI(temperature=<span class="number">0.9</span>) </span><br><span class="line">title_chain = LLMChain(llm=llm, prompt=title_template, verbose=<span class="keyword">True</span>)</span><br><span class="line">blog_outline_chain = LLMChain(llm=llm, prompt=blog_outline_template, verbose=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<p>用户输入自己想写的博客文章的话题，顺序执行博文标题 Chain 和博文提纲 Chain。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    topic = input(<span class="string">'Enter the blog topic here: '</span>)</span><br><span class="line">    title = title_chain.run(topic=topic)</span><br><span class="line">    blog_outline = blog_outline_chain.run(title=title)</span><br><span class="line"></span><br><span class="line">    print(<span class="string">f'Title: <span class="subst">&#123;title&#125;</span>\n'</span>)</span><br><span class="line">    print(<span class="string">f'Blog Outline: <span class="subst">&#123;blog_outline&#125;</span>'</span>)</span><br></pre></td></tr></table></figure>
+<p>最后，我们就得到了 LLM 生成的博客文章标题和提纲。<br>这里我输入的 topic 是 LangChain，可以看出来 LLM 把 LangChain 理解成一个语言学习平台，还是有很多提升空间，如果输入的信息更多一些，LLM 应该会理解的更准确。不过总的来说，LLM 的效果不错，博客文章的标题和提纲确实都生成得有模有样！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">$ Enter the blog topic here: LangChain</span><br><span class="line"></span><br><span class="line">&gt; Entering new LLMChain chain...</span><br><span class="line">Prompt after formatting:</span><br><span class="line">write me a blog article title about LangChain</span><br><span class="line"></span><br><span class="line">&gt; Finished chain.</span><br><span class="line"></span><br><span class="line">&gt; Entering new LLMChain chain...</span><br><span class="line">Prompt after formatting:</span><br><span class="line">write me a blog outline based on this title TITLE:</span><br><span class="line"></span><br><span class="line">&quot;Unlocking the Power of LangChain: The Revolutionary Language Exchange Platform&quot;</span><br><span class="line"></span><br><span class="line">&gt; Finished chain.</span><br><span class="line">Title:</span><br><span class="line"></span><br><span class="line">&quot;Unlocking the Power of LangChain: The Revolutionary Language Exchange Platform&quot;</span><br><span class="line"></span><br><span class="line">Blog Outline:</span><br><span class="line"></span><br><span class="line">I. Introduction</span><br><span class="line">A. What is LangChain?</span><br><span class="line">B. How does LangChain work?</span><br><span class="line"></span><br><span class="line">II. Benefits of LangChain</span><br><span class="line">A. Allows users to learn multiple languages</span><br><span class="line">B. Gives users access to native speakers</span><br><span class="line">C. Establishes an international community</span><br><span class="line"></span><br><span class="line">III. LangChain Platform Features</span><br><span class="line">A. Live Video Chat</span><br><span class="line">B. Digital Currency</span><br><span class="line">C. Language Exercises</span><br><span class="line"></span><br><span class="line">IV. LangChain User Experiences</span><br><span class="line">A. Testimonials from current users</span><br><span class="line">B. Positive effects on users’ capability in foreign language skills</span><br><span class="line"></span><br><span class="line">V. Conclusion</span><br><span class="line">A. How LangChain is setting a new standard in language learning</span><br><span class="line">B. The impact LangChain can have on international cultural understanding</span><br><span class="line">C. A call to action to join the LangChain community</span><br></pre></td></tr></table></figure>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a href="https://blog.streamlit.io/langchain-tutorial-1-build-an-llm-powered-app-in-18-lines-of-code/#what-is-langchain" target="_blank" rel="noopener">https://blog.streamlit.io/langchain-tutorial-1-build-an-llm-powered-app-in-18-lines-of-code/#what-is-langchain</a></li>
+<li><a href="https://www.youtube.com/watch?v=MlK6SIjcjE8" target="_blank" rel="noopener">https://www.youtube.com/watch?v=MlK6SIjcjE8</a></li>
+</ul>
 
       
     </div>
@@ -498,7 +535,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Langchain/" rel="tag"># Langchain</a>
+            <a href="/tags/LangChain/" rel="tag"># LangChain</a>
           
             <a href="/tags/ChatGPT/" rel="tag"># ChatGPT</a>
           
@@ -581,8 +618,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png"
@@ -756,6 +802,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LangChain-是什么？"><span class="nav-number">1.</span> <span class="nav-text">LangChain 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LangChain-的关键功能"><span class="nav-number">2.</span> <span class="nav-text">LangChain 的关键功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LangChain-小试牛刀"><span class="nav-number">3.</span> <span class="nav-text">LangChain 小试牛刀</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Text-Generator"><span class="nav-number">3.1.</span> <span class="nav-text">Text Generator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Blog-Outline-Creator"><span class="nav-number">3.2.</span> <span class="nav-text">Blog Outline Creator</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
         <div class="back-to-top">
@@ -911,7 +973,7 @@
         var disqus_config = function () {
           this.page.url = 'http://yanshengjia.com/2023/06/09/Langchain-大语言模型界的Airflow/';
           this.page.identifier = '2023/06/09/Langchain-大语言模型界的Airflow/';
-          this.page.title = 'Langchain\\:大语言模型界的 Airflow';
+          this.page.title = 'LangChain:大语言模型界的 Airflow';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://yanshengjia.disqus.com/embed.js';
