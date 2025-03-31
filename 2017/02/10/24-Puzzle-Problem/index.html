@@ -1,38 +1,490 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Monaco:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yanshengjia.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"hide","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"K1YPL7B54D","apiKey":"7f22077ed5b2dfbd70cc761b8cf48112","indexName":"wildpointer","hits":{"per_page":10}}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="This article discusses about using A* Algorithm to solve 24 Puzzle Problem. 本文讲述了如何用A*算法解决24数码问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="24 Puzzle Problem">
+<meta property="og:url" content="http://yanshengjia.com/2017/02/10/24-Puzzle-Problem/index.html">
+<meta property="og:site_name" content="WildPointer">
+<meta property="og:description" content="This article discusses about using A* Algorithm to solve 24 Puzzle Problem. 本文讲述了如何用A*算法解决24数码问题。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/puzzle0.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/puzzle0.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/puzzle2.png">
+<meta property="article:published_time" content="2017-02-10T16:33:45.000Z">
+<meta property="article:modified_time" content="2020-04-26T16:11:32.674Z">
+<meta property="article:author" content="Shengjia Yan">
+<meta property="article:tag" content="24 Puzzle Problem">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/puzzle0.png">
 
 
-{% block title %} {{ page.title }} | {{ config.title }} {% endblock %}
-
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="canonical" href="http://yanshengjia.com/2017/02/10/24-Puzzle-Problem/">
 
 
-{% block content %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://yanshengjia.com/2017/02/10/24-Puzzle-Problem/","path":"2017/02/10/24-Puzzle-Problem/","title":"24 Puzzle Problem"}</script>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>24 Puzzle Problem | WildPointer</title>
+  
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/algoliasearch/5.23.0/lite/builds/browser.umd.js" defer></script><script src="/js/third-party/search/algolia-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">WildPointer</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Welcome to my world!</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
 
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-projects"><a href="/projects" rel="section"><i class="fa fa-star fa-fw"></i>projects</a></li><li class="menu-item menu-item-tech"><a href="/tech" rel="section"><i class="fa fa-code fa-fw"></i>tech</a></li><li class="menu-item menu-item-donate"><a href="/donate" rel="section"><i class="fa fa-usd fa-fw"></i>donate</a></li><li class="menu-item menu-item-me"><a href="/me" rel="section"><i class="fa fa-user fa-fw"></i>me</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fab fa-algolia fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#24-Puzzle"><span class="nav-number">1.</span> <span class="nav-text">24 Puzzle</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#A-Algorithm"><span class="nav-number">2.</span> <span class="nav-text">A* Algorithm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDA-Algorithm"><span class="nav-number">3.</span> <span class="nav-text">IDA* Algorithm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Experiment"><span class="nav-number">4.</span> <span class="nav-text">Experiment</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shengjia Yan"
+      src="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+  <p class="site-author-name" itemprop="name">Shengjia Yan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yanshengjia" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/yanshengjia" title="Linkedin → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fa fa-linkedin fa-fw"></i>Linkedin</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/yanshengjia" title="Zhihu → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>Zhihu</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yanshengjia.com/2017/02/10/24-Puzzle-Problem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+      <meta itemprop="name" content="Shengjia Yan">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="24 Puzzle Problem | WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          24 Puzzle Problem
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2017-02-10 11:33:45" itemprop="dateCreated datePublished" datetime="2017-02-10T11:33:45-05:00">2017-02-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2020-04-26 12:11:32" itemprop="dateModified" datetime="2020-04-26T12:11:32-04:00">2020-04-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Artificial-Intelligence/" itemprop="url" rel="index"><span itemprop="name">Artificial Intelligence</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2017/02/10/24-Puzzle-Problem/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/02/10/24-Puzzle-Problem/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>This article discusses about using <strong>A* Algorithm</strong> to solve <strong>24 Puzzle Problem</strong>.</p>
+<p>本文讲述了如何用<strong>A*算法</strong>解决<strong>24数码问题</strong>。</p>
+<span id="more"></span>
+<hr>
+<h1 id="24-Puzzle"><a href="#24-Puzzle" class="headerlink" title="24 Puzzle"></a>24 Puzzle</h1><p>在5×5的棋盘，摆有24个棋子，每个棋子上标有1~24中的某一数字，不同棋子上标的数字不同。</p>
+<p>棋盘上还有一个空白格，与空格相邻的棋子可以移到空白格中。反过来看，可以看成空白格移动到相邻的格子中。</p>
+<p><strong>24 Puzzle Problem:</strong> 给定一个初始状态和一个目标状态，从初始状态开始，通过空白格的移动，最后达到目标状态。</p>
+<p>本文中，我们设置了2种目标状态，当然，你也可以根据自己的喜好来设置目标状态。</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/puzzle0.png" alt="puzzle_sprial"></p>
+<p>Fig. 1: Goal State 1 - SPRIAL</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/puzzle0.png" alt="puzzle_normal"></p>
+<p>Fig. 2: Goal State 2 - NORMAL</p>
+<p>有许多方法解决24数码问题，比如广度优先搜索法、A*、IDA*等。</p>
+<p>一般来说，解24数码问题可以通过将棋盘的潜在状态存储成一棵树来解决。树中棋盘的每个状态都可以看做一个节点。</p>
+<p>先看一个8数码问题的例子。</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/puzzle2.png" alt="8puzzle"></p>
+<p>Fig. 3: The 8-Puzzle state space for a very simple example</p>
+<p>广度优先搜索属于盲目搜索，往往是在搜索了大量无关的状态节点后才达到目标状态，甚至根本达不到目标状态。这就导致一颗巨大的树以至于耗尽内存，并且效率很低。</p>
+<p>搜索是一种试探性的查寻过程，为了减少搜索的盲目性，增加试探的准确性，我们采用<strong>启发式搜索算法 (heuristic search)</strong>，本次实验中使用的是 A* 算法。</p>
+<p>启发式搜索就是在搜索中要对每一个搜索的节点进行评估，从中选择最好、可能容易到达目标的节点，再从这个节点向前进行搜索，这样就可以在搜索中省略大量无关的节点，提高了效率。</p>
+<hr>
+<h1 id="A-Algorithm"><a href="#A-Algorithm" class="headerlink" title="A* Algorithm"></a>A* Algorithm</h1><p>这是一个启发式搜索算法，常用于寻找最短路径 (Pathfinding)。</p>
+<p>一个节点的好坏用估价函数来对它进行评估。</p>
+<p>A* 算法的估价函数可表示为： $F = G + H$</p>
+<ul>
+<li>$G$ : 初始节点到当前节点的实际代价</li>
+<li>$H$ : 对当前节点到目标节点的距离的启发式估计</li>
+</ul>
+<p>每个节点都有自己的 $F$ 值，$G$ 值和 $H$ 值。$F$ 越小，节点越好。$H$ 的选择非常重要，对于不同的目标状态，应采取合理的启发式估计函数，</p>
+<p>在搜索过程中，在扩展出一个节点后，要计算它的估价函数 F ，并对待拓展的节点排序，保证每次拓展的节点都是估价函数最小的。</p>
+<p><strong>数据结构：</strong></p>
+<ul>
+<li>openlist : 待拓展节点的队列，每次搜索都需要所有待拓展节点中 F 最小的那个节点。</li>
+<li>closedlist : 已拓展节点的队列，每个节点存储有它的前驱节点的信息。</li>
+</ul>
+<p><strong>算法流程：</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">输入初始状态和目标状态；</span><br><span class="line">判断问题是否有解(对奇数阶棋盘，只有当初始状态所有序列的逆序数为偶数时有解；对偶数阶棋盘，只有当初始状态所得序列的逆序数加其空格所在行数所得结果为偶数时有解)；</span><br><span class="line"><span class="keyword">if</span>(有解)</span><br><span class="line">     将初始状态加入 openlist；</span><br><span class="line">     <span class="keyword">while</span>(未找到解 &amp;&amp; openlist 非空)</span><br><span class="line">     &#123;</span><br><span class="line">         从openlist中找出评价值 F 最小的节点，作为当前节点；</span><br><span class="line">         判断当前节点状态和目标状态是否一致，若一致，<span class="keyword">break</span>；否则下一步；</span><br><span class="line">         检查当前节点周围的点，如果已经在openlist中看是否能通过当前点得到更小的 G，如果能就更新那个点的G, H 的值；如果在closedlist中或者是障碍物(不可达)则忽略它们; 如果可达且不在 openlist 中，将其加入 openlist；</span><br><span class="line">         把当前节点从openlist中移除，加入closedlist中；</span><br><span class="line">      &#125;</span><br><span class="line">保存路径，输出结果；</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="IDA-Algorithm"><a href="#IDA-Algorithm" class="headerlink" title="IDA* Algorithm"></a>IDA* Algorithm</h1><p>Iterative Deepening A*</p>
+<ul>
+<li>启发式搜索算法</li>
+<li>与 A* 相比，更高效，空间开销更小</li>
+<li>设置一个与初始状态的启发式估值相等的阈值 (threshold)</li>
+<li>实施深度优先搜索，当最新节点的估价超过阈值，则剪枝；假如搜索到解，返回它</li>
+<li>假如没有找到解，将阈值被超过的最小数值加到阈值上，重新开始搜索</li>
+</ul>
+<hr>
+<h1 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h1><p>对于2种不同的目标状态，我们采用了2种不同启发式估计函数</p>
+<ul>
+<li>目标状态：普通 -&gt; $H$: 当前节点与目标节点的曼哈顿距离</li>
+<li>目标状态：螺旋 -&gt; $H$: Nilsson’s sequence score 尼尔森序列分数  $t = h + 3 × s$<ul>
+<li>假如当前棋盘中心和目标状态的中心不匹配，$s$ 得1分</li>
+<li>假如当前方块顺时针方向上的第一个方块不是目标状态中它顺时针方向上第一个方块，那么 $s$ 得2分</li>
+<li>$h$ 是当前节点与目标节点的曼哈顿距离</li>
+</ul>
+</li>
+</ul>
+<p>Gif 1: 24 Puzzle Solution - SPRIAL</p>
+<p>Gif 2: 24 Puzzle Solution - NORMAL</p>
+<p>感谢<a href="https://github.com/a367">朴哥</a>！</p>
+<hr>
+<p>测试代码：<a href="https://github.com/yanshengjia/artificial-intelligence/tree/master/24-puzzle">24-puzzle</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/wechatpay.jpg" alt="Shengjia Yan WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/alipay.jpg" alt="Shengjia Yan Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/24-Puzzle-Problem/" rel="tag"># 24 Puzzle Problem</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/02/07/Million-Queens-Problem/" rel="prev" title="Million Queens Problem">
+                  <i class="fa fa-angle-left"></i> Million Queens Problem
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/02/11/Neural-Networks-for-Face-Recognition/" rel="next" title="Neural Networks for Face Recognition">
+                  Neural Networks for Face Recognition <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"yanshengjia","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js" defer></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

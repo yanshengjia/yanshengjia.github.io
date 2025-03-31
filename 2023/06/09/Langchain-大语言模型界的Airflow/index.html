@@ -1,38 +1,471 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Monaco:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yanshengjia.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"hide","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"K1YPL7B54D","apiKey":"7f22077ed5b2dfbd70cc761b8cf48112","indexName":"wildpointer","hits":{"per_page":10}}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="LangChain 是一个利用大语言模型 (LLM) 构建应用程序的开源框架。它可以结合 LLM 和各种信息源比如 Google Wikipedia，以创造出各式各样有趣的应用。而且，就像 Airflow 编排 ETL 数据管道一样，LangChain 能够编排多个 LLM 相关的任务进而组成 LLM 管道。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LangChain:大语言模型界的 Airflow">
+<meta property="og:url" content="http://yanshengjia.com/2023/06/09/Langchain-%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%95%8C%E7%9A%84Airflow/index.html">
+<meta property="og:site_name" content="WildPointer">
+<meta property="og:description" content="LangChain 是一个利用大语言模型 (LLM) 构建应用程序的开源框架。它可以结合 LLM 和各种信息源比如 Google Wikipedia，以创造出各式各样有趣的应用。而且，就像 Airflow 编排 ETL 数据管道一样，LangChain 能够编排多个 LLM 相关的任务进而组成 LLM 管道。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-06-10T02:32:45.000Z">
+<meta property="article:modified_time" content="2023-06-10T13:47:09.088Z">
+<meta property="article:author" content="Shengjia Yan">
+<meta property="article:tag" content="LangChain">
+<meta property="article:tag" content="ChatGPT">
+<meta name="twitter:card" content="summary">
 
 
-{% block title %} {{ page.title }} | {{ config.title }} {% endblock %}
-
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="canonical" href="http://yanshengjia.com/2023/06/09/Langchain-%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%95%8C%E7%9A%84Airflow/">
 
 
-{% block content %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://yanshengjia.com/2023/06/09/Langchain-%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%95%8C%E7%9A%84Airflow/","path":"2023/06/09/Langchain-大语言模型界的Airflow/","title":"LangChain:大语言模型界的 Airflow"}</script>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>LangChain:大语言模型界的 Airflow | WildPointer</title>
+  
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/algoliasearch/5.23.0/lite/builds/browser.umd.js" defer></script><script src="/js/third-party/search/algolia-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">WildPointer</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Welcome to my world!</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
 
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-projects"><a href="/projects" rel="section"><i class="fa fa-star fa-fw"></i>projects</a></li><li class="menu-item menu-item-tech"><a href="/tech" rel="section"><i class="fa fa-code fa-fw"></i>tech</a></li><li class="menu-item menu-item-donate"><a href="/donate" rel="section"><i class="fa fa-usd fa-fw"></i>donate</a></li><li class="menu-item menu-item-me"><a href="/me" rel="section"><i class="fa fa-user fa-fw"></i>me</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fab fa-algolia fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LangChain-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">LangChain 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LangChain-%E7%9A%84%E5%85%B3%E9%94%AE%E5%8A%9F%E8%83%BD"><span class="nav-number">2.</span> <span class="nav-text">LangChain 的关键功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LangChain-%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80"><span class="nav-number">3.</span> <span class="nav-text">LangChain 小试牛刀</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Text-Generator"><span class="nav-number">3.1.</span> <span class="nav-text">Text Generator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Blog-Outline-Creator"><span class="nav-number">3.2.</span> <span class="nav-text">Blog Outline Creator</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shengjia Yan"
+      src="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+  <p class="site-author-name" itemprop="name">Shengjia Yan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yanshengjia" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/yanshengjia" title="Linkedin → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fa fa-linkedin fa-fw"></i>Linkedin</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/yanshengjia" title="Zhihu → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>Zhihu</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yanshengjia.com/2023/06/09/Langchain-%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%95%8C%E7%9A%84Airflow/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+      <meta itemprop="name" content="Shengjia Yan">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="LangChain:大语言模型界的 Airflow | WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LangChain:大语言模型界的 Airflow
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-06-09 22:32:45" itemprop="dateCreated datePublished" datetime="2023-06-09T22:32:45-04:00">2023-06-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-06-10 09:47:09" itemprop="dateModified" datetime="2023-06-10T09:47:09-04:00">2023-06-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/LLM/" itemprop="url" rel="index"><span itemprop="name">LLM</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2023/06/09/Langchain-%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%95%8C%E7%9A%84Airflow/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/06/09/Langchain-大语言模型界的Airflow/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>LangChain 是一个利用大语言模型 (LLM) 构建应用程序的开源框架。它可以结合 LLM 和各种信息源比如 Google Wikipedia，以创造出各式各样有趣的应用。而且，就像 Airflow 编排 ETL 数据管道一样，LangChain 能够编排多个 LLM 相关的任务进而组成 LLM 管道。</p>
+<span id="more"></span>
+<hr>
+<p>在这篇博客中，我将向大家介绍一款非常有趣的开源技术框架，它被称为 LangChain。LangChain 是一个智能代理系统，其主要目的是利用最先进的语言生成技术，协助软件研发人员、数据科学家以及其他技术从业者更高效地进行各种任务处理。</p>
+<p>首先，让我们来了解一下 LangChain 的核心功能之一：它具有一个强大的利用 LLM 进行决策的智能代理系统。通过这个系统，LangChain 能够分析各种场景，为用户提供实时的行动建议。为了确保准确性，该系统采用了大量的前期训练，使其能快速响应并作出最佳决策。</p>
+<p>此外，LangChain 提供了一个标准的接口，方便用户根据自己的需求选择合适的代理 (Agent)。通过这种方式，用户可以依照场景和个人喜好，快速选择出最适合的智能代理参与到工作中。需要注意的是，LangChain 还有一个强大的功能是示例库 (Prompt)，库中收藏有丰富的实际应用案例，可以供用户参考学习。</p>
+<p>当然，LangChain 的应用远不止于此。它还可以应用于各种涉及语言处理和分析的场景，这样的例子包括：自动回复电子邮件、生成报告或文章以及进行关键词提取等。而在语言生成方面，LangChain 也可以展现出令人惊叹的优势， 成为用户最佳的写作助手。 总的来说，LangChain 是为语言生成和智能语言处理创造的一款具有广泛实用价值的工具。</p>
+<p>确实，LangChain 通过发挥其智能代理和语言生成技术的优势，为我们的生活和工作带来了诸多便利。如果你正在寻找一个集成了最新技术和智能语言处理功能的工具，LangChain 无疑将是你的最佳选择。尝试一下 LangChain，并发掘其潜力，你会发现它将会为你带来惊喜。</p>
+<p><strong>注意</strong>：<em>以上内容由 ChatGPT 生成</em></p>
+<hr>
+<h2 id="LangChain-是什么？"><a href="#LangChain-是什么？" class="headerlink" title="LangChain 是什么？"></a>LangChain 是什么？</h2><p>LangChain 是一个利用大语言模型 (LLM) 来开发各种应用的开源框架。它由 Harrison Chase 创造，2022 年十月在 Github 发布，它的仓库地址位于 <a href="https://github.com/hwchase17/langchain">https://github.com/hwchase17/langchain</a></p>
+<p>就像它的仓库简介说的那样，<em>Building applications with LLMs through composability</em>，LangChain 的特点就在于组合性，或者说连接性。LangChain 可以将大语言模型 (比如 OpenAI 和 HuggingFace Hub) 和外部信息源 (比如 Google, Baidu, Wikipedia) 连接起来，当然它也可以连接数据预处理管道，甚至你的机器学习模型。有了这种组合性，我们就可以用 LangChain 来编排各种与 LLM 相关的任务，比如 Prompt Engineering, Text Completion, Chat, Reasoning 和智能 AI 代理 (Agent)，有点类似于 Apache Airflow 编排各种数据处理的任务，数据工程师们肯定知道我在说什么。</p>
+<h2 id="LangChain-的关键功能"><a href="#LangChain-的关键功能" class="headerlink" title="LangChain 的关键功能"></a>LangChain 的关键功能</h2><p>LangChain 提供了一系列工具，比如 Chains, Agents, Prompt templates, Memory, Indexes，以便在文本输入和输出之间交互。LangChain 有以下 7 个关键模块：</p>
+<ol>
+<li>Models: 开源或闭源的大语言模型 (LLM)</li>
+<li>Prompts: 提示词模版，类似于 Python 的 format 函数。可以接收用户的输入变量来构建提示词</li>
+<li>Memory: 赋予 chains 和 agents 记忆能力，使其记住于用户的先前互动和历史对话内容</li>
+<li>Indexes: 向量化数据 (Embedding) 并存入向量数据库，默认使用 chromadb，然后可以根据用户的输入检索查询最相关的文本</li>
+<li>Chains: 将多个组件或其他 chains 组合在一个管道中的方法，LangChain 提供 chains 的标准接口</li>
+<li>Agents: 根据用户设定的目标，Agents 会自行思考可行的任务并执行它们，类似于 AutoGPT</li>
+<li>Callbacks: 回调函数，可以在 LLM 应用的不同阶段自动执行各种任务，比如 logging, monitoring, steaming 等等</li>
+</ol>
+<h2 id="LangChain-小试牛刀"><a href="#LangChain-小试牛刀" class="headerlink" title="LangChain 小试牛刀"></a>LangChain 小试牛刀</h2><p>光说不练假把式，让我们来实现 2 个简单基于 LangChain 的 LLM 应用吧。</p>
+<p>开始前，先安装 dependencies。</p>
+<p>请注意，以下 2 个应用都是在 Python3.10 环境下写的。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install langchain openai</span><br></pre></td></tr></table></figure></p>
+<h3 id="Text-Generator"><a href="#Text-Generator" class="headerlink" title="Text Generator"></a>Text Generator</h3><p>最基本的 LLM 文本补全应用：用户提出一个问题，LLM 生成一个回答。</p>
+<p>在这个应用中，我们会用到 LangChain 中的 Models 功能来调用 OpenAI 的 LLM。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> langchain.llms <span class="keyword">import</span> OpenAI</span><br><span class="line"></span><br><span class="line">os.environ[<span class="string">&#x27;OPENAI_API_KEY&#x27;</span>] = <span class="string">&#x27;your openai key&#x27;</span></span><br><span class="line"></span><br><span class="line">llm = OpenAI(temperature=<span class="number">0.7</span>) <span class="comment"># OpenAI LLM wrapper</span></span><br><span class="line">user_input = <span class="built_in">input</span>(<span class="string">&#x27;Enter your question:&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(llm(user_input))</span><br></pre></td></tr></table></figure>
+<p>去掉引入 dependencies 和 OpenAI API Key, 一共 3 行代码 LangChain 就实现了一个简单问答应用，非常方便！</p>
+<h3 id="Blog-Outline-Creator"><a href="#Blog-Outline-Creator" class="headerlink" title="Blog Outline Creator"></a>Blog Outline Creator</h3><p>这个应用相比上一个相对而言稍微复杂一些，它的目的在于：根据用户输入的话题，生成博客文章的标题和提纲。</p>
+<p>在这个应用中，我们会用到 LangChain 的 Prompt template 和 Chains 模块。</p>
+<p>首先，跟往常一样，先引入 dependencies 和 OpenAI Key<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> config <span class="keyword">import</span> OPENAI_KEY</span><br><span class="line"><span class="keyword">from</span> langchain.llms <span class="keyword">import</span> OpenAI</span><br><span class="line"><span class="keyword">from</span> langchain.prompts <span class="keyword">import</span> PromptTemplate</span><br><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> LLMChain</span><br><span class="line"></span><br><span class="line">os.environ[<span class="string">&#x27;OPENAI_API_KEY&#x27;</span>] = <span class="string">&#x27;your openai key&#x27;</span></span><br></pre></td></tr></table></figure></p>
+<p>创建两个 Prompt templates，一个是博客文章标题的提示词模版，另一个是博文提纲的提示词模版。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">title_template = PromptTemplate(</span><br><span class="line">    input_variables = [<span class="string">&#x27;topic&#x27;</span>], </span><br><span class="line">    template=<span class="string">&#x27;write me a blog article title about &#123;topic&#125;&#x27;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">blog_outline_template = PromptTemplate(</span><br><span class="line">    input_variables = [<span class="string">&#x27;title&#x27;</span>], </span><br><span class="line">    template=<span class="string">&#x27;write me a blog outline based on this title TITLE: &#123;title&#125;&#x27;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>调用 OpenAI 的 LLM 模型，并创建两个 LLM Chains。标题 Chain 的输入是标题的 Prompt，提纲 Chain 的输入是提纲的 Prompt。细心的观众可能已经发现了，这两个 Chains 是有先后顺序的，我们会先执行标题 Chain，有了 LLM 生成的标题之后，再执行提纲 Chain。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">llm = OpenAI(temperature=<span class="number">0.9</span>) </span><br><span class="line">title_chain = LLMChain(llm=llm, prompt=title_template, verbose=<span class="literal">True</span>)</span><br><span class="line">blog_outline_chain = LLMChain(llm=llm, prompt=blog_outline_template, verbose=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>用户输入自己想写的博客文章的话题，顺序执行博文标题 Chain 和博文提纲 Chain。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    topic = <span class="built_in">input</span>(<span class="string">&#x27;Enter the blog topic here: &#x27;</span>)</span><br><span class="line">    title = title_chain.run(topic=topic)</span><br><span class="line">    blog_outline = blog_outline_chain.run(title=title)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;Title: <span class="subst">&#123;title&#125;</span>\n&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;Blog Outline: <span class="subst">&#123;blog_outline&#125;</span>&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>最后，我们就得到了 LLM 生成的博客文章标题和提纲。</p>
+<p>这里我输入的 topic 是 LangChain，可以看出来 LLM 把 LangChain 理解成一个语言学习平台，还是有很多提升空间，如果输入的信息更多一些，LLM 应该会理解的更准确。不过总的来说，LLM 的效果不错，博客文章的标题和提纲确实都生成得有模有样！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">$ Enter the blog topic here: LangChain</span><br><span class="line"></span><br><span class="line">&gt; Entering new LLMChain chain...</span><br><span class="line">Prompt after formatting:</span><br><span class="line">write me a blog article title about LangChain</span><br><span class="line"></span><br><span class="line">&gt; Finished chain.</span><br><span class="line"></span><br><span class="line">&gt; Entering new LLMChain chain...</span><br><span class="line">Prompt after formatting:</span><br><span class="line">write me a blog outline based on this title TITLE:</span><br><span class="line"></span><br><span class="line">&quot;Unlocking the Power of LangChain: The Revolutionary Language Exchange Platform&quot;</span><br><span class="line"></span><br><span class="line">&gt; Finished chain.</span><br><span class="line">Title:</span><br><span class="line"></span><br><span class="line">&quot;Unlocking the Power of LangChain: The Revolutionary Language Exchange Platform&quot;</span><br><span class="line"></span><br><span class="line">Blog Outline:</span><br><span class="line"></span><br><span class="line">I. Introduction</span><br><span class="line">A. What is LangChain?</span><br><span class="line">B. How does LangChain work?</span><br><span class="line"></span><br><span class="line">II. Benefits of LangChain</span><br><span class="line">A. Allows users to learn multiple languages</span><br><span class="line">B. Gives users access to native speakers</span><br><span class="line">C. Establishes an international community</span><br><span class="line"></span><br><span class="line">III. LangChain Platform Features</span><br><span class="line">A. Live Video Chat</span><br><span class="line">B. Digital Currency</span><br><span class="line">C. Language Exercises</span><br><span class="line"></span><br><span class="line">IV. LangChain User Experiences</span><br><span class="line">A. Testimonials from current users</span><br><span class="line">B. Positive effects on users’ capability in foreign language skills</span><br><span class="line"></span><br><span class="line">V. Conclusion</span><br><span class="line">A. How LangChain is setting a new standard in language learning</span><br><span class="line">B. The impact LangChain can have on international cultural understanding</span><br><span class="line">C. A call to action to join the LangChain community</span><br></pre></td></tr></table></figure>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a href="https://blog.streamlit.io/langchain-tutorial-1-build-an-llm-powered-app-in-18-lines-of-code/#what-is-langchain">https://blog.streamlit.io/langchain-tutorial-1-build-an-llm-powered-app-in-18-lines-of-code/#what-is-langchain</a></li>
+<li><a href="https://www.youtube.com/watch?v=MlK6SIjcjE8">https://www.youtube.com/watch?v=MlK6SIjcjE8</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/wechatpay.jpg" alt="Shengjia Yan WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/alipay.jpg" alt="Shengjia Yan Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/LangChain/" rel="tag"># LangChain</a>
+              <a href="/tags/ChatGPT/" rel="tag"># ChatGPT</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/02/29/%E6%88%91%E5%9C%A825%E5%B2%81%E5%AD%A6%E5%88%B0%E7%9A%8425%E4%BB%B6%E4%BA%8B/" rel="prev" title="我在25岁学到的25件事">
+                  <i class="fa fa-angle-left"></i> 我在25岁学到的25件事
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/03/30/AI%E6%B5%AA%E6%BD%AE%E4%B8%8B%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%B8%88-%E4%BB%8E%22%E4%BB%A3%E7%A0%81%E5%B7%A5%E4%BA%BA%22%E5%88%B0%22AI%E5%8D%8F%E4%BD%9C%E8%80%85%22%E7%9A%84%E8%8C%83%E5%BC%8F%E8%BD%AC%E7%A7%BB/" rel="next" title="AI浪潮下软件工程师的转型与机遇">
+                  AI浪潮下软件工程师的转型与机遇 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"yanshengjia","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js" defer></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

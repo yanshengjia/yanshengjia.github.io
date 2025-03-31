@@ -1,38 +1,481 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Monaco:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yanshengjia.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"hide","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"K1YPL7B54D","apiKey":"7f22077ed5b2dfbd70cc761b8cf48112","indexName":"wildpointer","hits":{"per_page":10}}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="I took an interview with 17zuoye today. This article records the process and content of the interview. 今天参加了一起作业的 NLP 工程师面试，本文记录了面试的内容。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一起作业 NLP 工程师电面">
+<meta property="og:url" content="http://yanshengjia.com/2017/08/04/%E4%B8%80%E8%B5%B7%E4%BD%9C%E4%B8%9ANLP%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%94%B5%E9%9D%A2/index.html">
+<meta property="og:site_name" content="WildPointer">
+<meta property="og:description" content="I took an interview with 17zuoye today. This article records the process and content of the interview. 今天参加了一起作业的 NLP 工程师面试，本文记录了面试的内容。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-08-04T06:35:36.000Z">
+<meta property="article:modified_time" content="2019-12-26T16:23:40.875Z">
+<meta property="article:author" content="Shengjia Yan">
+<meta name="twitter:card" content="summary">
 
 
-{% block title %} {{ page.title }} | {{ config.title }} {% endblock %}
-
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="canonical" href="http://yanshengjia.com/2017/08/04/%E4%B8%80%E8%B5%B7%E4%BD%9C%E4%B8%9ANLP%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%94%B5%E9%9D%A2/">
 
 
-{% block content %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://yanshengjia.com/2017/08/04/%E4%B8%80%E8%B5%B7%E4%BD%9C%E4%B8%9ANLP%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%94%B5%E9%9D%A2/","path":"2017/08/04/一起作业NLP工程师电面/","title":"一起作业 NLP 工程师电面"}</script>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>一起作业 NLP 工程师电面 | WildPointer</title>
+  
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/algoliasearch/5.23.0/lite/builds/browser.umd.js" defer></script><script src="/js/third-party/search/algolia-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">WildPointer</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Welcome to my world!</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
 
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-projects"><a href="/projects" rel="section"><i class="fa fa-star fa-fw"></i>projects</a></li><li class="menu-item menu-item-tech"><a href="/tech" rel="section"><i class="fa fa-code fa-fw"></i>tech</a></li><li class="menu-item menu-item-donate"><a href="/donate" rel="section"><i class="fa fa-usd fa-fw"></i>donate</a></li><li class="menu-item menu-item-me"><a href="/me" rel="section"><i class="fa fa-user fa-fw"></i>me</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fab fa-algolia fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#2017-08-08-%E6%9B%B4%E6%96%B0"><span class="nav-number">1.</span> <span class="nav-text">2017-08-08 更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2017-08-10-%E6%9B%B4%E6%96%B0"><span class="nav-number">2.</span> <span class="nav-text">2017-08-10 更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2017-10-03-%E6%9B%B4%E6%96%B0"><span class="nav-number">3.</span> <span class="nav-text">2017-10-03 更新</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shengjia Yan"
+      src="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+  <p class="site-author-name" itemprop="name">Shengjia Yan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yanshengjia" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/yanshengjia" title="Linkedin → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fa fa-linkedin fa-fw"></i>Linkedin</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/yanshengjia" title="Zhihu → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>Zhihu</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yanshengjia.com/2017/08/04/%E4%B8%80%E8%B5%B7%E4%BD%9C%E4%B8%9ANLP%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%94%B5%E9%9D%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+      <meta itemprop="name" content="Shengjia Yan">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="一起作业 NLP 工程师电面 | WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一起作业 NLP 工程师电面
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2017-08-04 02:35:36" itemprop="dateCreated datePublished" datetime="2017-08-04T02:35:36-04:00">2017-08-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2019-12-26 11:23:40" itemprop="dateModified" datetime="2019-12-26T11:23:40-05:00">2019-12-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Interview/" itemprop="url" rel="index"><span itemprop="name">Interview</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2017/08/04/%E4%B8%80%E8%B5%B7%E4%BD%9C%E4%B8%9ANLP%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%94%B5%E9%9D%A2/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/08/04/一起作业NLP工程师电面/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>I took an interview with <a href="https://www.17zuoye.com">17zuoye</a> today. This article records the process and content of the interview.</p>
+<p>今天参加了<a href="http://www.17zuoye.com">一起作业</a>的 NLP 工程师面试，本文记录了面试的内容。</p>
+<span id="more"></span>
+<hr>
+<p>这家公司之前没听说过，得到这个面试机会的因为我在拉勾上投了一堆NLP/ML的职位，结果这家公司的HR很快找到我说可以安排面试，她的态度给我的感觉挺好，然后我就想那就试试吧。</p>
+<p>这家公司是用 NLP/AI 做中小学教育的，感觉还是挺有前景的。</p>
+<p>这次面试很直接，面试官一上来简单聊了两句，然后直接做题。</p>
+<hr>
+<p><strong>第一题：</strong></p>
+<p>输入为两个list，数据结构如下面 ListNode 所示，输出为两链表对应位的和，例如：</p>
+<p>l1: 3-&gt;4-&gt;2, l2: 3-&gt;6-&gt;4, output: 6-&gt;0-&gt;7</p>
+<ul>
+<li>每个节点只有一个非负整数</li>
+<li>超过10的向下一个节点进位</li>
+<li>l1, l2可能不一样长, 对应节点没有的视为0</li>
+<li>下面给出基本测试用例，面试者需自行设计测试用例，保证代码无bug</li>
+</ul>
+<p>TestCase：</p>
+<ul>
+<li>l1: 1-&gt;1-&gt;1 l2: 2-&gt;2-&gt;2, output: 3-&gt;3-&gt;3</li>
+<li>l1: 1-&gt;2-&gt;3 l2: 4-&gt;5, output: 5-&gt;7-&gt;3</li>
+<li>l1: 1 l2: 9-&gt;9, output: 0-&gt;0-&gt;1</li>
+</ul>
+<p>链表各位求和，<a href="http://www.lintcode.com/zh-cn/problem/add-two-numbers/">LintCode167</a> 原题，思路就是先加公共部分，再把相对长的链表未加的部分加到结果链表中，直接秒了。</p>
+<p>[C++ Code]</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * @param l1: the first list</span></span><br><span class="line"><span class="comment">     * @param l2: the second list</span></span><br><span class="line"><span class="comment">     * @return: the sum list of l1 and l2 </span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">ListNode *<span class="title">addLists</span><span class="params">(ListNode *l1, ListNode *l2)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// write your code here</span></span><br><span class="line">        ListNode *result = <span class="literal">NULL</span>, *iter = <span class="literal">NULL</span>, *i = l1, *j = l2;</span><br><span class="line">        <span class="type">int</span> val1 = <span class="number">0</span>, val2 = <span class="number">0</span>, carry = <span class="number">0</span>, sum = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (i == <span class="literal">NULL</span> &amp;&amp; j == <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (i == <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> j;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (j == <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (i != <span class="literal">NULL</span> &amp;&amp; j != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                val1 = i-&gt;val;</span><br><span class="line">                val2 = j-&gt;val;</span><br><span class="line">                sum = (val1 + val2 + carry) % <span class="number">10</span>;</span><br><span class="line">                carry = (val1 + val2 + carry) / <span class="number">10</span>;</span><br><span class="line">                ListNode *node = <span class="keyword">new</span> <span class="built_in">ListNode</span>(sum);</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span> (result == <span class="literal">NULL</span>) &#123;</span><br><span class="line">                    result = node;</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span> (iter != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                    iter-&gt;next = node;</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                iter = node;</span><br><span class="line">                i = i-&gt;next;</span><br><span class="line">                j = j-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">while</span> (i != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                sum = (i-&gt;val + carry) % <span class="number">10</span>;</span><br><span class="line">                carry = (i-&gt;val + carry) / <span class="number">10</span>;</span><br><span class="line">                ListNode *node = <span class="keyword">new</span> <span class="built_in">ListNode</span>(sum);</span><br><span class="line">                </span><br><span class="line">                iter-&gt;next = node;</span><br><span class="line">                </span><br><span class="line">                iter = node;</span><br><span class="line">                i = i-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">while</span> (j != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                sum = (j-&gt;val + carry) % <span class="number">10</span>;</span><br><span class="line">                carry = (j-&gt;val + carry) / <span class="number">10</span>;</span><br><span class="line">                ListNode *node = <span class="keyword">new</span> <span class="built_in">ListNode</span>(sum);</span><br><span class="line">                </span><br><span class="line">                iter-&gt;next = node;</span><br><span class="line">                </span><br><span class="line">                iter = node;</span><br><span class="line">                j = j-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (carry) &#123;</span><br><span class="line">                ListNode *node = <span class="keyword">new</span> <span class="built_in">ListNode</span>(carry);</span><br><span class="line">                iter-&gt;next = node;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<hr>
+<p><strong>第二题：</strong></p>
+<p>有序数组转为平衡二叉查找树 (Convert sorted array to AVL Tree)，<a href="https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/">LeetCode 108</a> 原题，思路就是二分法，将有序数组中每次处于中间的元素作为二叉树根结点，递归地构造整棵树。</p>
+<p>这么做的依据是平衡二叉树的一个性质：若为平衡二叉树，则中序遍历结果为一非递减序列。</p>
+<p>[C++ Code]</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition of TreeNode:</span></span><br><span class="line"><span class="comment"> * class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> * public:</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left, *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123;</span></span><br><span class="line"><span class="comment"> *         this-&gt;val = val;</span></span><br><span class="line"><span class="comment"> *         this-&gt;left = this-&gt;right = NULL;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * @param A: A sorted (increasing order) array</span></span><br><span class="line"><span class="comment">     * @return: A tree node</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">TreeNode *<span class="title">sortedArrayToBST</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;A)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// write your code here</span></span><br><span class="line">        TreeNode *root = <span class="literal">NULL</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (A.<span class="built_in">empty</span>())</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="type">int</span> size = A.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> low = <span class="number">0</span>, high = size - <span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        root = <span class="built_in">createTree</span>(A, low, high);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function">TreeNode *<span class="title">createTree</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;A, <span class="type">int</span> low, <span class="type">int</span> high)</span> </span>&#123;</span><br><span class="line">        TreeNode *root;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (low &gt; high)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="type">int</span> mid = (low + high) / <span class="number">2</span>;</span><br><span class="line">        root = <span class="keyword">new</span> <span class="built_in">TreeNode</span>(A[mid]);</span><br><span class="line">        root-&gt;left = <span class="built_in">createTree</span>(A, low, mid - <span class="number">1</span>);</span><br><span class="line">        root-&gt;right = <span class="built_in">createTree</span>(A, mid + <span class="number">1</span>, high);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>还问了一些数据结构和算法方面的问题，比如有一堆字符串，如何判断一个新字符串是否出现在这堆字符串中，就可以用二叉查找树 (BST) 来做。</p>
+<p>面试的两题都做出来，感觉面试官还是挺满意的。</p>
+<hr>
+<h3 id="2017-08-08-更新"><a href="#2017-08-08-更新" class="headerlink" title="2017-08-08 更新"></a>2017-08-08 更新</h3><p>AI/NLP 部门的老大今天又面了我一轮，聊了下我大学时候做的 Entity Linking 的项目，然后做了一道题。</p>
+<p>他看了我博客上今日头条的面试，然后说我们就做这个题吧。。。</p>
+<p>不过题目的要求稍有改动：一个字符串中只有大括号(“{}”)、中括号(“[]”)、小括号(“()”)，判断该字符串中的括号是否匹配。</p>
+<p>e.g. str = “{()[]()}” 合法；str = “[(])” 不合法。</p>
+<p>后经朴哥提醒，这也是一道原题 <a href="https://leetcode.com/problems/valid-parentheses/description/">LeetCode 20</a> 有效的括号序列。</p>
+<p>[C++ Code]</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stack&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isLeft</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c == <span class="string">&#x27;&#123;&#x27;</span> || c == <span class="string">&#x27;[&#x27;</span> || c == <span class="string">&#x27;(&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isMatch</span><span class="params">(<span class="type">char</span> left, <span class="type">char</span> right)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (right == <span class="string">&#x27;&#125;&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (left == <span class="string">&#x27;&#123;&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (right == <span class="string">&#x27;]&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (left == <span class="string">&#x27;[&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>; </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (right == <span class="string">&#x27;)&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (left == <span class="string">&#x27;(&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isValidParentheses</span><span class="params">(string &amp;str)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> size = str.<span class="built_in">length</span>();</span><br><span class="line">    <span class="keyword">if</span> (size == <span class="number">0</span>)    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    stack&lt;<span class="type">char</span>&gt; cache;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;size; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">isLeft</span>(str[i])) &#123;</span><br><span class="line">            cache.<span class="built_in">push</span>(str[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (cache.<span class="built_in">empty</span>() || !<span class="built_in">isMatch</span>(cache.<span class="built_in">top</span>(), str[i])) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            cache.<span class="built_in">pop</span>();</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!cache.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>限时编程测试结束后，又问了一些ML相关的知识。</p>
+<p>第一个问题是 逻辑回归 和 线性回归 有什么区别？我没答上来，虽说这是一道很基础的问题了，看来是时候好好恶补 ML 的知识了。</p>
+<p>第二个问题是如果在一段话中有一个单词出现了拼写错误，如何推荐替代它的正确单词？</p>
+<p>这是一个开放问题了，和面试官讨论下来，我说了三种方法：</p>
+<ul>
+<li>字符串相似度 (编辑距离) Trie树</li>
+<li>计算候选单词的上下文相似度</li>
+<li>设计一些启发式规则来计算候选单词的分数</li>
+</ul>
+<p>今天面的感觉还行吧，不过一个 ML 里的基本问题没答上来确实很扣分了。</p>
+<hr>
+<h3 id="2017-08-10-更新"><a href="#2017-08-10-更新" class="headerlink" title="2017-08-10 更新"></a>2017-08-10 更新</h3><p>技术面试通过啦！</p>
+<p>感谢一起科技！</p>
+<p>也感谢我自己！</p>
+<hr>
+<h3 id="2017-10-03-更新"><a href="#2017-10-03-更新" class="headerlink" title="2017-10-03 更新"></a>2017-10-03 更新</h3><p>现在是国庆节，这几天北京的天气还是不错的！</p>
+<p>突然想到上次面试时候没答上来的那道题：<strong>逻辑回归 和 线性回归 有什么区别？</strong></p>
+<p>就找了点资料研究了一下，以下是答案。</p>
+<p>TODO</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/wechatpay.jpg" alt="Shengjia Yan WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/alipay.jpg" alt="Shengjia Yan Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/07/27/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A1%E7%AE%97%E6%B3%95%E5%AE%9E%E4%B9%A0%E7%94%9F%E9%9D%A2%E8%AF%95/" rel="prev" title="今日头条算法实习生面试">
+                  <i class="fa fa-angle-left"></i> 今日头条算法实习生面试
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/10/17/%E4%B8%80%E4%B8%AA%E6%89%98%E7%A6%8F%E8%8F%9C%E9%B8%9F%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB/" rel="next" title="一个托福菜鸟的自我修养">
+                  一个托福菜鸟的自我修养 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"yanshengjia","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js" defer></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

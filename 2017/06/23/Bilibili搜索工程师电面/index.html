@@ -1,38 +1,441 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Monaco:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yanshengjia.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"hide","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"K1YPL7B54D","apiKey":"7f22077ed5b2dfbd70cc761b8cf48112","indexName":"wildpointer","hits":{"per_page":10}}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Bilibili (the Chinese version of Youtube) tele-interviewed me at yesterday afternoon. This article records the process and content of the interview. 昨天下午参加了B站的一个电话面试，本文记录了面试的内容。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bilibili 搜索工程师电面">
+<meta property="og:url" content="http://yanshengjia.com/2017/06/23/Bilibili%E6%90%9C%E7%B4%A2%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%94%B5%E9%9D%A2/index.html">
+<meta property="og:site_name" content="WildPointer">
+<meta property="og:description" content="Bilibili (the Chinese version of Youtube) tele-interviewed me at yesterday afternoon. This article records the process and content of the interview. 昨天下午参加了B站的一个电话面试，本文记录了面试的内容。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-06-23T14:59:16.000Z">
+<meta property="article:modified_time" content="2019-12-26T16:23:40.872Z">
+<meta property="article:author" content="Shengjia Yan">
+<meta property="article:tag" content="Bilibili">
+<meta name="twitter:card" content="summary">
 
 
-{% block title %} {{ page.title }} | {{ config.title }} {% endblock %}
-
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="canonical" href="http://yanshengjia.com/2017/06/23/Bilibili%E6%90%9C%E7%B4%A2%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%94%B5%E9%9D%A2/">
 
 
-{% block content %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://yanshengjia.com/2017/06/23/Bilibili%E6%90%9C%E7%B4%A2%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%94%B5%E9%9D%A2/","path":"2017/06/23/Bilibili搜索工程师电面/","title":"Bilibili 搜索工程师电面"}</script>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Bilibili 搜索工程师电面 | WildPointer</title>
+  
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/algoliasearch/5.23.0/lite/builds/browser.umd.js" defer></script><script src="/js/third-party/search/algolia-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">WildPointer</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Welcome to my world!</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
 
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-projects"><a href="/projects" rel="section"><i class="fa fa-star fa-fw"></i>projects</a></li><li class="menu-item menu-item-tech"><a href="/tech" rel="section"><i class="fa fa-code fa-fw"></i>tech</a></li><li class="menu-item menu-item-donate"><a href="/donate" rel="section"><i class="fa fa-usd fa-fw"></i>donate</a></li><li class="menu-item menu-item-me"><a href="/me" rel="section"><i class="fa fa-user fa-fw"></i>me</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fab fa-algolia fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shengjia Yan"
+      src="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+  <p class="site-author-name" itemprop="name">Shengjia Yan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yanshengjia" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/yanshengjia" title="Linkedin → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fa fa-linkedin fa-fw"></i>Linkedin</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/yanshengjia" title="Zhihu → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>Zhihu</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yanshengjia.com/2017/06/23/Bilibili%E6%90%9C%E7%B4%A2%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%94%B5%E9%9D%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+      <meta itemprop="name" content="Shengjia Yan">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Bilibili 搜索工程师电面 | WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Bilibili 搜索工程师电面
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2017-06-23 10:59:16" itemprop="dateCreated datePublished" datetime="2017-06-23T10:59:16-04:00">2017-06-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2019-12-26 11:23:40" itemprop="dateModified" datetime="2019-12-26T11:23:40-05:00">2019-12-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Interview/" itemprop="url" rel="index"><span itemprop="name">Interview</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2017/06/23/Bilibili%E6%90%9C%E7%B4%A2%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%94%B5%E9%9D%A2/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/06/23/Bilibili搜索工程师电面/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Bilibili (the Chinese version of Youtube) tele-interviewed me at yesterday afternoon. This article records the process and content of the interview.</p>
+<p>昨天下午参加了B站的一个电话面试，本文记录了面试的内容。</p>
+<span id="more"></span>
+<hr>
+<p>作为B站的忠实粉丝，能够参与B站的电面是很高兴的。</p>
+<p>给我面试的面试官是来自云技术部的，她的声音很好听 :)</p>
+<p>一上来就是自我介绍，讲讲曾经做过的项目，她对我做过的实体链接研究、代码编辑器以及人工智能的项目比较感兴趣，然后我就讲了大概半小时的 Entity Linking in Web Tables……</p>
+<p>介绍完背景经历后，就问了一些数据结构方面的问题：</p>
+<ul>
+<li>讲下你知道的数据结构</li>
+<li>在这些数据结构中插入元素的时间复杂度</li>
+</ul>
+<p>对于第一个问题，我基本把我想到的数据结构都讲了：链表，队列，栈，二叉树，堆，trie树，Hash表</p>
+<p>然后在第二个问题中，堆中插入元素的过程我没有答上来，我感觉是自顶向下，用二分查找的方式插入，然而实际上是自底向上，根据堆的性质 (父节点的值大于子节点的值，或者相反) 递归插入。</p>
+<p>讲完数据结构，就是限时编程测试，在 CodePad 上做一个题。</p>
+<p>题目是<strong>环形链表插值</strong>，一个环状有序链表，有头指针，里面存储的元素按升序排列(除去环的交接点，即头部元素和尾部元素)。使用C/C++实现一个算法，将新元素插入到当前链表中，不破坏原有链表的各种约束。</p>
+<p>[C++ Code]</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Created by sjyan @2017-06-23</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ListNode</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    ListNode *next;</span><br><span class="line">    <span class="type">bool</span> isHead;</span><br><span class="line">    <span class="built_in">ListNode</span>(<span class="type">int</span> val) &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;val = val;</span><br><span class="line">        <span class="keyword">this</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="keyword">this</span>-&gt;isHead = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// insert a new element to the linked list</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">insert</span><span class="params">(ListNode *head, ListNode *newone)</span> </span>&#123;    </span><br><span class="line">    <span class="comment">// head-&gt;head</span></span><br><span class="line">    <span class="keyword">if</span> (head-&gt;next-&gt;isHead == <span class="literal">true</span>) &#123;</span><br><span class="line">        head-&gt;next = newone;</span><br><span class="line">        newone-&gt;next = head;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ListNode *p = head-&gt;next;</span><br><span class="line">    ListNode *q = p-&gt;next;</span><br><span class="line">    ListNode *last = p;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// head-&gt;newone-&gt;p1-&gt;...</span></span><br><span class="line">    <span class="keyword">if</span> (p-&gt;val &gt; newone-&gt;val) &#123;</span><br><span class="line">        head-&gt;next = newone;</span><br><span class="line">        newone-&gt;next = p;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// head-&gt;p1-&gt;p2-&gt;...-&gt;pn-&gt;head</span></span><br><span class="line">    <span class="keyword">while</span> (q-&gt;isHead != <span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (p-&gt;val &lt;= newone-&gt;val &amp;&amp; newone-&gt;val &lt;= q-&gt;val) &#123;</span><br><span class="line">            p-&gt;next = newone;</span><br><span class="line">            newone-&gt;next = q;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        last = q;</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">        q = q-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// head-&gt;...-&gt;last-&gt;newone-&gt;haed</span></span><br><span class="line">    <span class="comment">// head-&gt;p-&gt;head</span></span><br><span class="line">    <span class="keyword">if</span> (last-&gt;val &lt; newone-&gt;val) &#123;</span><br><span class="line">        last-&gt;next = newone;</span><br><span class="line">        newone-&gt;next = head;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// print linked list</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;head-&gt;&quot;</span>;</span><br><span class="line">    ListNode *p = head-&gt;next;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span>(p-&gt;isHead != <span class="literal">true</span>) &#123;</span><br><span class="line">        cout&lt;&lt;p-&gt;val&lt;&lt;<span class="string">&quot;-&gt;&quot;</span>;</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;head&quot;</span>&lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// case 1: head-&gt;2-&gt;4-&gt;6-&gt;head, newone = 3</span></span><br><span class="line">    ListNode *head = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">0</span>);</span><br><span class="line">    ListNode *p1 = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">2</span>);</span><br><span class="line">    ListNode *p2 = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">4</span>);</span><br><span class="line">    ListNode *p3 = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">6</span>);</span><br><span class="line">    ListNode *newone = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">5</span>);</span><br><span class="line">    head-&gt;isHead = <span class="literal">true</span>;</span><br><span class="line">    head-&gt;next = p1;</span><br><span class="line">    p1-&gt;next = p2;</span><br><span class="line">    p2-&gt;next = p3;</span><br><span class="line">    p3-&gt;next = head;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// case 2: head-&gt;head, newone = 3</span></span><br><span class="line">    <span class="comment">// ListNode *head = new ListNode(0);</span></span><br><span class="line">    <span class="comment">// ListNode *newone = new ListNode(3);</span></span><br><span class="line">    <span class="comment">// head-&gt;isHead = true;</span></span><br><span class="line">    <span class="comment">// head-&gt;next = head;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// case 3: head-&gt;1-&gt;head, newone = 3</span></span><br><span class="line">    <span class="comment">// ListNode *head = new ListNode(0);</span></span><br><span class="line">    <span class="comment">// ListNode *p1 = new ListNode(1);</span></span><br><span class="line">    <span class="comment">// ListNode *newone = new ListNode(3);</span></span><br><span class="line">    <span class="comment">// head-&gt;isHead = true;</span></span><br><span class="line">    <span class="comment">// head-&gt;next = p1;</span></span><br><span class="line">    <span class="comment">// p1-&gt;next = head;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// case 4: head-&gt;4-&gt;head, newone = 3</span></span><br><span class="line">    <span class="comment">// ListNode *head = new ListNode(0);</span></span><br><span class="line">    <span class="comment">// ListNode *p1 = new ListNode(4);</span></span><br><span class="line">    <span class="comment">// ListNode *newone = new ListNode(3);</span></span><br><span class="line">    <span class="comment">// head-&gt;isHead = true;</span></span><br><span class="line">    <span class="comment">// head-&gt;next = p1;</span></span><br><span class="line">    <span class="comment">// p1-&gt;next = head;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// insert</span></span><br><span class="line">    <span class="built_in">print</span>(head);</span><br><span class="line">    <span class="built_in">insert</span>(head, newone);</span><br><span class="line">    <span class="built_in">print</span>(head);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/wechatpay.jpg" alt="Shengjia Yan WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/alipay.jpg" alt="Shengjia Yan Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Bilibili/" rel="tag"># Bilibili</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/04/12/JIST-2016-Paper/" rel="prev" title="Entity Linking in Web Tables with Multiple Linked Knowledge Bases (JIST 2016)">
+                  <i class="fa fa-angle-left"></i> Entity Linking in Web Tables with Multiple Linked Knowledge Bases (JIST 2016)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/06/27/%E5%A4%A7%E4%BC%97%E7%82%B9%E8%AF%84%E7%AE%97%E6%B3%95%E5%AE%9E%E4%B9%A0%E7%94%9F%E7%94%B5%E9%9D%A2/" rel="next" title="大众点评算法实习生电面">
+                  大众点评算法实习生电面 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"yanshengjia","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js" defer></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

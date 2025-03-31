@@ -1,38 +1,754 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Monaco:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yanshengjia.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"hide","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"K1YPL7B54D","apiKey":"7f22077ed5b2dfbd70cc761b8cf48112","indexName":"wildpointer","hits":{"per_page":10}}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="LDA 主题模型几乎是每一个 NLP 工程师的必修课，而她背后的数学与概率论知识却让她看起来有些高冷。 那么何为 LDA (Latent Dirichlet Allocation)？ 简单的说，L (Latent 隐含)，主题隐含在文档中；DA (Dirichlet Allocation 狄利克雷分布)，文档的主题服从 Dirichlet Distribution。 本文将站在一个初学者的角度来讲">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LDA 数学笔记">
+<meta property="og:url" content="http://yanshengjia.com/2017/12/16/LDA-%E6%95%B0%E5%AD%A6%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="WildPointer">
+<meta property="og:description" content="LDA 主题模型几乎是每一个 NLP 工程师的必修课，而她背后的数学与概率论知识却让她看起来有些高冷。 那么何为 LDA (Latent Dirichlet Allocation)？ 简单的说，L (Latent 隐含)，主题隐含在文档中；DA (Dirichlet Allocation 狄利克雷分布)，文档的主题服从 Dirichlet Distribution。 本文将站在一个初学者的角度来讲">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda0.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda4.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda5.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda6.png">
+<meta property="article:published_time" content="2017-12-16T22:49:24.000Z">
+<meta property="article:modified_time" content="2020-04-26T01:51:33.924Z">
+<meta property="article:author" content="Shengjia Yan">
+<meta property="article:tag" content="LDA">
+<meta property="article:tag" content="Topic Model">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/lda0.png">
 
 
-{% block title %} {{ page.title }} | {{ config.title }} {% endblock %}
-
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="canonical" href="http://yanshengjia.com/2017/12/16/LDA-%E6%95%B0%E5%AD%A6%E7%AC%94%E8%AE%B0/">
 
 
-{% block content %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://yanshengjia.com/2017/12/16/LDA-%E6%95%B0%E5%AD%A6%E7%AC%94%E8%AE%B0/","path":"2017/12/16/LDA-数学笔记/","title":"LDA 数学笔记"}</script>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>LDA 数学笔记 | WildPointer</title>
+  
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/algoliasearch/5.23.0/lite/builds/browser.umd.js" defer></script><script src="/js/third-party/search/algolia-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">WildPointer</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Welcome to my world!</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
 
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-projects"><a href="/projects" rel="section"><i class="fa fa-star fa-fw"></i>projects</a></li><li class="menu-item menu-item-tech"><a href="/tech" rel="section"><i class="fa fa-code fa-fw"></i>tech</a></li><li class="menu-item menu-item-donate"><a href="/donate" rel="section"><i class="fa fa-usd fa-fw"></i>donate</a></li><li class="menu-item menu-item-me"><a href="/me" rel="section"><i class="fa fa-user fa-fw"></i>me</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fab fa-algolia fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D-Introduction"><span class="nav-number">1.</span> <span class="nav-text">介绍 Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E7%BA%B2-Outline"><span class="nav-number">2.</span> <span class="nav-text">提纲 Outline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B4%E8%A7%89-Intuition-behind-LDA"><span class="nav-number">3.</span> <span class="nav-text">直觉 Intuition behind LDA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%AE%9A%E7%90%86-Bayes-Theorem"><span class="nav-number">4.</span> <span class="nav-text">贝叶斯定理 Bayes Theorem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%BD%E7%8E%9B%E5%87%BD%E6%95%B0-Gamma-Function"><span class="nav-number">5.</span> <span class="nav-text">伽玛函数 Gamma Function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E6%A6%82%E7%8E%87%E8%AE%BA-Some-Probability-Theory"><span class="nav-number">6.</span> <span class="nav-text">一些概率论 Some Probability Theory</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%AF%E5%8A%AA%E5%88%A9%E5%88%86%E5%B8%83-Bernoulli-Distribution"><span class="nav-number">6.1.</span> <span class="nav-text">伯努利分布 Bernoulli Distribution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83-Binomial-Distribution"><span class="nav-number">6.2.</span> <span class="nav-text">二项分布 Binomial Distribution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E9%A1%B9%E5%88%86%E5%B8%83-Multinomial-Distribution"><span class="nav-number">6.3.</span> <span class="nav-text">多项分布 Multinomial Distribution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B4%9D%E5%A1%94%E5%88%86%E5%B8%83-Beta-Distribution"><span class="nav-number">6.4.</span> <span class="nav-text">贝塔分布 Beta Distribution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8B%84%E5%88%A9%E5%85%8B%E9%9B%B7%E5%88%86%E5%B8%83-Dirichlet-Distribution"><span class="nav-number">6.5.</span> <span class="nav-text">狄利克雷分布 Dirichlet Distribution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E8%BD%AD%E5%88%86%E5%B8%83-Conjugate-Distribution"><span class="nav-number">6.6.</span> <span class="nav-text">共轭分布 Conjugate Distribution</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%90%E5%90%AB%E7%8B%84%E5%88%A9%E5%85%8B%E9%9B%B7%E5%88%86%E5%B8%83%E4%B8%BB%E9%A2%98%E6%A8%A1%E5%9E%8B-LDA-Topic-Model"><span class="nav-number">7.</span> <span class="nav-text">隐含狄利克雷分布主题模型 LDA Topic Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF-Use-Cases"><span class="nav-number">7.1.</span> <span class="nav-text">使用场景 Use Cases</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%87%E8%AE%BE-Assumptions"><span class="nav-number">7.2.</span> <span class="nav-text">假设 Assumptions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%98%E5%AD%90%E8%A1%A8%E7%A4%BA%E6%B3%95-Plate-Notation"><span class="nav-number">7.3.</span> <span class="nav-text">盘子表示法 Plate Notation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E8%BF%87%E7%A8%8B-Generative-Process"><span class="nav-number">7.4.</span> <span class="nav-text">生成过程 Generative Process</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%86%E8%BF%87%E7%A8%8B-Working-Backwards"><span class="nav-number">7.5.</span> <span class="nav-text">逆过程 Working Backwards</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95-Existing-Solutions"><span class="nav-number">7.6.</span> <span class="nav-text">解法 Existing Solutions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%89%E5%B8%83%E6%96%AF%E9%87%87%E6%A0%B7%E7%AE%97%E6%B3%95-Gibss-Sampling-Algorithm"><span class="nav-number">8.</span> <span class="nav-text">吉布斯采样算法 Gibss Sampling Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA-Conclusions"><span class="nav-number">9.</span> <span class="nav-text">结论 Conclusions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">10.</span> <span class="nav-text">References</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Open-Source-Libraries"><span class="nav-number">11.</span> <span class="nav-text">Open Source Libraries</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shengjia Yan"
+      src="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+  <p class="site-author-name" itemprop="name">Shengjia Yan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yanshengjia" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/yanshengjia" title="Linkedin → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fa fa-linkedin fa-fw"></i>Linkedin</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/yanshengjia" title="Zhihu → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>Zhihu</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yanshengjia.com/2017/12/16/LDA-%E6%95%B0%E5%AD%A6%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+      <meta itemprop="name" content="Shengjia Yan">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="LDA 数学笔记 | WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LDA 数学笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2017-12-16 17:49:24" itemprop="dateCreated datePublished" datetime="2017-12-16T17:49:24-05:00">2017-12-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2020-04-25 21:51:33" itemprop="dateModified" datetime="2020-04-25T21:51:33-04:00">2020-04-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2017/12/16/LDA-%E6%95%B0%E5%AD%A6%E7%AC%94%E8%AE%B0/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/12/16/LDA-数学笔记/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>LDA 主题模型几乎是每一个 NLP 工程师的必修课，而她背后的数学与概率论知识却让她看起来有些高冷。</p>
+<p>那么何为 LDA (Latent Dirichlet Allocation)？</p>
+<p>简单的说，L (Latent 隐含)，主题隐含在文档中；DA (Dirichlet Allocation 狄利克雷分布)，文档的主题服从 Dirichlet Distribution。</p>
+<p>本文将站在一个初学者的角度来讲述 LDA 与她背后的故事。</p>
+<span id="more"></span>
+<hr>
+<h2 id="介绍-Introduction"><a href="#介绍-Introduction" class="headerlink" title="介绍 Introduction"></a>介绍 Introduction</h2><p>人类通过先验知识和上下文来理解文档 (Document) 中的主题 (Topic)，这对人类来说很容易，但是对机器而言难度就大了很多。</p>
+<p>LDA (Latent Dirichlet Allocation) 通过建立一种</p>
+<ul>
+<li>词袋模型 (Bag-of-Word Model)：一篇文档是由一组词构成的一个集合，词与词之间没有顺序以及先后的关系</li>
+<li>统计模型 (Statistical Model)：经过数理统计法求得各变量之间的函数关系</li>
+<li>生成概率模型 (Generative Probabilistic Model)：认为每一类数据都服从某一种分布，如狄利克雷分布</li>
+<li>主题模型 (Topic Model)：在机器学习和自然语言处理等领域，用来在一系列文档中发现抽象主题的一种统计模型</li>
+<li>无监督学习模型 (Unsupervised Model)：在训练时不需要人工标注的数据集，需要的仅仅是文档集以及指定主题的数量 K</li>
+</ul>
+<p>来发现文档集 (Document Collection / Corpus) 中的抽象主题，从而试图解决这类问题。</p>
+<p>在机器学习领域中有2个 LDA：</p>
+<ul>
+<li>线性判别分析 (Linear Discriminant Analysis)，主要用于降维和分类。</li>
+<li>隐含狄利克雷分布 (Latent Dirichlet Allocation)，在主题模型中占有重要的地位，目前在文本挖掘领域包括文本主题识别、文本分类以及文本相似度计算方面都有应用。</li>
+</ul>
+<p>本文关注的是后者。</p>
+<p>LDA 由 Blei, David M., Andrew Y. Ng, and Michael I. Jordan 于 2003 年提出，可以将文档集中每篇文档的主题按照概率分布的形式给出。</p>
+<p>那么何为 LDA？</p>
+<p>简单得说，L (Latent 隐含)，主题隐含在文档中；DA (Dirichlet Allocation 狄利克雷分布)，文档的主题服从狄利克雷分布 (Dirichlet Distribution)。</p>
+<hr>
+<h2 id="提纲-Outline"><a href="#提纲-Outline" class="headerlink" title="提纲 Outline"></a>提纲 Outline</h2><p>为了深入理解 LDA 主题模型，我们需要了解下列5个部分：</p>
+<ul>
+<li>一个概念：贝叶斯定理</li>
+<li>一个函数：Gamma 函数</li>
+<li>五个分布：二项分布 &lt;-&gt; Beta 分布，多项分布 &lt;-&gt; Dirichlet 分布，共轭分布</li>
+<li>两个模型：PLSA 模型，LDA 模型</li>
+<li>两个算法：变分推断之 EM 算法，Gibbs 采样算法 (马尔科夫链蒙特卡罗 MCMC)</li>
+</ul>
+<p>让我们先从直觉出发，从一种宏观的角度看 LDA。</p>
+<hr>
+<h2 id="直觉-Intuition-behind-LDA"><a href="#直觉-Intuition-behind-LDA" class="headerlink" title="直觉 Intuition behind LDA"></a>直觉 Intuition behind LDA</h2><p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/lda0.png" alt="lda0"></p>
+<p>现在我们有六篇文档，如上图所示，前三篇的主题是关于水果的，后三篇是关于动物的。</p>
+<p>假如将这六篇文档作为 LDA 模型的输入，并且设 K = 2，这里的 K 是 LDA 模型中的一个重要参数，代表我们想从文档集中抽取出的主题的数量。</p>
+<p>LDA 的第一个输出是主题的单词分布 (Topic - Word Distribution)，由上图可知，主题1的单词概率分布是 apple banana orange 各占 33%，这就是 LDA 描述主题的方法，她使用单词 (Word / Term) 来描述主题。</p>
+<p>LDA 的第二个输出是文档的主题分布 (Doc - Topic Distribution)，由上图可知，文档1中单词 apple banana 都是关于水果的，所以它的主题是 100% 关于主题1 (水果)，文档4的主题是 100% 关于主题2 (动物)。当然，一个文档中是可以包含多个主题的，此处的例子只包含一个主题是因为文档中单词比较少，正好都关于一个主题。</p>
+<p>让我们梳理一下，LDA 的输入是一个文档集，输出是2个分布，基本上她会告诉你 <strong>每个主题在讨论什么</strong> 以及 <strong>每篇文档中包含了哪些主题</strong>。</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/lda1.png" alt="lda1"></p>
+<p>有了 LDA 的输出结果，我们可以对新文档的主题进行预测。</p>
+<p>假如我们现在有一个新文档 doc7. cat dog apple，可以预测出它的主题分布是 33% 关于主题1，66% 关于主题2。</p>
+<p>好，现在我们直观地感受了一下 LDA 模型的输入输出以及她预测新文档主题分布的能力，那她的模型结构和求解原理是怎么样的呢？</p>
+<p>要想理解她的原理，我们需要了解在 LDA 中，一篇文档的生成过程以及其逆过程，这个逆过程就是求解文档的主题分布的过程。</p>
+<p>在深入讲解她之前，我们需要一些先验知识作为铺垫。</p>
+<hr>
+<h2 id="贝叶斯定理-Bayes-Theorem"><a href="#贝叶斯定理-Bayes-Theorem" class="headerlink" title="贝叶斯定理 Bayes Theorem"></a>贝叶斯定理 Bayes Theorem</h2><script type="math/tex; mode=display">
+P(A|B)=\frac{P(A)\times{P(B|A)}}{P(B)}</script><script type="math/tex; mode=display">
+posterior = prior \times likelihood</script><script type="math/tex; mode=display">
+后验概率 = 先验概率 \times 似然</script><ul>
+<li>概率: 用于在已知一些参数的情况下，预测接下来的观测所得到的结果。</li>
+<li>似然: 用于在已知某些观测所得到的结果时，对有关事物的性质的参数进行估计。</li>
+<li>$P(A|B)$: 是已知 B 发生后 A 的条件概率，也由于得自B的取值而被称作 A 的后验概率。</li>
+<li>$P(A)$: 是 A 的先验概率。之所以称为”先验”是因为它不考虑任何 B 方面的因素。</li>
+<li>$P(B|A)$: 是已知 A 发生后 B 的条件概率，也由于得自A的取值而被称作 B 的后验概率。</li>
+<li>$P(B)$: 是 B 的先验概率。</li>
+<li>$\frac{P(B|A)}{P(B)}$: 称作标准似然 (standardised likelihood)</li>
+</ul>
+<p>举个好人坏人的例子，你对好人和坏人的认知，先验分布为：100个好人和100个的坏人，即你认为好人坏人各占一半，现在你被2个好人帮助了和1个坏人骗了 (似然)，于是你得到了新的后验分布为：102个好人和101个的坏人。现在你的后验分布里面认为好人比坏人多了。这个后验分布接着又变成你的新的先验分布，当你被1个好人帮助了和3个坏人骗了后 (似然)，你又更新了你的后验分布为：103个好人和104个的坏人。依次继续更新下去。</p>
+<p>LDA 是基于贝叶斯模型的，她是一个三层贝叶斯模型。</p>
+<hr>
+<h2 id="伽玛函数-Gamma-Function"><a href="#伽玛函数-Gamma-Function" class="headerlink" title="伽玛函数 Gamma Function"></a>伽玛函数 Gamma Function</h2><p>定义：</p>
+<script type="math/tex; mode=display">
+\Gamma(x) = \int_{0}^{\infty}t^{x-1}e^{-t}dt</script><p>分部积分后，可以发现 Gamma 函数具有这样神奇的性质：</p>
+<script type="math/tex; mode=display">
+\Gamma(x+1) = x \Gamma(x)</script><p>Gamma 函数可以看成是阶乘在实数集上的延拓：</p>
+<script type="math/tex; mode=display">
+\Gamma(n) = (n-1)!</script><p>为什么要提到 Gamma 函数？</p>
+<p>LDA 所涉及的概率分布中会用到 Gamma 函数以及它的性质，所以先介绍一下 Gamma 函数。</p>
+<hr>
+<h2 id="一些概率论-Some-Probability-Theory"><a href="#一些概率论-Some-Probability-Theory" class="headerlink" title="一些概率论 Some Probability Theory"></a>一些概率论 Some Probability Theory</h2><p>LDA 主题模型中涉及了许多概率分布，列举如下。</p>
+<h3 id="伯努利分布-Bernoulli-Distribution"><a href="#伯努利分布-Bernoulli-Distribution" class="headerlink" title="伯努利分布 Bernoulli Distribution"></a>伯努利分布 Bernoulli Distribution</h3><p>伯努利试验是只有2种可能结果的单次随机试验。</p>
+<p>进行一次伯努利试验，成功 (X=1) 概率为 p (0&lt;=p&lt;=1)，失败 (X=0) 概率是 1-p，则称随机变量 X 服从伯努利分布。</p>
+<p>概率密度公式为：</p>
+<script type="math/tex; mode=display">
+f_{X}(x) = p^{x}(1-p)^{1-x} =
+\begin{cases}
+  p & \text{if} \ x = 1,\\
+  q & \text{if} \ x = 0.
+\end{cases}</script><h3 id="二项分布-Binomial-Distribution"><a href="#二项分布-Binomial-Distribution" class="headerlink" title="二项分布 Binomial Distribution"></a>二项分布 Binomial Distribution</h3><p>是 N 重伯努利分布，X ~ B(n, p). </p>
+<p>概率密度公式为：</p>
+<script type="math/tex; mode=display">
+P(K = k) = 
+\begin{pmatrix}
+  n \\
+  k \\ 
+\end{pmatrix}
+p^k{(1-p)}^{n-k}</script><h3 id="多项分布-Multinomial-Distribution"><a href="#多项分布-Multinomial-Distribution" class="headerlink" title="多项分布 Multinomial Distribution"></a>多项分布 Multinomial Distribution</h3><p>多项分布，是二项分布扩展到多维的情况. 多项分布是指单次试验中的随机变量的取值不再是 0-1 的，而是有多种离散值可能（1,2,3…,k）.</p>
+<p>概率密度函数为：</p>
+<script type="math/tex; mode=display">
+P(x_1, x_2, ..., x_k; n, p_1, p_2, ..., p_k) = \frac{n!}{x_1!...x_k!}{p_1}^{x_1}...{p_k}^{x_k}</script><h3 id="贝塔分布-Beta-Distribution"><a href="#贝塔分布-Beta-Distribution" class="headerlink" title="贝塔分布 Beta Distribution"></a>贝塔分布 Beta Distribution</h3><p>Beta分布的定义：对于参数 $\alpha &gt; 0, \beta &gt; 0$ , 取值范围为 [0, 1] 的随机变量 X 的概率密度函数为：</p>
+<script type="math/tex; mode=display">
+f(x; \alpha, \beta) = \frac{1}{B(\alpha, \beta)} x^{\alpha - 1} {(1-x)}^{\beta-1}</script><p>其中，</p>
+<script type="math/tex; mode=display">
+\frac{1}{B(\alpha, \beta)} = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)}</script><h3 id="狄利克雷分布-Dirichlet-Distribution"><a href="#狄利克雷分布-Dirichlet-Distribution" class="headerlink" title="狄利克雷分布 Dirichlet Distribution"></a>狄利克雷分布 Dirichlet Distribution</h3><p>概率密度函数为：</p>
+<script type="math/tex; mode=display">
+f(x_1, x_2, ..., x_k; \alpha_1, \alpha_2, ..., \alpha_k) = \frac{1}{B(\alpha)} \prod_{i=1}^{k}{x_i}^{\alpha^i-1}</script><p>其中，</p>
+<script type="math/tex; mode=display">
+B(\alpha) = \frac{\prod_{i=1}^{k}\Gamma(\alpha^i)}{\Gamma(\sum_{i=1}^{k}\alpha^i)}, \sum_{i=1}^{k}x^i = 1</script><h3 id="共轭分布-Conjugate-Distribution"><a href="#共轭分布-Conjugate-Distribution" class="headerlink" title="共轭分布 Conjugate Distribution"></a>共轭分布 Conjugate Distribution</h3><p>在贝叶斯理论中，如果后验概率分布 $P(\theta | x)$ 与先验概率分布 $P(\theta)$ 具有相同形式，则先验分布与后验分布被称为共轭分布，先验分布被称为似然函数的共轭先验。</p>
+<script type="math/tex; mode=display">
+P(\theta | x) = \frac{P(\theta, x)} {P(x)}</script><p>共轭先验的好处主要在于代数上的方便性，可以直接给出后验分布的封闭形式，否则的话只能数值计算。共轭先验也有助于获得关于似然函数如何更新先验分布的直观印象。</p>
+<p>为什么要讲共轭分布呢？</p>
+<p>联系到前文提到的贝叶斯理论，因为我们希望先验分布和似然对应的后验分布，在后面还可以作为先验分布！就像上面例子里的 “102个好人和101个的坏人” ，它既是前面一次贝叶斯推荐的后验分布，又是后一次贝叶斯推荐的先验分布。换句话说，我们希望先验分布和后验分布的形式是一样的，这样的分布叫共轭分布。</p>
+<p>根据 二项分布、贝塔分布、多项式分布、狄利克雷分布的公式，数学上可以推导出：</p>
+<p>贝塔分布是二项式分布的共轭先验分布，<strong>狄利克雷分布是多项式分布的共轭先验分布</strong>。</p>
+<hr>
+<h2 id="隐含狄利克雷分布主题模型-LDA-Topic-Model"><a href="#隐含狄利克雷分布主题模型-LDA-Topic-Model" class="headerlink" title="隐含狄利克雷分布主题模型 LDA Topic Model"></a>隐含狄利克雷分布主题模型 LDA Topic Model</h2><h3 id="使用场景-Use-Cases"><a href="#使用场景-Use-Cases" class="headerlink" title="使用场景 Use Cases"></a>使用场景 Use Cases</h3><ul>
+<li>自动推测出文档集中讨论的主题</li>
+<li>推测出的主题信息可以用于总结和组织文档，也可以用于降低特征 (featurization) 和维度 (dimensionality)<ul>
+<li>文档 X 在讨论什么？-&gt; 主题识别</li>
+<li>文档 X 和 文档 Y 的相似度是多少？-&gt; 文本相似度计算</li>
+<li>如果我对主题 Z 感兴趣，那么哪篇文档最对我的胃口？ -&gt; 推荐系统</li>
+</ul>
+</li>
+<li>其他使用场景<ul>
+<li>情感分析 Sentiment analysis</li>
+<li>图片目标定位 Object localization for images</li>
+<li>音乐自动谐波分析 Automatic harmonic analysis for music</li>
+<li>生物信息学 Bioinformatics</li>
+</ul>
+</li>
+</ul>
+<h3 id="假设-Assumptions"><a href="#假设-Assumptions" class="headerlink" title="假设 Assumptions"></a>假设 Assumptions</h3><ul>
+<li>Documents with similar topics will use similar groups of words</li>
+<li>Document definitions / modeling:<ul>
+<li>Documents are probability distributions over latent topics 文档是潜在主题的概率分布</li>
+<li>Topics are probability distributions over words 主题是单词的概率分布</li>
+</ul>
+</li>
+</ul>
+<p>Doc - Topic Distribution</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/lda2.png" alt="lda2"></p>
+<p>Topic - Word Distribution</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/lda3.png" alt="lda3"></p>
+<p>LDA 认为单词携带了强烈的语义信息，包含相似主题的文档中会出现相似的单词组。</p>
+<p>一篇文档可以包含多个主题，文档中每一个词都由其中的一个主题生成，每个主题都有一个单词的概率分布与之相关联。</p>
+<p>LDA 模型与别的词袋模型的不同之处就在于，它利用了单词的概率分布而不是单词的出现频率。其他词袋模型可能会考虑文档中出现得最频繁的单词，而 LDA 使用了一种更全面的方法：考虑主题的单词分布。</p>
+<h3 id="盘子表示法-Plate-Notation"><a href="#盘子表示法-Plate-Notation" class="headerlink" title="盘子表示法 Plate Notation"></a>盘子表示法 Plate Notation</h3><p>当我们谈论 LDA 时，经常用盘子表示法来简洁地表达 LDA 模型参数间的依赖关系。</p>
+<p>LDA 是一个三层贝叶斯模型，如下图所示，矩形框是“盘子”，代表复制品 (replicates)。</p>
+<ul>
+<li>大盘子代表文档层</li>
+<li>中盘子代表单词层</li>
+<li>小盘子代表主题层</li>
+</ul>
+<p>根据这些参数指向的位置 (落在哪个盘子中)，可以看出一个参数是应用于文档层，还是应用于主题层，还是单词层。</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/lda4.png" alt="lda4"></p>
+<p>参数：</p>
+<ul>
+<li>$M$: 语料库中文档的数量</li>
+<li>$N$: 文档中单词的数量</li>
+<li>$K$: 语料库中主题的数量 </li>
+<li>$\alpha$: 每篇文档的主题分布 (先验狄利克雷分布) 的参数，是一个 K 维向量，K 是主题数量<ul>
+<li>越高，代表每篇文档可能包含更多的主题，而不只是包含一个或者两个特定的主题</li>
+<li>越低，代表每篇文档包含的主题数越少</li>
+</ul>
+</li>
+<li>$\theta_i$: 文档 $i$ 的主题分布</li>
+<li>$z_{ij}$: 文档 $i$ 中第 $j$ 个单词的主题编号，服从多项式分布</li>
+<li>$\beta$: 每个主题的单词分布 (先验狄利克雷分布) 的参数，是一个 V 维向量，V 是文档中单词的数量<ul>
+<li>越高，代表每个主题可能包含更多的单词</li>
+<li>越低，代表每个主题包含的单词数越少</li>
+</ul>
+</li>
+<li>$\varphi<em>{z</em>{ij}}$: 主题 $z_{ij}$ 的单词分布</li>
+<li>$w_{ij}$: 特定的单词，服从多项式分布</li>
+</ul>
+<h3 id="生成过程-Generative-Process"><a href="#生成过程-Generative-Process" class="headerlink" title="生成过程 Generative Process"></a>生成过程 Generative Process</h3><p>为了能比较好地理解 LDA 推测文档的主题分布的过程，先了解一篇文档的生成过程是很有帮助的。</p>
+<p>LDA 认为一篇新文档是以这样的方式生成的：</p>
+<ul>
+<li>For each document $i$, draw $\theta_i \sim Dirichlet(\alpha), d = 1…D$</li>
+<li>For each word $j$ in document $i$:<ul>
+<li>Sample from $\theta<em>i$ , draw a topic index $z</em>{ij} \sim Multinomial(\theta_i)$</li>
+<li>Sample from $\varphi<em>{z</em>{ij}}$ , draw the observed word $w<em>{ij} \sim Multinomial(\varphi</em>{z_{ij}})$</li>
+</ul>
+</li>
+</ul>
+<p>For parameter estimation, the posterior distribution is:</p>
+<script type="math/tex; mode=display">
+P(z, \theta, \varphi | w, \alpha, \beta) = \frac{P(z, \theta, \varphi | \alpha, \beta)}{P(w | \alpha, \beta)}</script><p>简单点，一篇文档的生成分为三步：</p>
+<ul>
+<li>决定文档中单词的数量</li>
+<li>给文档选择一个主题分布 (i.e. 20% topic A, 30% topic B, 50% topic C)</li>
+<li>生成文档中的单词，通过：<ul>
+<li>首先基于文档的主题分布选一个主题</li>
+<li>再基于主题的单词分布随机选一个单词</li>
+<li>重复上面两步，直到单词数量达到一开始设定的上限</li>
+</ul>
+</li>
+</ul>
+<p>举个栗子。</p>
+<p>我们有一篇文章，它包含4个主题：Arts, Budgets, Children, Education。</p>
+<p>如下图所示，每个主题可以被它下面的这些单词描述。</p>
+<p>现在我们要写一篇包含这4个主题的文章</p>
+<ul>
+<li>设定文档的长度为 1000 个词</li>
+<li>假设文档的主题分布是：30% Arts, 20% Budgets, 30% Children, 20% Education<ul>
+<li>首先基于文档的主题分布选一个主题 (根据我们的主题分布，1000 个词中大约 300 词来自主题 Arts)</li>
+<li>再基于主题的单词分布随机选一个单词</li>
+<li>重复上面两步 1000 次</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/lda5.png" alt="lda5"></p>
+<p>这就是 LDA 认为的人类写文章的过程。</p>
+<p>在生成过程中文章的语法无关紧要，重要的是单词的分布，也许我们无法阅读生成后的文章，但是我们至少能知道这篇文章的主题是关于什么的。</p>
+<p>值得注意的是，这个生成过程，从主题开始，不断挑选单词生成文档，它并不是 LDA 中运行的算法，而它的逆过程才是。</p>
+<p>LDA 求解文档的主题分布实际上是上述生成过程的逆过程，从文档开始，反过来去发现文档中的主题。</p>
+<ul>
+<li>生成过程：主题 -&gt; 文档</li>
+<li>逆过程：文档 -&gt; 主题</li>
+</ul>
+<p>如果只是想理解基本的 LDA 模型，到这里就可以了，如果想知道 LDA 模型的求解原理，让我们继续。</p>
+<h3 id="逆过程-Working-Backwards"><a href="#逆过程-Working-Backwards" class="headerlink" title="逆过程 Working Backwards"></a>逆过程 Working Backwards</h3><p>假如你有一个语料库 / 文档集，你希望 LDA 去学习每篇文档中 k 个主题的分布，以及每个主题的单词分布。</p>
+<p>LDA 从文档层回溯，去推测哪些主题可能用于生成该文档。</p>
+<ul>
+<li>随机给每篇文档中的每个单词分配 (assign) k 个主题中的一个主题</li>
+<li>对于每篇文档 d，更新 (重新采样 Resample) 单词的主题<ul>
+<li>假设除了当前文档之外的所有主题分配是正确的</li>
+<li>计算两个概率<ul>
+<li>当前文档 d 中的单词被分配到主题 t 的概率 P(topic t | doc d)</li>
+<li>所有文档中被分配到主题 t 的单词中是单词 w 的概率 P(word w | topic t)</li>
+</ul>
+</li>
+<li>基于这两个概率的乘积 P(topic t | doc d) * P(word w | topic t) 分配给单词 w 一个新的主题</li>
+</ul>
+</li>
+<li>不断重复上述步骤，最终达到稳定状态，这时可以认为所有主题的分配是合理的，得到文档的主题分布</li>
+</ul>
+<p>根据上文提到的文档生成模型，两个概率的乘积 P(topic t | doc d) * P(word w | topic t) 就是主题 t 生成单词 w 的概率，所以用这个概率重新采样当前单词的主题是说得通的。</p>
+<p>这个逆过程就是吉布斯采样。</p>
+<h3 id="解法-Existing-Solutions"><a href="#解法-Existing-Solutions" class="headerlink" title="解法 Existing Solutions"></a>解法 Existing Solutions</h3><p>基于 LDA 模型如何求解 每一个主题的单词分布 和 每一篇文档的主题分布 呢？</p>
+<p>有两种著名的算法，来估计 LDA 模型中的参数</p>
+<ul>
+<li>Variational EM (Expectation Maximization)</li>
+<li>Gibss Sampling</li>
+</ul>
+<p>这两个算法都是批处理算法 (full batch algorithm)，运行时需要先把整个语料库读入内存，在每轮迭代中都会扫描 (scan) 语料库，这意味着巨大的内存压力。</p>
+<p>当语料库很大的时候，批处理算法就显得力不从心了。如今，LDA 模型面对的输入语料库已经很大，比如 Wikipedia。</p>
+<p>为了解决批处理算法带来的问题，Hoffman M, Bach F R, Blei D M 在 2010 年提出了 Online learning for LDA，该算法可以流式地处理大量的语料输入，并且在许多工业级的应用中都被证明有效。基本上现在主流的主题模型开源库中实现的 LDA 模型都是用的 Online LDA。</p>
+<p>Online LDA Algorithm:</p>
+<ul>
+<li>is streamed: training documents may come in sequentially, no random access required.</li>
+<li>runs in constant memory w.r.t. the number of documents: size of the training corpus does not affect memory footprint, can process corpora larger than RAM, and</li>
+<li>is distributed: makes use of a cluster of machines, if available, to speed up model estimation.</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/lda6.png" alt="lda6"></p>
+<p>在 LDA 模型中，topic 的个数 K 的选取是一直都没有公认的好方法，原因在于不同任务对于推测主题的要求是存在差异的。</p>
+<p>如果 LDA 是用于某个目标明确的学习任务 (比如分类)，那么就直接采用任务的指标来衡量就好了，能够实现分类效果最好的 topic 个数就是最合适的。</p>
+<p>如果没有这样的任务怎么办？</p>
+<p>业界最常用的指标包括 Perplexity，MPI-score 等，通过观察 Perplexity / MPI-score 这些指标随 topic 个数的变化曲线能够帮助我们选择合适的 topic 个数，比如可以找出曲线的拐点 (Perplexity 又小，topic 个数又少)。但是这些指标只能作为参考，而不能作为标准。</p>
+<p>Yee Whye Teh 等人提出的层次狄利克雷过程 (Hierarchical Dirichlet Processes) 可以自动地确定 topic 的个数，也可以用于参考。</p>
+<p>在现实中，肉眼看是一个简单有效的方法。</p>
+<hr>
+<h2 id="吉布斯采样算法-Gibss-Sampling-Algorithm"><a href="#吉布斯采样算法-Gibss-Sampling-Algorithm" class="headerlink" title="吉布斯采样算法 Gibss Sampling Algorithm"></a>吉布斯采样算法 Gibss Sampling Algorithm</h2><p>在 LDA 最初提出的时候，人们使用变分推断之 EM 算法进行求解，后来人们普遍开始使用较为简单的 Gibbs Sampling 来估计 LDA 参数，具体过程如下：</p>
+<ul>
+<li>首先对所有文档中的所有词遍历一遍，为其都随机分配一个主题，即 $z_{m,n} = k \sim Mult(1/K)$ ,其中 $m$ 表示第 $m$ 篇文档，$n$ 表示文档中的第 $n$ 个词，$k$ 表示主题，$K$ 表示主题的总数，之后将对应的 $n^{(k)}_m+1, n_m+1, n^{(t)}_k+1, n_k+1$, 他们分别表示在 $m$ 文档中 $k$ 主题出现的次数，$m$ 文档中主题数量的和，$k$ 主题对应的 $t$ 词的次数，$k$ 主题对应的总词数。</li>
+<li>之后对下述操作进行重复迭代。</li>
+<li>对所有文档中的所有词进行遍历，假如当前文档 $m$ 的词 $t$ 对应主题为 $k$，则 $n^{(k)}_m-1, n_m-1, n^{(t)}_k-1, n_k-1$, 即先拿出当前词，之后根据 LDA 中 topic sample 的概率分布 sample 出新的主题，在对应的 $n^{(k)}_m, n_m, n^{(t)}_k, n_k$ 上分别 +1。</li>
+</ul>
+<script type="math/tex; mode=display">
+p(z_{i}=k|z_{-i},w) \propto \frac{(n_{k,-i}^{(t)} + \beta _{t})(n_{m,-i}^{(k)} + \alpha _{k})}{(\sum _{t=1}^{V}n_{k,-i}^{(t)} + \beta _{t})}</script><p>迭代完成后输出 主题-词矩阵 $\varphi$ 和 文档-主题矩阵 $\theta$</p>
+<script type="math/tex; mode=display">
+\phi _{k,t} = \frac{(n_{k}^{(t)} + \beta _{t})}{(n_{k} + \beta _{t})}</script><script type="math/tex; mode=display">
+\theta _{m,k} = \frac{(n_{m}^{(k)} + \alpha _{k})}{(n_{m} + \alpha _{k})}</script><hr>
+<h2 id="结论-Conclusions"><a href="#结论-Conclusions" class="headerlink" title="结论 Conclusions"></a>结论 Conclusions</h2><p>文档是主题上的概率分布，主题是单词上的概率分布。</p>
+<p>LDA 接受的输入是若干文档。她认为每篇文档中的单词是语义相关的。她试图想明白每篇文档是如何创造出来的。我们只需要告诉她有多少个主题需要构造，她就会根据主题的数量在语料库上生成主题和单词的分布。基于她的输出，可以预测新文档的主题分布，计算文档之间的相似度，文本分类。</p>
+<p>LDA</p>
+<ul>
+<li>Input<ul>
+<li>文档集 (Corpus)</li>
+<li>K: the number of topics</li>
+</ul>
+</li>
+<li>Output<ul>
+<li>主题的单词分布 (Topic - Word Distribution) -&gt; 每个主题在讨论什么</li>
+<li>文档的主题分布 (Doc - Topic Distribution) -&gt; 每篇文档中包含了哪些主题</li>
+</ul>
+</li>
+</ul>
+<p>优点</p>
+<ul>
+<li>对于每一个主题均可找出一些词语来描述它</li>
+<li>是一个有效的主题建模工具</li>
+<li>在许多领域已经展示出了很好的结果，比如推荐，文本分类</li>
+</ul>
+<p>不足</p>
+<ul>
+<li>必须事先指定主题的数量 K，而这个 K 的选取是困难的，需要大量的试验来确定</li>
+<li>假如语料库中有许多关联的主题，狄利克雷主题分布无法捕捉主题间的相关性</li>
+</ul>
+<hr>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li>Blei, David M., Andrew Y. Ng, and Michael I. Jordan. “Latent dirichlet allocation.” Journal of machine Learning research3.Jan (2003): 993-1022.</li>
+<li>Hoffman, Blei, Bach: Online Learning for Latent Dirichlet Allocation, NIPS 2010.</li>
+<li>Hoffman M D, Blei D M, Wang C, et al. Stochastic variational inference[J]. The Journal of Machine Learning Research, 2013, 14(1): 1303-1347.</li>
+<li>LDA 数学八卦，rickjin</li>
+<li>主题模型 LDA，邹博</li>
+<li><a href="http://blog.csdn.net/v_july_v/article/details/41209515">通俗理解 LDA 主题模型</a>，July</li>
+<li><a href="https://zhuanlan.zhihu.com/p/31470216">一文详解LDA主题模型</a>，夏琦</li>
+<li><a href="http://www.cnblogs.com/pinard/p/6831308.html">文本主题模型之LDA</a>，刘建平</li>
+<li><a href="https://zh.wikipedia.org/wiki/%E9%9A%90%E5%90%AB%E7%8B%84%E5%88%A9%E5%85%8B%E9%9B%B7%E5%88%86%E5%B8%83">隐含狄利克雷分布</a>，维基百科</li>
+<li><a href="https://www.zhihu.com/question/32286630/answer/55644323">怎么确定LDA的topic个数？</a>，知乎</li>
+<li><a href="https://www.youtube.com/watch?v=ZgyA1Q2ywbM">Topic modeling with Latent Dirichlet Allocation</a>, Yuhao Yang</li>
+<li><a href="https://www.youtube.com/watch?v=3mHy4OSyRf0">LDA Topic Models</a>, Andrius Knispellis</li>
+<li><a href="https://www.youtube.com/watch?v=DWJYZq_fQ2A">Latent Dirichlet Allocation Algorithm Description</a>, Scott Sullvan</li>
+<li><a href="https://www.youtube.com/watch?v=e1wr0xHbfYk">徐亦达机器学习课程 Variational Inference Example - LDA</a>, Yida Xu</li>
+<li>周志华. 机器学习[M]. 清华大学出版社, 2016.</li>
+<li>Goodfellow I, Bengio Y, Courville A, et al. Deep learning[M]. Cambridge: MIT press, 2016. MLA</li>
+<li>李航. “统计学习方法.” 清华大学出版社, 北京 (2012).</li>
+</ul>
+<hr>
+<h2 id="Open-Source-Libraries"><a href="#Open-Source-Libraries" class="headerlink" title="Open Source Libraries"></a>Open Source Libraries</h2><ul>
+<li><a href="https://radimrehurek.com/gensim/models/ldamodel.html">gensim LDA model</a></li>
+<li><a href="http://scikit-learn.org/stable/modules/decomposition.html#latentdirichletallocation">sklearn LDA</a></li>
+<li><a href="https://github.com/lda-project/lda">lda-project/lda</a></li>
+<li><a href="https://github.com/baidu/Familia">baidu Familia</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/wechatpay.jpg" alt="Shengjia Yan WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/alipay.jpg" alt="Shengjia Yan Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/LDA/" rel="tag"># LDA</a>
+              <a href="/tags/Topic-Model/" rel="tag"># Topic Model</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/12/15/Ngrams-%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%8B%BC%E5%86%99%E6%A0%A1%E6%AD%A3/" rel="prev" title="Ngrams 语言模型与拼写校正">
+                  <i class="fa fa-angle-left"></i> Ngrams 语言模型与拼写校正
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/02/24/2018-Personal-Challenges/" rel="next" title="2018 Personal Challenges">
+                  2018 Personal Challenges <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"yanshengjia","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js" defer></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

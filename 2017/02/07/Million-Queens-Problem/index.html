@@ -1,38 +1,559 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Monaco:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yanshengjia.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"hide","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"K1YPL7B54D","apiKey":"7f22077ed5b2dfbd70cc761b8cf48112","indexName":"wildpointer","hits":{"per_page":10}}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="This article discusses about how to solve Million Queens Problem in very short time. 本文介绍了一种在很短时间内解决百万皇后问题的算法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Million Queens Problem">
+<meta property="og:url" content="http://yanshengjia.com/2017/02/07/Million-Queens-Problem/index.html">
+<meta property="og:site_name" content="WildPointer">
+<meta property="og:description" content="This article discusses about how to solve Million Queens Problem in very short time. 本文介绍了一种在很短时间内解决百万皇后问题的算法。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/queen0.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/queen1.png">
+<meta property="article:published_time" content="2017-02-07T09:32:18.000Z">
+<meta property="article:modified_time" content="2019-12-26T16:23:40.874Z">
+<meta property="article:author" content="Shengjia Yan">
+<meta property="article:tag" content="N Queens Problem">
+<meta property="article:tag" content="Million Queens Problem">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/queen0.png">
 
 
-{% block title %} {{ page.title }} | {{ config.title }} {% endblock %}
-
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="canonical" href="http://yanshengjia.com/2017/02/07/Million-Queens-Problem/">
 
 
-{% block content %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://yanshengjia.com/2017/02/07/Million-Queens-Problem/","path":"2017/02/07/Million-Queens-Problem/","title":"Million Queens Problem"}</script>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Million Queens Problem | WildPointer</title>
+  
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/algoliasearch/5.23.0/lite/builds/browser.umd.js" defer></script><script src="/js/third-party/search/algolia-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">WildPointer</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Welcome to my world!</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
 
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-projects"><a href="/projects" rel="section"><i class="fa fa-star fa-fw"></i>projects</a></li><li class="menu-item menu-item-tech"><a href="/tech" rel="section"><i class="fa fa-code fa-fw"></i>tech</a></li><li class="menu-item menu-item-donate"><a href="/donate" rel="section"><i class="fa fa-usd fa-fw"></i>donate</a></li><li class="menu-item menu-item-me"><a href="/me" rel="section"><i class="fa fa-user fa-fw"></i>me</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fab fa-algolia fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#N-Queens-Problem"><span class="nav-number">1.</span> <span class="nav-text">N Queens Problem</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Backtracking"><span class="nav-number">2.</span> <span class="nav-text">Backtracking</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Queen-Search-1-Algorithm"><span class="nav-number">3.</span> <span class="nav-text">Queen Search 1 Algorithm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Queen-Search-4-Algorithm"><span class="nav-number">4.</span> <span class="nav-text">Queen Search 4 Algorithm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Thoughts"><span class="nav-number">5.</span> <span class="nav-text">Thoughts</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">6.</span> <span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shengjia Yan"
+      src="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+  <p class="site-author-name" itemprop="name">Shengjia Yan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yanshengjia" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/yanshengjia" title="Linkedin → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fa fa-linkedin fa-fw"></i>Linkedin</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/yanshengjia" title="Zhihu → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>Zhihu</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yanshengjia.com/2017/02/07/Million-Queens-Problem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+      <meta itemprop="name" content="Shengjia Yan">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Million Queens Problem | WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Million Queens Problem
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2017-02-07 04:32:18" itemprop="dateCreated datePublished" datetime="2017-02-07T04:32:18-05:00">2017-02-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2019-12-26 11:23:40" itemprop="dateModified" datetime="2019-12-26T11:23:40-05:00">2019-12-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Artificial-Intelligence/" itemprop="url" rel="index"><span itemprop="name">Artificial Intelligence</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2017/02/07/Million-Queens-Problem/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/02/07/Million-Queens-Problem/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>This article discusses about how to solve <strong>Million Queens Problem</strong> in very short time.</p>
+<p>本文介绍了一种在很短时间内解决<strong>百万皇后问题</strong>的算法。</p>
+<span id="more"></span>
+<hr>
+<h1 id="N-Queens-Problem"><a href="#N-Queens-Problem" class="headerlink" title="N Queens Problem"></a>N Queens Problem</h1><p>国际象棋中，皇后可以在行、列和对角线行走。</p>
+<p>假如在一个 N×N 的棋盘 (N=1 或 N&gt;=4)，如何在棋盘上放置 N 个皇后，使得每个皇后处于安全的位置(不被其他皇后攻击)？</p>
+<p>换句话说，使得每行、每列和每条对角线上不存在2个或2个以上的皇后。</p>
+<p>这就是 N 皇后问题。</p>
+<p>百万皇后问题即为 N 为百万数量级。</p>
+<p>N 皇后问题是人工智能领域中一个经典的组合问题，在包括 VLSI (超大规模集成电路) 和交通控制等问题上有广泛应用。</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/queen0.png" alt="queen0"></p>
+<p>Fig. 1: an invalid solution for 4-queens</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/queen1.png" alt="queen1"></p>
+<p>Fig. 2: a valid solution for 4-queens</p>
+<hr>
+<h1 id="Backtracking"><a href="#Backtracking" class="headerlink" title="Backtracking"></a>Backtracking</h1><p>N 皇后的经典求解方法是<strong>回溯法 (backtracking)</strong>，又称为试探法。</p>
+<p>按照目标条件向前搜索，以达到目标。当探索到某一步，发现原先选择达不到目标，就退回一步重新搜索。这种走不通就退回再走的算法称为回溯法。</p>
+<p>把 N 皇后的解表示成一个一维数组 a[N], 其中 a[i] 表示第 i 个皇后在第 i 行第 a[i] 列。</p>
+<p><strong>目标条件：</strong></p>
+<ul>
+<li>所有皇后不能在同一行，a[i] 的定义就保证了这一点。</li>
+<li>所有皇后不能在同一列，因此 a[i] 数组中不能有相同的值。</li>
+<li>任意2个皇后不能在同一条对角线上，如何检测？2个皇后连成的直线斜率绝对值为1时它们在同一对角线上。</li>
+</ul>
+<p>假设某一行为当前状态，不断检查该行所有的位置是否能放一个皇后，检索的状态有两种：</p>
+<ul>
+<li>先从首位开始检查，如果不能放置，接着检查该行第二个位置，依次检查下去，直到在该行找到一个可以放置一个皇后的地方，然后保存当前状态，转到下一行重复上述方法的检索。</li>
+<li>如果检查了该行所有的位置均不能放置一个皇后，说明上一行皇后放置的位置无法让所有的皇后找到自己合适的位置，因此就要回溯到上一行，重新检查该皇后位置后面的位置。</li>
+</ul>
+<p>回溯法生成所有可能的 N 皇后的解。</p>
+<hr>
+<h1 id="Queen-Search-1-Algorithm"><a href="#Queen-Search-1-Algorithm" class="headerlink" title="Queen Search 1 Algorithm"></a>Queen Search 1 Algorithm</h1><p><strong>解的结构：</strong></p>
+<p>每行一个解，用一个一维数组 queen[N] 保存解的列位置，queen[i] 表示第 i 个皇后在第 i 行第 queen[i] 列。数组queen是 1~N 的一个排列。</p>
+<p>这样皇后不会在行或者列上冲突，我们只要解决对角线上的冲突问题。</p>
+<p>Pseudocode:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 产生一个随机的初始解的排列 queen</span></span><br><span class="line"><span class="keyword">while</span>(!collision)</span><br><span class="line">&#123;</span><br><span class="line">     <span class="keyword">for</span> all i, j in [<span class="number">0</span>,N<span class="number">-1</span>] &amp;&amp; i!=j</span><br><span class="line">     &#123;</span><br><span class="line">          <span class="keyword">if</span> <span class="built_in">swap</span>(queen[i], queen[j]) -&gt; reduce collision</span><br><span class="line">              <span class="keyword">do</span> it</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同一条正对角线满足其行号与列号之差为常数，同一条负对角线满足其行号与列号之和为常数。</p>
+<p>每一条对角线可以维护对应的冲突数，用数组 b 和 c 分别维护正对角线和负对角线的冲突数，数组长度都是 2N-1.</p>
+<p>每次交换2个皇后会涉及8条对角线，因此 QS1 中判断交换能否减少冲突的时间是O(1)级别的。</p>
+<p>N 皇后问题的最大冲突数为 N-1，for 循环运行的时间复杂度为 O(N^2) 且其成功运行至少减少1次冲突，所以 QS1 在一个随机解上的搜索的最坏时间复杂度为 O(N^3)。</p>
+<hr>
+<h1 id="Queen-Search-4-Algorithm"><a href="#Queen-Search-4-Algorithm" class="headerlink" title="Queen Search 4 Algorithm"></a>Queen Search 4 Algorithm</h1><p>QS1 中初始排列 queen 是完全随机的，这大概在对角线上会造成 0.53n 个冲突[1]。</p>
+<p>假如让初始排列中的冲突数减少，会不会让 QS1 更高效呢？ 这就是 QS4 的背后的基本思想。</p>
+<p>初始排列的生成:</p>
+<ul>
+<li>皇后是一行一行放置的</li>
+<li>新皇后的位置是在空闲列中随机生成的，直到找到一个无冲突的位置</li>
+<li>在放置了一定数量的无冲突的皇后之后，其他的皇后就在空闲列中完全随机生成了，不管对角线有没有冲突</li>
+</ul>
+<p>皇后的无冲突数需要谨慎选择:</p>
+<ul>
+<li>如果太小，那么 QS4 相比 QS1 没什么提升</li>
+<li>如果太大，初始化时间太长</li>
+</ul>
+<p>可能冲突的皇后数 c 与皇后数 n 相关。二者关系如下表。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">皇后数 n</th>
+<th style="text-align:left">可能冲突数 c</th>
+<th style="text-align:left">无冲突数 m</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">n&lt;=10</td>
+<td style="text-align:left">(n&gt;8) ? 8 : n</td>
+<td style="text-align:left">n-c</td>
+</tr>
+<tr>
+<td style="text-align:left">n&lt;100</td>
+<td style="text-align:left">n</td>
+<td style="text-align:left">0</td>
+</tr>
+<tr>
+<td style="text-align:left">n&lt;1000</td>
+<td style="text-align:left">30</td>
+<td style="text-align:left">n-30</td>
+</tr>
+<tr>
+<td style="text-align:left">n&lt;10000</td>
+<td style="text-align:left">50</td>
+<td style="text-align:left">n-50</td>
+</tr>
+<tr>
+<td style="text-align:left">n&lt;100000</td>
+<td style="text-align:left">80</td>
+<td style="text-align:left">n-80</td>
+</tr>
+<tr>
+<td style="text-align:left">n&gt;=100000</td>
+<td style="text-align:left">100</td>
+<td style="text-align:left">n-100</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Table 1: 可能冲突的皇后数 c 与皇后数 n 的关系</p>
+<p>在初始排列生成后，至多 c 个皇后需要移动来寻找解。</p>
+<p>QS4 中的搜索算法和 QS1 中类似：</p>
+<ul>
+<li>选择2个皇后，一个皇后来自可能冲突的皇后集合，另一个皇后完全随机选择。</li>
+<li>假如交换2个皇后的列位置可以减少冲突数，就交换；反之，不交换。</li>
+<li>搜索直到找到一个合法解结束。</li>
+<li>如果没有搜索到合法的解，那么就重新初始化。</li>
+</ul>
+<p>QS4 算法将大部分时间花在了初始化上，搜索的过程耗时很短。</p>
+<hr>
+<h1 id="Thoughts"><a href="#Thoughts" class="headerlink" title="Thoughts"></a>Thoughts</h1><ul>
+<li><p>解的结构是决定搜索性能的重要因素</p>
+</li>
+<li><p>局部搜索可能会陷入局部搜索陷阱</p>
+<ul>
+<li>当一个随机解不能通过局部搜索消除所有冲突时，我们采用了随机重启的解决办法</li>
+</ul>
+<ul>
+<li>N 皇后问题的可行解很多，所以可以通过随机解的局部搜索解决</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li>[1] Sosic, R.; Gu, J. 3,000,000 Queens in less than one minute. ACM SIGART Bulletin, 1991, 2(2).</li>
+<li>[2] Sosic, R.; Gu, J. A polynomial time algorithm for the N-Queens problem. ACM SIGART Bulletin, 1(3).</li>
+<li>[3] Sosic, R.; Gu, J. Fast search algorithms for the n-queens problem. IEEE Transactions on Systems, Man and Cybernetics, 1991, 21(6): 1572 - 1576.</li>
+<li>[4] Sosic, R.; Gu, J. Efficient local search with conflict minimization: a case study of the n-queens problem. IEEE Transactions on Knowledge and Data Engineering, 1994, 6(5):661 - 668</li>
+</ul>
+<hr>
+<p><strong>测试代码：</strong><a href="https://github.com/yanshengjia/artificial-intelligence/tree/master/million-queens">million-queens</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/wechatpay.jpg" alt="Shengjia Yan WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/alipay.jpg" alt="Shengjia Yan Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/N-Queens-Problem/" rel="tag"># N Queens Problem</a>
+              <a href="/tags/Million-Queens-Problem/" rel="tag"># Million Queens Problem</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/01/31/%E4%BD%BF%E7%94%A8Hexo-Github-Pages%E6%90%AD%E5%BB%BA%E7%8B%AC%E7%AB%8B%E5%8D%9A%E5%AE%A2/" rel="prev" title="使用 Hexo + Github Pages 搭建独立博客">
+                  <i class="fa fa-angle-left"></i> 使用 Hexo + Github Pages 搭建独立博客
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/02/10/24-Puzzle-Problem/" rel="next" title="24 Puzzle Problem">
+                  24 Puzzle Problem <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"yanshengjia","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js" defer></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
