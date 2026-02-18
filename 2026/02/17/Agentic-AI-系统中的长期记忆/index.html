@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Monaco:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yanshengjia.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"hide","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"K1YPL7B54D","apiKey":"7f22077ed5b2dfbd70cc761b8cf48112","indexName":"wildpointer","hits":{"per_page":10}}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="过去一年里，我陆续做过几个 Agent 相关的项目，从简单的对话助手到带工具调用的自动化系统。一个成熟的 Agentic AI 系统当然不只是模型推理能力，它需要工具编排、状态管理、反馈闭环，甚至一定程度的自治能力。但真正跑进生产环境后，我发现一个更底层的问题：如果没有长期记忆，AI Agent 本质上只是无状态的一次性工具。它记不住用户的偏好，记不住过去的决策，更无法从历史结果中学习。在真正可用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agentic AI 系统中的长期记忆">
+<meta property="og:url" content="http://yanshengjia.com/2026/02/17/Agentic-AI-%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86/index.html">
+<meta property="og:site_name" content="WildPointer">
+<meta property="og:description" content="过去一年里，我陆续做过几个 Agent 相关的项目，从简单的对话助手到带工具调用的自动化系统。一个成熟的 Agentic AI 系统当然不只是模型推理能力，它需要工具编排、状态管理、反馈闭环，甚至一定程度的自治能力。但真正跑进生产环境后，我发现一个更底层的问题：如果没有长期记忆，AI Agent 本质上只是无状态的一次性工具。它记不住用户的偏好，记不住过去的决策，更无法从历史结果中学习。在真正可用">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-18T04:05:08.000Z">
+<meta property="article:modified_time" content="2026-02-18T04:06:55.562Z">
+<meta property="article:author" content="Shengjia Yan">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="Long Term Memory">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://yanshengjia.com/2026/02/17/Agentic-AI-%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://yanshengjia.com/2026/02/17/Agentic-AI-%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86/","path":"2026/02/17/Agentic-AI-系统中的长期记忆/","title":"Agentic AI 系统中的长期记忆"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Agentic AI 系统中的长期记忆 | WildPointer</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/algoliasearch/5.23.0/lite/builds/browser.umd.js" defer></script><script src="/js/third-party/search/algolia-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">WildPointer</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Welcome to my world!</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-projects"><a href="/projects" rel="section"><i class="fa fa-star fa-fw"></i>projects</a></li><li class="menu-item menu-item-tech"><a href="/tech" rel="section"><i class="fa fa-code fa-fw"></i>tech</a></li><li class="menu-item menu-item-donate"><a href="/donate" rel="section"><i class="fa fa-usd fa-fw"></i>donate</a></li><li class="menu-item menu-item-me"><a href="/me" rel="section"><i class="fa fa-user fa-fw"></i>me</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fab fa-algolia fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88-AI-Agent-%E9%9C%80%E8%A6%81%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">1. 为什么 AI Agent 需要长期记忆？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BB%80%E4%B9%88%E6%98%AF-AI-Agent-%E7%9A%84%E8%AE%B0%E5%BF%86%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">2. 什么是 AI Agent 的记忆？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E5%BA%93%E9%87%8C%E5%BA%94%E8%AF%A5%E5%AD%98%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">3. 长期记忆库里应该存什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%AF%BB%E5%8F%96-%E5%86%99%E5%85%A5%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">4. 什么时候读取 &#x2F; 写入长期记忆？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%AF%BB%E5%8F%96%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">什么时候读取？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%86%99%E5%85%A5%EF%BC%9F"><span class="nav-number">4.2.</span> <span class="nav-text">什么时候写入？</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shengjia Yan"
+      src="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+  <p class="site-author-name" itemprop="name">Shengjia Yan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags">
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yanshengjia" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://www.linkedin.com/in/yanshengjia" title="Linkedin → http:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fa fa-linkedin fa-fw"></i>Linkedin</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/yanshengjia" title="Zhihu → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;yanshengjia" rel="noopener me" target="_blank"><i class="fab fa-zhihu fa-fw"></i>Zhihu</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yanshengjia.com/2026/02/17/Agentic-AI-%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/skydive0.png">
+      <meta itemprop="name" content="Shengjia Yan">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Agentic AI 系统中的长期记忆 | WildPointer">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Agentic AI 系统中的长期记忆
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-02-17 23:05:08 / Modified: 23:06:55" itemprop="dateCreated datePublished" datetime="2026-02-17T23:05:08-05:00">2026-02-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/GenAI/" itemprop="url" rel="index"><span itemprop="name">GenAI</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/GenAI/Agentic-AI/" itemprop="url" rel="index"><span itemprop="name">Agentic AI</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2026/02/17/Agentic-AI-%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2026/02/17/Agentic-AI-系统中的长期记忆/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>过去一年里，我陆续做过几个 Agent 相关的项目，从简单的对话助手到带工具调用的自动化系统。一个成熟的 Agentic AI 系统当然不只是模型推理能力，它需要工具编排、状态管理、反馈闭环，甚至一定程度的自治能力。但真正跑进生产环境后，我发现一个更底层的问题：如果没有长期记忆，AI Agent 本质上只是无状态的一次性工具。它记不住用户的偏好，记不住过去的决策，更无法从历史结果中学习。在真正可用的 Agentic AI 系统里，长期记忆 (Long Term Memory) 不是锦上添花，而是决定系统是否具备长期能力的基础设施。</p>
+<span id="more"></span>
+<hr>
+<h2 id="1-为什么-AI-Agent-需要长期记忆？"><a href="#1-为什么-AI-Agent-需要长期记忆？" class="headerlink" title="1. 为什么 AI Agent 需要长期记忆？"></a>1. 为什么 AI Agent 需要长期记忆？</h2><p>在单轮对话场景下，LLM 的能力已经足够强大。很多时候，我们只需要一个 prompt，就可以完成写作、总结，甚至复杂推理。但当 AI 从一次性的对话工具，演变为持续运行的 Agent 时，问题就完全不同了。</p>
+<p>一个真正运行在生产环境里的 Agent，不只是完成任务，它需要在时间维度上持续存在。它要面对同一个用户多次发出的请求，要在不同阶段做出决策，要在反馈中调整行为。</p>
+<p>如果没有长期记忆，每一次与 Agent 的交互其实都是重新开始。用户表达过的偏好会被遗忘，过去的决策无法复用，失败的经验也不会转化为系统的改进。所谓的用户个性化 (personalization) 只能停留在当前会话里，无法跨时间跨 session 延续。</p>
+<p>没有记忆的 Agent，本质上只是一个无状态工具；有记忆的 Agent，才有可能成为一个长期协作甚至动态演进的系统。</p>
+<hr>
+<h2 id="2-什么是-AI-Agent-的记忆？"><a href="#2-什么是-AI-Agent-的记忆？" class="headerlink" title="2. 什么是 AI Agent 的记忆？"></a>2. 什么是 AI Agent 的记忆？</h2><p>当我们讨论 Agent 的长期记忆时，首先要搞清楚一个问题：什么是 AI Agent 的长期记忆？</p>
+<p>短期记忆 (Short-Term Memory, STM) 很好理解，它是 Agent 在当前任务或当前会话中暂时持有的上下文状态，比如当前的对话信息。但是短期记忆是暂时的 (Ephemeral)，在会话结束就会被丢失。</p>
+<p>长期记忆 (Long-Term Memory, LTM) 是跨任务、跨会话、可持久化的状态存储，用来保存会在未来影响用户决策的信息。它可以被敷用，并且是实现系统个性化的关键。</p>
+<p>它并不只是保存聊天记录，也不是简单地把所有信息丢进向量数据库或者DDB。真正有意义的记忆，是那些会在未来影响决策的信息。</p>
+<p>借鉴认知科学的划分，Agent 的长期记忆通常可以分为三种类型：</p>
+<ul>
+<li><p><strong>语义记忆（Semantic Memory）</strong><br>这是关于事实 (facts) 的记忆。它包括用户的稳定属性、明确表达的偏好，以及长期有效的信息。例如用户的时区、写作风格、业务约束等。这类记忆更新频率不高，但一旦出错，会长期影响系统表现。</p>
+</li>
+<li><p><strong>情景记忆（Episodic Memory）</strong><br>这是关于过往经历 (past experience) 的记忆。它记录过去发生过的事情，以及当时的上下文和结果，例如一次工具调用的输出、一段关键对话、一次失败的决策或用户反馈。这类记忆数量往往较多，也更容易产生噪声，因此通常需要筛选和摘要。</p>
+</li>
+<li><p><strong>程序记忆（Procedural Memory）</strong><br>这是关于行为规则 (rules / constraint) 的记忆。它体现为规则、约束和行为策略。在很多 LLM 系统中，它可能存在于 system prompt、工具使用说明或者一些写在系统 markdown 中的 guardrails。程序记忆决定了 Agent 的行为边界，是系统稳定性的核心。</p>
+</li>
+</ul>
+<p>当我们把这三种记忆区分开来，问题其实就变得清晰很多：哪些信息属于长期事实？哪些属于可参考的历史？哪些属于行为规则？</p>
+<hr>
+<h2 id="3-长期记忆库里应该存什么？"><a href="#3-长期记忆库里应该存什么？" class="headerlink" title="3. 长期记忆库里应该存什么？"></a>3. 长期记忆库里应该存什么？</h2><p>当我们决定为 Agent 引入长期记忆之后，一个更关键的问题就出现了：什么信息值得被记住？</p>
+<p>AI Agent 和人类一样，更多记忆并不意味着更好表现。如果我们不管三七二十一，把所有信息所有原始对话记录都扔进长期记忆库，记忆中的大量噪声反而会干扰 Agent 的判断并产生很多的幻觉 (hallucination)。这点已有大量研究证明，比如 <a href="https://promptmetheus.com/resources/llm-knowledge-base/lost-in-the-middle-effect">Lost-in-the-Middle Effect</a> 或者 <a href="https://arxiv.org/abs/2401.14887">RAG 中的检索噪声</a>问题。</p>
+<p>所有，真正重要的不是存多少记忆，而是选择有效的记忆。</p>
+<p>一个更合理的原则是：</p>
+<blockquote>
+<p>只存储那些会在未来影响决策的信息。</p>
+</blockquote>
+<p>从这个角度出发，长期记忆中通常会包含几类内容：</p>
+<ul>
+<li><p><strong>长期有效的用户事实或偏好</strong><br>例如写作风格、优先级规则、固定业务约束等。这类信息通常比较稳定，一旦确定，就会持续影响后续行为。</p>
+</li>
+<li><p><strong>关键决策及其结果</strong><br>某种策略是否有效？某次操作是否成功？失败是否暴露了系统限制？这些都属于情景记忆的重要来源。它们的价值不在于事件本身，而在于对未来决策的参考意义。</p>
+</li>
+<li><p><strong>经过多次交互推断出的长期倾向</strong><br>有些信息并非用户明确表达，而是系统在多次交互中逐渐观察到的，例如用户更偏好简洁回答，或更关注成本而非性能。这类信息通常需要设置信心阈值，避免过早写入。</p>
+</li>
+</ul>
+<p>与此同时，记忆的遗忘同样重要。如果 Agent 把所有对话和行为永久保存，记忆很快就会变成负担。一个成熟的长期记忆系统，往往需要具备筛选、压缩甚至衰减机制，让不再重要的信息逐渐淡出。</p>
+<p>设计长期记忆时真正困难的，不是“如何存储”，而是“是否应该存储”。</p>
+<hr>
+<h2 id="4-什么时候读取-写入长期记忆？"><a href="#4-什么时候读取-写入长期记忆？" class="headerlink" title="4. 什么时候读取 / 写入长期记忆？"></a>4. 什么时候读取 / 写入长期记忆？</h2><p>上一节探讨了长期记忆“存什么”的问题，在真实生产环境中，一个更实际的问题是长期记忆“什么时候用”？</p>
+<h3 id="什么时候读取？"><a href="#什么时候读取？" class="headerlink" title="什么时候读取？"></a>什么时候读取？</h3><p>通常发生在以下场景：</p>
+<ul>
+<li>新一轮交互开始时  </li>
+<li>需要做重要决策之前  </li>
+<li>调用关键工具之前  </li>
+</ul>
+<p>但读取并不意味着加载全部记忆。合理的做法是根据当前任务进行有选择的检索，让相关信息进入上下文，而不是让历史淹没当前决策。</p>
+<h3 id="什么时候写入？"><a href="#什么时候写入？" class="headerlink" title="什么时候写入？"></a>什么时候写入？</h3><p>在实践中，长期记忆的写入通常有两种机制：</p>
+<ul>
+<li><p><strong>Hot Path（同步写入）</strong><br>在 Agent 主循环中直接更新记忆。实现简单、一致性强，但会增加服务的延迟，并可能写入未经筛选的低质量信息。</p>
+</li>
+<li><p><strong>Background（异步写入）</strong><br>主 Agent 只发出“记忆信号”，由后台 (可以是另一个 agent) 进行整理、总结和存储。这种方式可以降低延迟，并对记忆进行质量控制，但系统复杂度更高。</p>
+</li>
+</ul>
+<p>在多数实际系统中，更合理的做法是采用混合模式：<br>对用户明确表达的长期偏好使用同步写入，对需要总结或推断的信息使用异步机制，同时在写入前进行置信度判断和去重处理。</p>
+<p>长期记忆并不是简单的存储组件，而是 Agent 架构中的一个独立层级。它既影响性能，也影响系统稳定性，更决定了 Agent 是否具备长期演化的能力。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/wechatpay.jpg" alt="Shengjia Yan WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="https://raw.githubusercontent.com/yanshengjia/photo/master/alipay.jpg" alt="Shengjia Yan Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/Long-Term-Memory/" rel="tag"># Long Term Memory</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/03/30/AI%E6%B5%AA%E6%BD%AE%E4%B8%8B%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%B8%88-%E4%BB%8E%22%E4%BB%A3%E7%A0%81%E5%B7%A5%E4%BA%BA%22%E5%88%B0%22AI%E5%8D%8F%E4%BD%9C%E8%80%85%22%E7%9A%84%E8%8C%83%E5%BC%8F%E8%BD%AC%E7%A7%BB/" rel="prev" title="AI浪潮下的软件工程师:从"代码工人"到"AI协作者"的范式转移">
+                  <i class="fa fa-angle-left"></i> AI浪潮下的软件工程师:从"代码工人"到"AI协作者"的范式转移
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2016 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"yanshengjia","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js" defer></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
