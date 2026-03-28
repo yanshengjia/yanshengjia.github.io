@@ -17,19 +17,20 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yanshengjia.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"hide","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"algolia":{"appID":"K1YPL7B54D","apiKey":"7f22077ed5b2dfbd70cc761b8cf48112","indexName":"wildpointer","hits":{"per_page":10}}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="过去一年里，我陆续做过几个 Agent 相关的项目，从简单的对话助手到带工具调用的自动化系统。一个成熟的 Agentic AI 系统当然不只是模型推理能力，它需要工具编排、状态管理、反馈闭环，甚至一定程度的自治能力。但真正跑进生产环境后，我发现一个更底层的问题：如果没有长期记忆，AI Agent 本质上只是无状态的一次性工具。它记不住用户的偏好，记不住过去的决策，更无法从历史结果中学习。在真正可用">
+    <meta name="description" content="过去一年里，我陆续做过几个 AI Agent 相关的项目，从简单的对话助手到带工具调用的 Agentic AI 系统。一个成熟的 Agentic AI 系统当然不只是模型推理能力，它需要工具编排、状态管理、反馈闭环，甚至一定程度的自治能力。但真正进入生产环境后，我意识到一个更底层的问题：如果没有长期记忆，AI Agent 本质上只是无状态的一次性工具。它记不住用户的偏好，记不住过去的决策，更无法从">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Agentic AI 系统中的长期记忆">
 <meta property="og:url" content="http://yanshengjia.com/2026/02/17/Agentic-AI-%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86/index.html">
 <meta property="og:site_name" content="WildPointer">
-<meta property="og:description" content="过去一年里，我陆续做过几个 Agent 相关的项目，从简单的对话助手到带工具调用的自动化系统。一个成熟的 Agentic AI 系统当然不只是模型推理能力，它需要工具编排、状态管理、反馈闭环，甚至一定程度的自治能力。但真正跑进生产环境后，我发现一个更底层的问题：如果没有长期记忆，AI Agent 本质上只是无状态的一次性工具。它记不住用户的偏好，记不住过去的决策，更无法从历史结果中学习。在真正可用">
+<meta property="og:description" content="过去一年里，我陆续做过几个 AI Agent 相关的项目，从简单的对话助手到带工具调用的 Agentic AI 系统。一个成熟的 Agentic AI 系统当然不只是模型推理能力，它需要工具编排、状态管理、反馈闭环，甚至一定程度的自治能力。但真正进入生产环境后，我意识到一个更底层的问题：如果没有长期记忆，AI Agent 本质上只是无状态的一次性工具。它记不住用户的偏好，记不住过去的决策，更无法从">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-02-18T04:05:08.000Z">
-<meta property="article:modified_time" content="2026-02-18T04:06:55.562Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/memory_pipeline.png">
+<meta property="article:published_time" content="2026-02-17T21:28:08.000Z">
+<meta property="article:modified_time" content="2026-03-28T22:01:07.323Z">
 <meta property="article:author" content="Shengjia Yan">
-<meta property="article:tag" content="LLM">
 <meta property="article:tag" content="Long Term Memory">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yanshengjia/photo/master/memory_pipeline.png">
 
 
 <link rel="canonical" href="http://yanshengjia.com/2026/02/17/Agentic-AI-%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86/">
@@ -167,7 +168,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88-AI-Agent-%E9%9C%80%E8%A6%81%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">1. 为什么 AI Agent 需要长期记忆？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BB%80%E4%B9%88%E6%98%AF-AI-Agent-%E7%9A%84%E8%AE%B0%E5%BF%86%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">2. 什么是 AI Agent 的记忆？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E5%BA%93%E9%87%8C%E5%BA%94%E8%AF%A5%E5%AD%98%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">3. 长期记忆库里应该存什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%AF%BB%E5%8F%96-%E5%86%99%E5%85%A5%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">4. 什么时候读取 &#x2F; 写入长期记忆？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%AF%BB%E5%8F%96%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">什么时候读取？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%86%99%E5%85%A5%EF%BC%9F"><span class="nav-number">4.2.</span> <span class="nav-text">什么时候写入？</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88-AI-Agent-%E9%9C%80%E8%A6%81%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">1. 为什么 AI Agent 需要长期记忆？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BB%80%E4%B9%88%E6%98%AF-AI-Agent-%E7%9A%84%E8%AE%B0%E5%BF%86%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">2. 什么是 AI Agent 的记忆？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E5%BA%93%E9%87%8C%E5%BA%94%E8%AF%A5%E5%AD%98%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">3. 长期记忆库里应该存什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%AF%BB%E5%8F%96-%E5%86%99%E5%85%A5%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">4. 什么时候读取 &#x2F; 写入长期记忆？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%AF%BB%E5%8F%96%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">什么时候读取？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%86%99%E5%85%A5%EF%BC%9F"><span class="nav-number">4.2.</span> <span class="nav-text">什么时候写入？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%B8%A6%E6%9C%89%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E7%9A%84-Agent"><span class="nav-number">5.</span> <span class="nav-text">5. 一个简单的带有长期记忆的 Agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">6.</span> <span class="nav-text">长期记忆的生命周期</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -193,7 +194,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags">
-        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-count">44</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -259,9 +260,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2026-02-17 23:05:08 / Modified: 23:06:55" itemprop="dateCreated datePublished" datetime="2026-02-17T23:05:08-05:00">2026-02-17</time>
+      <time title="Created: 2026-02-17 16:28:08" itemprop="dateCreated datePublished" datetime="2026-02-17T16:28:08-05:00">2026-02-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-03-28 18:01:07" itemprop="dateModified" datetime="2026-03-28T18:01:07-04:00">2026-03-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -269,11 +276,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/GenAI/" itemprop="url" rel="index"><span itemprop="name">GenAI</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/GenAI/Agentic-AI/" itemprop="url" rel="index"><span itemprop="name">Agentic AI</span></a>
+          <a href="/categories/Agentic-AI/" itemprop="url" rel="index"><span itemprop="name">Agentic AI</span></a>
         </span>
     </span>
 
@@ -307,17 +310,17 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>过去一年里，我陆续做过几个 Agent 相关的项目，从简单的对话助手到带工具调用的自动化系统。一个成熟的 Agentic AI 系统当然不只是模型推理能力，它需要工具编排、状态管理、反馈闭环，甚至一定程度的自治能力。但真正跑进生产环境后，我发现一个更底层的问题：如果没有长期记忆，AI Agent 本质上只是无状态的一次性工具。它记不住用户的偏好，记不住过去的决策，更无法从历史结果中学习。在真正可用的 Agentic AI 系统里，长期记忆 (Long Term Memory) 不是锦上添花，而是决定系统是否具备长期能力的基础设施。</p>
+    <div class="post-body" itemprop="articleBody"><p>过去一年里，我陆续做过几个 AI Agent 相关的项目，从简单的对话助手到带工具调用的 Agentic AI 系统。一个成熟的 Agentic AI 系统当然不只是模型推理能力，它需要工具编排、状态管理、反馈闭环，甚至一定程度的自治能力。但真正进入生产环境后，我意识到一个更底层的问题：如果没有长期记忆，AI Agent 本质上只是无状态的一次性工具。它记不住用户的偏好，记不住过去的决策，更无法从历史结果中学习。在真正可用的 Agentic AI 系统里，长期记忆 (Long Term Memory) 不是锦上添花，而是决定系统是否具备长期进化能力的基础设施。</p>
 <span id="more"></span>
 <hr>
-<h2 id="1-为什么-AI-Agent-需要长期记忆？"><a href="#1-为什么-AI-Agent-需要长期记忆？" class="headerlink" title="1. 为什么 AI Agent 需要长期记忆？"></a>1. 为什么 AI Agent 需要长期记忆？</h2><p>在单轮对话场景下，LLM 的能力已经足够强大。很多时候，我们只需要一个 prompt，就可以完成写作、总结，甚至复杂推理。但当 AI 从一次性的对话工具，演变为持续运行的 Agent 时，问题就完全不同了。</p>
+<h2 id="1-为什么-AI-Agent-需要长期记忆？"><a href="#1-为什么-AI-Agent-需要长期记忆？" class="headerlink" title="1. 为什么 AI Agent 需要长期记忆？"></a>1. 为什么 AI Agent 需要长期记忆？</h2><p>在单轮对话场景下，LLM 的能力已经足够强大。很多时候，我们只需要一个 prompt，就可以完成写作、总结，甚至复杂推理。但当 AI 从一次性的对话工具，演变为持续多轮运行的 Agent 时，问题就完全不同了。</p>
 <p>一个真正运行在生产环境里的 Agent，不只是完成任务，它需要在时间维度上持续存在。它要面对同一个用户多次发出的请求，要在不同阶段做出决策，要在反馈中调整行为。</p>
 <p>如果没有长期记忆，每一次与 Agent 的交互其实都是重新开始。用户表达过的偏好会被遗忘，过去的决策无法复用，失败的经验也不会转化为系统的改进。所谓的用户个性化 (personalization) 只能停留在当前会话里，无法跨时间跨 session 延续。</p>
 <p>没有记忆的 Agent，本质上只是一个无状态工具；有记忆的 Agent，才有可能成为一个长期协作甚至动态演进的系统。</p>
 <hr>
 <h2 id="2-什么是-AI-Agent-的记忆？"><a href="#2-什么是-AI-Agent-的记忆？" class="headerlink" title="2. 什么是 AI Agent 的记忆？"></a>2. 什么是 AI Agent 的记忆？</h2><p>当我们讨论 Agent 的长期记忆时，首先要搞清楚一个问题：什么是 AI Agent 的长期记忆？</p>
 <p>短期记忆 (Short-Term Memory, STM) 很好理解，它是 Agent 在当前任务或当前会话中暂时持有的上下文状态，比如当前的对话信息。但是短期记忆是暂时的 (Ephemeral)，在会话结束就会被丢失。</p>
-<p>长期记忆 (Long-Term Memory, LTM) 是跨任务、跨会话、可持久化的状态存储，用来保存会在未来影响用户决策的信息。它可以被敷用，并且是实现系统个性化的关键。</p>
+<p>长期记忆 (Long-Term Memory, LTM) 是跨任务、跨会话、可持久化的状态存储，用来保存会在未来影响用户决策的信息。它可以被复用，并且是实现系统个性化的关键。</p>
 <p>它并不只是保存聊天记录，也不是简单地把所有信息丢进向量数据库或者DDB。真正有意义的记忆，是那些会在未来影响决策的信息。</p>
 <p>借鉴认知科学的划分，Agent 的长期记忆通常可以分为三种类型：</p>
 <ul>
@@ -356,7 +359,7 @@
 <li>需要做重要决策之前  </li>
 <li>调用关键工具之前  </li>
 </ul>
-<p>但读取并不意味着加载全部记忆。合理的做法是根据当前任务进行有选择的检索，让相关信息进入上下文，而不是让历史淹没当前决策。</p>
+<p>但读取并不意味着加载全部记忆。合理的做法是根据当前任务进行有选择的检索，让相关信息进入上下文，而不是让历史记忆淹没当前决策。</p>
 <h3 id="什么时候写入？"><a href="#什么时候写入？" class="headerlink" title="什么时候写入？"></a>什么时候写入？</h3><p>在实践中，长期记忆的写入通常有两种机制：</p>
 <ul>
 <li><p><strong>Hot Path（同步写入）</strong><br>在 Agent 主循环中直接更新记忆。实现简单、一致性强，但会增加服务的延迟，并可能写入未经筛选的低质量信息。</p>
@@ -366,6 +369,57 @@
 </ul>
 <p>在多数实际系统中，更合理的做法是采用混合模式：<br>对用户明确表达的长期偏好使用同步写入，对需要总结或推断的信息使用异步机制，同时在写入前进行置信度判断和去重处理。</p>
 <p>长期记忆并不是简单的存储组件，而是 Agent 架构中的一个独立层级。它既影响性能，也影响系统稳定性，更决定了 Agent 是否具备长期演化的能力。</p>
+<hr>
+<h2 id="5-一个简单的带有长期记忆的-Agent"><a href="#5-一个简单的带有长期记忆的-Agent" class="headerlink" title="5. 一个简单的带有长期记忆的 Agent"></a>5. 一个简单的带有长期记忆的 Agent</h2><p>前面聊了长期记忆的概念和设计原则，如果只是停留在理论层面，总感觉有点“纸上谈兵”。不如让我们 get hands dirty，来做一个带长期记忆的简单对话 Agent，它大概会长什么样？</p>
+<p>想象一个简单的 AI 聊天助手。如果没有长期记忆，这个助手每次对话都像第一次见面 —— 你刚刚说过的话、表达过的偏好、甚至刚刚做过的决策，都会在下一轮对话中被彻底遗忘。某种程度上，这样的 Agent 更像是一个“健忘但聪明”的工具。</p>
+<p>但如果给它加上长期记忆，事情就开始变得有意思了。这个 Agent 可以记住你喜欢简洁的回答风格，也可以记住你曾经否定过某种方案，甚至可以逐渐形成对你工作习惯的理解。随着时间推移，它不再只是回应问题，而是在逐渐“懂”用户。</p>
+<p>从工程角度来看，这个 AI Agent 其实并不复杂。每一轮对话，Agent 只需要做几件事情：先从长期记忆库里找找有没有相关信息，然后筛选出真正有用的部分，再生成回复。等对话结束后，再判断这一轮有没有值得长期保存的新信息新记忆，如果有，就写回长期记忆库里。</p>
+<p>这样，一个完整的长期记忆循环就形成了：</p>
+<ul>
+<li>Retrieve memory  </li>
+<li>Distill memory  </li>
+<li>Use memory  </li>
+<li>Write memory  </li>
+</ul>
+<p>用流程图表示，大概是这样的：</p>
+<p><img src="https://raw.githubusercontent.com/yanshengjia/photo/master/memory_pipeline.png" alt="memory_pipeline"></p>
+<ul>
+<li><p>检索记忆 + 记忆蒸馏：当用户输入到来时，Agent 会先从长期记忆库中检索可能相关的信息。但这些检索结果往往包含噪声，因此下一步会对这些检索出的记忆进行一次记忆蒸馏 (distillation)，筛选出真正有用的部分，再注入到当前上下文中。</p>
+</li>
+<li><p>提取新的记忆：在生成回复之后，Agent 会试图提取记忆，也可以理解为是再进行一次 记忆蒸馏 (memory distillation)，不过这一次是针对当前对话。Agent 会判断这一轮交互中是否出现了值得长期保存的信息，比如用户表达的偏好、约束条件，或者新的事实。</p>
+</li>
+<li><p>存储长期记忆：如果有新的长期记忆，就写入长期记忆库 (Long Term Memory Store)；如果没有，这一轮流程就结束。</p>
+</li>
+</ul>
+<p>这个过程就像是一个“记忆循环”：Agent 一边读取记忆来辅助当前回答，一边从新的对话里提炼出未来还会有价值的信息以供之后的轮次使用。</p>
+<p>长期记忆的价值，就在于它能改变 Agent 之后的行为。随着时间推移，Agent 的行为会变得更加稳定和个性化，它会慢慢变得像一个“懂你”的老朋友。</p>
+<p>拿我制作的这个简单的 chat agent 来说，长期记忆 (Long Term Memory) 的效果很容易观察。</p>
+<p>最开始，长期记忆库里什么都没有：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">LTM Agent Started:</span><br><span class="line">- chat: ask a question or continue the conversation</span><br><span class="line">- long-term memory is extracted automatically after each user turn</span><br><span class="line">- /show_ltm: display saved long-term memories for this user</span><br><span class="line">- /exit: quit</span><br><span class="line">You&gt; /show_ltm</span><br><span class="line">Saved LTM for user &#x27;sj&#x27;:</span><br><span class="line">(none)</span><br><span class="line">You&gt; Suggest a quick lunch for me</span><br><span class="line">Trace&gt; retrieve_memory</span><br><span class="line">Trace&gt; none</span><br><span class="line">Trace&gt; distill_new_memory</span><br><span class="line">Trace&gt; none</span><br><span class="line">Assistant&gt; How about a turkey and avocado wrap? ...</span><br></pre></td></tr></table></figure>
+<p>这时候 Agent 只能基于当前问题回答，因此给出了一个很普通、甚至不符合我饮食习惯的建议。</p>
+<p>接着，我在对话中表达了一个饮食偏好：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">You&gt; I am vegetarian</span><br><span class="line">Trace&gt; retrieve_memory</span><br><span class="line">Trace&gt; none</span><br><span class="line">Trace&gt; distill_new_memory</span><br><span class="line">Trace&gt; 1. will save [fact] The user is vegetarian.</span><br><span class="line">Assistant&gt; Great! Try a hummus and veggie wrap ...</span><br></pre></td></tr></table></figure>
+<p>这里最关键的不是回复本身，而是 记忆蒸馏 (distill_new_memory) 这一步。它说明 Agent 没有把这句话当成一次普通闲聊，而是识别出“用户是素食主义者”是一个未来可能持续有用的事实，于是把它写进了长期记忆库。</p>
+<p>我们来看一下这时长期记忆库里有什么</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;sj&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;text&quot;: &quot;The user is vegetarian.&quot;,</span><br><span class="line">      &quot;type&quot;: &quot;fact&quot;,</span><br><span class="line">      &quot;timestamp&quot;: &quot;2026-03-28T20:35:49.141368&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到了下一轮，这条记忆就开始真正发挥作用了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">You&gt; /show_ltm</span><br><span class="line">Saved LTM for user &#x27;sj&#x27;:</span><br><span class="line">1. [fact] The user is vegetarian.</span><br><span class="line">You&gt; suggest me a quick dinner option</span><br><span class="line">Trace&gt; retrieve_memory</span><br><span class="line">Trace&gt; 1. [fact] The user is vegetarian.</span><br><span class="line">Trace&gt; distill_new_memory</span><br><span class="line">Trace&gt; none</span><br><span class="line">Assistant&gt; How about a veggie stir-fry? Just sauté your favorite vegetables (like bell peppers, broccoli, and carrots) in olive oil, add some tofu for protein, and season with soy sauce and garlic. Serve with steamed rice or noodles for a quick, filling vegetarian dinner!</span><br></pre></td></tr></table></figure>
+<p>这一次，我并没有重新说明自己的饮食偏好，但 Agent 在检索记忆 (retrieve_memory) 阶段取回了之前保存的那条长期记忆，于是回答自然就变成了素食选项。也就是说，有了长期记忆之后，Agent 在新的轮次里能够主动把过去提炼出的用户偏好拿来辅助回答，这就是一个简单的具有个性化和持续进化能力的 Agent 的例子。</p>
+<p>以上带有长期记忆能力的 Chat Agent 的代码示例放在了这个代码仓库中 <a href="https://github.com/yanshengjia/artificial-intelligence/tree/master/langgraph-agent-with-long-term-memory">https://github.com/yanshengjia/artificial-intelligence/tree/master/langgraph-agent-with-long-term-memory</a></p>
+<h2 id="长期记忆的生命周期"><a href="#长期记忆的生命周期" class="headerlink" title="长期记忆的生命周期"></a>长期记忆的生命周期</h2><p>到这里，我们已经讨论了如何为 Agent 引入长期记忆，以及如何在每一轮对话中读取和更新记忆。但当系统真正运行一段时间之后，一个新的问题很快就会出现：长期记忆会越来越多。</p>
+<p>直觉上，我们可能会认为记忆越多越好。毕竟，Agent 记住的越多，似乎就越“聪明”。但在实际系统中，情况往往恰恰相反。随着记忆不断积累，检索噪声开始增加，相关性变得模糊，甚至会出现互相冲突的记忆。久而久之，Agent 不但没有变得更聪明，反而更容易做出不稳定的决策。</p>
+<p>这也是为什么长期记忆不仅需要“写入”，还需要“管理”。一个成熟的长期记忆系统，通常需要考虑以下几个方面：</p>
+<ul>
+<li><p><strong>Memory Pruning</strong><br>随着时间推移，一些记忆可能不再有价值。例如一次性的对话信息、已经过时的偏好，或者被更准确记忆替代的旧信息。这些记忆需要被定期清理，否则长期来看只会增加噪声。Pruning 通常由系统自动执行，例如根据时间、置信度或使用频率进行裁剪。</p>
+</li>
+<li><p><strong>Memory Update</strong><br>用户的偏好并不是一成不变的。一个用户可能今天偏好简洁回答，明天又希望更详细的解释。如果系统只是一味追加记忆，而不更新已有信息，很快就会出现冲突。因此，长期记忆往往需要支持更新，而不是只追加。</p>
+</li>
+<li><p><strong>Memory Deletion</strong><br>与 pruning 不同，memory deletion 更多是由用户主动发起的。例如用户可能希望“忘记我刚才说的偏好”，或者清除某些不再希望被记住的信息。这不仅是用户体验的一部分，也关系到系统的可控性和信任度。</p>
+</li>
+</ul>
+<p>从某种角度来看，长期记忆更像是一个“活的系统”，而不是一个简单的存储组件。它需要不断积累，也需要适时遗忘。</p>
+<p>这其实也和人类的记忆机制非常相似。我们不会记住所有事情，而是不断筛选、压缩、甚至遗忘信息。正是这种动态的记忆管理，让我们能够在复杂环境中保持高效决策。</p>
+<p>对于 Agent 来说也是一样。存储更多记忆并不一定带来更好的效果，关键在于如何管理这些记忆的生命周期。只有当长期记忆能够被有效维护时，Agent 才能真正具备持续进化的能力。</p>
 
     </div>
 
@@ -393,7 +447,6 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/LLM/" rel="tag"># LLM</a>
               <a href="/tags/Long-Term-Memory/" rel="tag"># Long Term Memory</a>
           </div>
 
