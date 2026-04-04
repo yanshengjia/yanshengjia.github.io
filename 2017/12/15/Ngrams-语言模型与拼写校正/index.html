@@ -25,7 +25,7 @@
 <meta property="og:description" content="在上一篇文章中，我翻译了 Peter Norvig 的 How to Write a Spelling Corrector，其中的拼写校正器主要依赖编辑距离和词频，并不利用上下文信息，因此在 real-word error 这类问题上效果有限。本文继续沿着这个话题往前走，介绍 NLP 中最经典的一类语言模型：Ngrams 模型，以及如何把它接入一个基于编辑距离的拼写校正器中，使校正器具备感知上下文">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2017-12-15T15:47:22.000Z">
-<meta property="article:modified_time" content="2026-04-04T20:18:04.292Z">
+<meta property="article:modified_time" content="2026-04-04T20:41:54.299Z">
 <meta property="article:author" content="Shengjia Yan">
 <meta property="article:tag" content="Spell Checking">
 <meta property="article:tag" content="Auto Correction">
@@ -270,7 +270,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-04-04 16:18:04" itemprop="dateModified" datetime="2026-04-04T16:18:04-04:00">2026-04-04</time>
+      <time title="Modified: 2026-04-04 16:41:54" itemprop="dateModified" datetime="2026-04-04T16:41:54-04:00">2026-04-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -355,7 +355,7 @@ P(w_i \mid w_1, \ldots, w_{i-1}) \approx P(w_i \mid w_{i-1})</script><p>如果�
 <script type="math/tex; mode=display">
 P(w_i \mid w_1, \ldots, w_{i-1}) \approx P(w_i \mid w_{i-2}, w_{i-1})</script><p>更一般地，N-gram 模型假设：</p>
 <script type="math/tex; mode=display">
-P(w_i \mid w_1, \ldots, w_{i-1}) \approx P(w_i \mid w_{i-n+1}, \ldots, w_{i-1})</script><p>也就是说，在 n-gram 模型中，当前词的条件概率只依赖于前面的 $n-1$ 个词。</p>
+P(w_i \mid w_1, \ldots, w_{i-1}) \approx P(w_i \mid w_{i-n+1}, \ldots, w_{i-1})</script><p>也就是说，在 n-gram 模型中，当前词的条件概率只依赖于前面的 $n - 1$ 个词。</p>
 <p>于是整句概率可以近似写成：</p>
 <script type="math/tex; mode=display">
 P(w_1, \ldots, w_n) \approx \prod_{i=1}^{n} P(w_i \mid w_{i-n+1}, \ldots, w_{i-1})</script><h2 id="一个简单例子"><a href="#一个简单例子" class="headerlink" title="一个简单例子"></a>一个简单例子</h2><p>假设我们有下面两个句子：</p>
@@ -364,14 +364,23 @@ P(w_1, \ldots, w_n) \approx \prod_{i=1}^{n} P(w_i \mid w_{i-n+1}, \ldots, w_{i-1
 <li>I love natural processing language</li>
 </ol>
 <p>如果使用 bigram 模型，这两个句子的分数分别由以下概率相乘得到：</p>
-<ul>
-<li>I love natural language processing: $P(I)P(love|I)P(natural|love)P(language|natural)P(processing|language)$</li>
-<li>I love natural language processing: $P(I)P(\text{love} \mid I)P(\text{natural} \mid \text{love})P(\text{language} \mid \text{natural})P(\text{processing} \mid \text{language})$</li>
-<li>I love natural processing language: $P(I)P(\text{love} \mid I)P(\text{natural} \mid \text{love})P(\text{processing} \mid \text{natural})P(\text{language} \mid \text{processing})$</li>
-</ul>
-<p>这两个句子前三项都一样，差别主要出现在后两个 bigram。由于在语料中：</p>
-<p>$P(\text{language} \mid \text{natural})$ 和 $P(\text{processing} \mid \text{language})$ 往往都会显著高于 $P(\text{processing} \mid \text{natural})$ 和 $P(\text{language} \mid \text{processing})$</p>
-<p>因此模型会更偏好 “I love natural language processing”。</p>
+<script type="math/tex; mode=display">
+P(\text{I love natural language processing}) \propto
+P(I)
+P(\text{love} \mid I)
+P(\text{natural} \mid \text{love})
+P(\text{language} \mid \text{natural})
+P(\text{processing} \mid \text{language})</script><script type="math/tex; mode=display">
+P(\text{I love natural processing language}) \propto
+P(I)
+P(\text{love} \mid I)
+P(\text{natural} \mid \text{love})
+P(\text{processing} \mid \text{natural})
+P(\text{language} \mid \text{processing})</script><p>这两个句子前三项都一样，差别主要出现在后两个 bigram。由于在语料中：</p>
+<script type="math/tex; mode=display">
+P(\text{language} \mid \text{natural}) \text{ 和 } P(\text{processing} \mid \text{language})</script><p>往往都会显著高于：</p>
+<script type="math/tex; mode=display">
+P(\text{processing} \mid \text{natural}) \text{ 和 } P(\text{language} \mid \text{processing})</script><p>因此模型会更偏好 “I love natural language processing”。</p>
 <h2 id="参数估计"><a href="#参数估计" class="headerlink" title="参数估计"></a>参数估计</h2><p>Ngrams 模型通常直接用最大似然估计 (Maximum Likelihood Estimation, MLE) 来统计条件概率。</p>
 <p>比如在 bigram 模型中：</p>
 <script type="math/tex; mode=display">
@@ -380,7 +389,22 @@ P(w_i \mid w_{i-1}) = \frac{\operatorname{Count}(w_{i-1}, w_i)}{\operatorname{Co
 P(w_i \mid w_{i-2}, w_{i-1}) = \frac{\operatorname{Count}(w_{i-2}, w_{i-1}, w_i)}{\operatorname{Count}(w_{i-2}, w_{i-1})}</script><p>这背后的直觉很直接：某个词在某个上下文中出现得越多，它在这个上下文下的条件概率就越高。</p>
 <p>但问题也很直接。如果某个 ngram 在训练语料中从来没有出现过，那么它的概率就会被估计为 0。这样一来，只要句子里包含一个未见过的 ngram，整句概率就会直接变成 0。</p>
 <p>所以，Ngrams 模型几乎总是要和“平滑算法”一起使用。</p>
-<h2 id="为什么-Ngrams-适合做拼写校正"><a href="#为什么-Ngrams-适合做拼写校正" class="headerlink" title="为什么 Ngrams 适合做拼写校正"></a>为什么 Ngrams 适合做拼写校正</h2><p>在拼写校正任务里，我们通常并不要求模型完整理解整句话的语义，只需要它回答一个更局部的问题：</p>
+<h2 id="为什么-Ngrams-适合做拼写校正"><a href="#为什么-Ngrams-适合做拼写校正" class="headerlink" title="为什么 Ngrams 适合做拼写校正"></a>为什么 Ngrams 适合做拼写校正</h2><p>在继续往下之前，先简单回顾一下上一篇文章里的编辑距离 (edit distance)。</p>
+<p>对于一个输入词，我们通常允许 4 类基础编辑操作：</p>
+<ul>
+<li>删除一个字符</li>
+<li>插入一个字符</li>
+<li>替换一个字符</li>
+<li>交换两个相邻字符</li>
+</ul>
+<p>如果一个单词经过 1 次这样的编辑可以变成另一个单词，那么我们就说它们的编辑距离为 1。上一篇文章里的 <code>edits1</code> 和 <code>edits2</code>，本质上就是在为一个错误输入词生成“编辑距离为 1 或 2 的候选词集合”。</p>
+<p>因此，一个基于编辑距离的拼写校正器通常包含两个阶段：</p>
+<ol>
+<li>候选生成：用编辑距离找出可能的修正词</li>
+<li>候选排序：从这些候选词中选出最合理的那个</li>
+</ol>
+<p>上一篇文章主要解决的是第 1 步以及一个很简单的排序问题，也就是直接用词频排序；本文要做的事情，就是用 Ngrams 语言模型把第 2 步做得更好。</p>
+<p>在拼写校正任务里，我们通常并不要求模型完整理解整句话的语义，只需要它回答一个更局部的问题：</p>
 <p>在当前位置，哪个候选词与周围上下文的搭配最自然？</p>
 <p>这恰好是 Ngrams 最擅长的事情。</p>
 <p>例如下面这句话：</p>
