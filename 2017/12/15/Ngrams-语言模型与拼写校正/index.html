@@ -25,7 +25,7 @@
 <meta property="og:description" content="在上一篇文章中，我翻译了 Peter Norvig 的 How to Write a Spelling Corrector，其中的拼写校正器主要依赖编辑距离和词频，并不利用上下文信息，因此在 real-word error 这类问题上效果有限。本文继续沿着这个话题往前走，介绍 NLP 中最经典的一类语言模型：Ngrams 模型，以及如何把它接入一个基于编辑距离的拼写校正器中，使校正器具备感知上下文">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2017-12-15T15:47:22.000Z">
-<meta property="article:modified_time" content="2026-04-04T19:59:05.040Z">
+<meta property="article:modified_time" content="2026-04-04T20:18:04.292Z">
 <meta property="article:author" content="Shengjia Yan">
 <meta property="article:tag" content="Spell Checking">
 <meta property="article:tag" content="Auto Correction">
@@ -270,7 +270,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-04-04 15:59:05" itemprop="dateModified" datetime="2026-04-04T15:59:05-04:00">2026-04-04</time>
+      <time title="Modified: 2026-04-04 16:18:04" itemprop="dateModified" datetime="2026-04-04T16:18:04-04:00">2026-04-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -317,10 +317,10 @@
 <hr>
 <h1 id="语言模型"><a href="#语言模型" class="headerlink" title="语言模型"></a>语言模型</h1><p>语言模型 (Language Model, LM) 解决的是一个基础问题：给定一个词序列，如何衡量它是否像一句自然语言。</p>
 <p>更形式化一点，给定一个词序列：</p>
-<p>$w_1, w_2, …, w_n$</p>
-<p>语言模型希望估计这个序列出现的概率：</p>
-<p>$P(w_1, w_2, …, w_n)$</p>
-<p>如果模型认为句子 A 的概率高于句子 B，那么我们就说 A 在模型看来更自然，也更符合训练语料中的语言分布。</p>
+<script type="math/tex; mode=display">
+w_1, w_2, \ldots, w_n</script><p>语言模型希望估计这个序列出现的概率：</p>
+<script type="math/tex; mode=display">
+P(w_1, w_2, \ldots, w_n)</script><p>如果模型认为句子 A 的概率高于句子 B，那么我们就说 A 在模型看来更自然，也更符合训练语料中的语言分布。</p>
 <p>比如：</p>
 <ol>
 <li>I love natural language processing.</li>
@@ -328,15 +328,20 @@
 </ol>
 <p>对于英语来说，第一个句子的概率显然应该高于第二个句子。语言模型的作用，就是把这种“通顺度”转化为一个可计算的分数。</p>
 <p>根据概率论中的链式法则，一个句子的概率可以分解为：</p>
-<p>$P(w<em>1, w_2, …, w_n) = \prod</em>{i=1}^{n} P(w<em>i|w_1, …, w</em>{i-1})$</p>
-<p>例如：</p>
-<p>$P(\text{I love natural language processing}) = P(\text{I}) P(\text{love}|\text{I}) P(\text{natural}|\text{I love}) P(\text{language}|\text{I love natural}) P(\text{processing}|\text{I love natural language})$</p>
-<p>这个公式在数学上完全正确，但直接用于工程实现并不现实。因为我们几乎不可能从有限语料中，准确估计“任意长历史条件下下一个词的概率”。</p>
+<script type="math/tex; mode=display">
+P(w_1, w_2, \ldots, w_n) = \prod_{i=1}^{n} P(w_i \mid w_1, \ldots, w_{i-1})</script><p>例如：</p>
+<script type="math/tex; mode=display">
+P(\text{I love natural language processing}) =
+P(\text{I})
+P(\text{love} \mid \text{I})
+P(\text{natural} \mid \text{I love})
+P(\text{language} \mid \text{I love natural})
+P(\text{processing} \mid \text{I love natural language})</script><p>这个公式在数学上完全正确，但直接用于工程实现并不现实。因为我们几乎不可能从有限语料中，准确估计“任意长历史条件下下一个词的概率”。</p>
 <p>假设我们要估计：</p>
-<p>$P(\text{processing}|\text{I love natural language})$</p>
-<p>前者还可以靠统计估计；但如果我们要估计：</p>
-<p>$P(\text{processing}|\text{Yesterday in the lab I suddenly realized that I love natural language})$</p>
-<p>这样的长上下文在语料中很可能根本没有出现过。于是语言建模里就有一个经典矛盾：</p>
+<script type="math/tex; mode=display">
+P(\text{processing} \mid \text{I love natural language})</script><p>前者还可以靠统计估计；但如果我们要估计：</p>
+<script type="math/tex; mode=display">
+P(\text{processing} \mid \text{Yesterday in the lab I suddenly realized that I love natural language})</script><p>这样的长上下文在语料中很可能根本没有出现过。于是语言建模里就有一个经典矛盾：</p>
 <ul>
 <li>上下文越长，信息越充分</li>
 <li>模型越复杂，数据稀疏问题越严重</li>
@@ -345,15 +350,15 @@
 <hr>
 <h1 id="Ngrams-语言模型"><a href="#Ngrams-语言模型" class="headerlink" title="Ngrams 语言模型"></a>Ngrams 语言模型</h1><p>Ngrams 模型的核心思想是一个很强但很实用的假设：<strong>一个词的出现只依赖于前面有限个词，而不是依赖于全部历史。</strong></p>
 <p>如果只看前面 1 个词，就是 bigram 模型：</p>
-<p>$P(w<em>i|w_1, …, w</em>{i-1}) \approx P(w<em>i|w</em>{i-1})$</p>
-<p>如果只看前面 2 个词，就是 trigram 模型：</p>
-<p>$P(w<em>i|w_1, …, w</em>{i-1}) \approx P(w<em>i|w</em>{i-2}, w_{i-1})$</p>
-<p>更一般地，N-gram 模型假设：</p>
-<p>$P(w<em>i|w_1, …, w</em>{i-1}) \approx P(w<em>i|w</em>{i-n+1}, …, w_{i-1})$</p>
-<p>也就是说，在 n-gram 模型中，当前词的条件概率只依赖于前面的 $n-1$ 个词。</p>
+<script type="math/tex; mode=display">
+P(w_i \mid w_1, \ldots, w_{i-1}) \approx P(w_i \mid w_{i-1})</script><p>如果只看前面 2 个词，就是 trigram 模型：</p>
+<script type="math/tex; mode=display">
+P(w_i \mid w_1, \ldots, w_{i-1}) \approx P(w_i \mid w_{i-2}, w_{i-1})</script><p>更一般地，N-gram 模型假设：</p>
+<script type="math/tex; mode=display">
+P(w_i \mid w_1, \ldots, w_{i-1}) \approx P(w_i \mid w_{i-n+1}, \ldots, w_{i-1})</script><p>也就是说，在 n-gram 模型中，当前词的条件概率只依赖于前面的 $n-1$ 个词。</p>
 <p>于是整句概率可以近似写成：</p>
-<p>$P(w<em>1, …, w_n) \approx \prod</em>{i=1}^{n} P(w<em>i|w</em>{i-n+1}, …, w_{i-1})$</p>
-<h2 id="一个简单例子"><a href="#一个简单例子" class="headerlink" title="一个简单例子"></a>一个简单例子</h2><p>假设我们有下面两个句子：</p>
+<script type="math/tex; mode=display">
+P(w_1, \ldots, w_n) \approx \prod_{i=1}^{n} P(w_i \mid w_{i-n+1}, \ldots, w_{i-1})</script><h2 id="一个简单例子"><a href="#一个简单例子" class="headerlink" title="一个简单例子"></a>一个简单例子</h2><p>假设我们有下面两个句子：</p>
 <ol>
 <li>I love natural language processing</li>
 <li>I love natural processing language</li>
@@ -361,17 +366,18 @@
 <p>如果使用 bigram 模型，这两个句子的分数分别由以下概率相乘得到：</p>
 <ul>
 <li>I love natural language processing: $P(I)P(love|I)P(natural|love)P(language|natural)P(processing|language)$</li>
-<li>I love natural processing language: $P(I)P(love|I)P(natural|love)P(processing|natural)P(language|processing)$</li>
+<li>I love natural language processing: $P(I)P(\text{love} \mid I)P(\text{natural} \mid \text{love})P(\text{language} \mid \text{natural})P(\text{processing} \mid \text{language})$</li>
+<li>I love natural processing language: $P(I)P(\text{love} \mid I)P(\text{natural} \mid \text{love})P(\text{processing} \mid \text{natural})P(\text{language} \mid \text{processing})$</li>
 </ul>
 <p>这两个句子前三项都一样，差别主要出现在后两个 bigram。由于在语料中：</p>
-<p>$P(language|natural)$ 和 $P(processing|language)$ 往往都会显著高于 $P(processing|natural)$ 和 $P(language|processing)$</p>
+<p>$P(\text{language} \mid \text{natural})$ 和 $P(\text{processing} \mid \text{language})$ 往往都会显著高于 $P(\text{processing} \mid \text{natural})$ 和 $P(\text{language} \mid \text{processing})$</p>
 <p>因此模型会更偏好 “I love natural language processing”。</p>
 <h2 id="参数估计"><a href="#参数估计" class="headerlink" title="参数估计"></a>参数估计</h2><p>Ngrams 模型通常直接用最大似然估计 (Maximum Likelihood Estimation, MLE) 来统计条件概率。</p>
 <p>比如在 bigram 模型中：</p>
-<p>$P(w<em>i|w</em>{i-1}) = \frac{Count(w<em>{i-1}, w_i)}{Count(w</em>{i-1})}$</p>
-<p>在 trigram 模型中：</p>
-<p>$P(w<em>i|w</em>{i-2}, w<em>{i-1}) = \frac{Count(w</em>{i-2}, w<em>{i-1}, w_i)}{Count(w</em>{i-2}, w_{i-1})}$</p>
-<p>这背后的直觉很直接：某个词在某个上下文中出现得越多，它在这个上下文下的条件概率就越高。</p>
+<script type="math/tex; mode=display">
+P(w_i \mid w_{i-1}) = \frac{\operatorname{Count}(w_{i-1}, w_i)}{\operatorname{Count}(w_{i-1})}</script><p>在 trigram 模型中：</p>
+<script type="math/tex; mode=display">
+P(w_i \mid w_{i-2}, w_{i-1}) = \frac{\operatorname{Count}(w_{i-2}, w_{i-1}, w_i)}{\operatorname{Count}(w_{i-2}, w_{i-1})}</script><p>这背后的直觉很直接：某个词在某个上下文中出现得越多，它在这个上下文下的条件概率就越高。</p>
 <p>但问题也很直接。如果某个 ngram 在训练语料中从来没有出现过，那么它的概率就会被估计为 0。这样一来，只要句子里包含一个未见过的 ngram，整句概率就会直接变成 0。</p>
 <p>所以，Ngrams 模型几乎总是要和“平滑算法”一起使用。</p>
 <h2 id="为什么-Ngrams-适合做拼写校正"><a href="#为什么-Ngrams-适合做拼写校正" class="headerlink" title="为什么 Ngrams 适合做拼写校正"></a>为什么 Ngrams 适合做拼写校正</h2><p>在拼写校正任务里，我们通常并不要求模型完整理解整句话的语义，只需要它回答一个更局部的问题：</p>
@@ -451,8 +457,8 @@
 <li>in the auditorium</li>
 </ul>
 <p>如果直接使用 MLE，那么：</p>
-<p>$P(\text{auditorium}|\text{in the}) = 0$</p>
-<p>这显然不合理，因为 “in the auditorium” 完全可能出现在真实文本中。</p>
+<script type="math/tex; mode=display">
+P(\text{auditorium} \mid \text{in the}) = 0</script><p>这显然不合理，因为 “in the auditorium” 完全可能出现在真实文本中。</p>
 <h3 id="平滑的作用"><a href="#平滑的作用" class="headerlink" title="平滑的作用"></a>平滑的作用</h3><p>平滑 (smoothing) 的目的，就是把一部分概率质量从高频事件上拿出来，重新分配给低频事件和未见事件。</p>
 <p>直观理解就是：</p>
 <ul>
@@ -474,17 +480,20 @@
 <li>如果高阶 ngram 不可靠或没见过，就退回到低阶概率</li>
 </ul>
 <p>以 trigram 为例，要计算：</p>
-<p>$P(w<em>i|w</em>{i-2}, w_{i-1})$</p>
-<p>那么：</p>
+<script type="math/tex; mode=display">
+P(w_i \mid w_{i-2}, w_{i-1})</script><p>那么：</p>
 <ul>
 <li>如果 $(w<em>{i-2}, w</em>{i-1}, w_i)$ 出现过，就优先用 trigram</li>
-<li>如果没出现过，就退回到 bigram $P(w<em>i|w</em>{i-1})$</li>
+<li>如果没出现过，就退回到 bigram $P(w<em>i \mid w</em>{i-1})$</li>
 <li>如果 bigram 也不可靠，再退回到 unigram $P(w_i)$</li>
 </ul>
 <p>这样即使高阶统计缺失，模型也不至于完全失效。</p>
 <h3 id="Interpolation"><a href="#Interpolation" class="headerlink" title="Interpolation"></a>Interpolation</h3><p>插值 (interpolation) 比 backoff 更平滑一些。它不是“高阶失败才退低阶”，而是把不同阶模型按权重混合起来：</p>
-<p>$P(w<em>i|w</em>{i-2}, w<em>{i-1}) = \lambda_3 P</em>{3}(w<em>i|w</em>{i-2}, w<em>{i-1}) + \lambda_2 P</em>{2}(w<em>i|w</em>{i-1}) + \lambda<em>1 P</em>{1}(w_i)$</p>
-<p>这样做有几个直接的好处：</p>
+<script type="math/tex; mode=display">
+P(w_i \mid w_{i-2}, w_{i-1}) =
+\lambda_3 P_{3}(w_i \mid w_{i-2}, w_{i-1}) +
+\lambda_2 P_{2}(w_i \mid w_{i-1}) +
+\lambda_1 P_{1}(w_i)</script><p>这样做有几个直接的好处：</p>
 <ul>
 <li>高阶模型利用更强的局部上下文</li>
 <li>低阶模型提供稳健性</li>
@@ -493,8 +502,8 @@
 <p>如果只是想给拼写校正器接一个效果不错的传统语言模型，那么直接使用 <code>interpolated Kneser-Ney</code> 通常就够了。</p>
 <hr>
 <h1 id="感知上下文的拼写校正器"><a href="#感知上下文的拼写校正器" class="headerlink" title="感知上下文的拼写校正器"></a>感知上下文的拼写校正器</h1><p>上一篇文章中的拼写校正器，本质上是在做下面这件事：</p>
-<p>$argmax_{c \in candidates(word)} P(c)$</p>
-<p>也就是说，给定一个错别字，在候选词集合中选一个词频最高的词。</p>
+<script type="math/tex; mode=display">
+\arg\max_{c \in \operatorname{candidates}(\text{word})} P(c)</script><p>也就是说，给定一个错别字，在候选词集合中选一个词频最高的词。</p>
 <p>这种方法对非词错误 (non-word error) 很有效，比如：</p>
 <ul>
 <li>speling -&gt; spelling</li>
@@ -522,10 +531,10 @@
 <li>I study natural language processes.</li>
 </ol>
 <p>接着用语言模型分别计算这些候选句子的分数，选择分数最高的那个。形式上可以写成：</p>
-<p>$argmax<em>{c \in candidates(x_i)} P(w_1, …, w</em>{i-1}, c, w_{i+1}, …, w_n)$</p>
-<p>如果还想把上一篇文章中的误差模型也考虑进来，可以写成：</p>
-<p>$score(c) = \log P<em>{LM}(sentence(c)) + \lambda \log P</em>{channel}(error|c)$</p>
-<p>其中：</p>
+<script type="math/tex; mode=display">
+\arg\max_{c \in \operatorname{candidates}(x_i)} P(w_1, \ldots, w_{i-1}, c, w_{i+1}, \ldots, w_n)</script><p>如果还想把上一篇文章中的误差模型也考虑进来，可以写成：</p>
+<script type="math/tex; mode=display">
+\operatorname{score}(c) = \log P_{LM}(\operatorname{sentence}(c)) + \lambda \log P_{channel}(\operatorname{error} \mid c)</script><p>其中：</p>
 <ul>
 <li>$P_{LM}$ 是候选句子的语言模型概率</li>
 <li>$P_{channel}$ 是误差模型，也就是“正确词 $c$ 变成当前错误形式的概率”</li>
