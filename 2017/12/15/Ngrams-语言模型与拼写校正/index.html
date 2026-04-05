@@ -25,10 +25,10 @@
 <meta property="og:description" content="在上一篇文章中，我翻译了 Peter Norvig 的 How to Write a Spelling Corrector，其中的拼写校正器主要依赖编辑距离和词频，并不利用上下文信息，因此在 real-word error 这类问题上效果有限。本文继续沿着这个话题往前走，介绍 NLP 中最经典的一类语言模型：Ngrams 模型，以及如何把它接入一个基于编辑距离的拼写校正器中，使校正器具备感知上下文">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2017-12-15T15:47:22.000Z">
-<meta property="article:modified_time" content="2026-04-04T20:53:57.849Z">
+<meta property="article:modified_time" content="2026-04-05T03:05:26.433Z">
 <meta property="article:author" content="Shengjia Yan">
 <meta property="article:tag" content="Spell Checking">
-<meta property="article:tag" content="Auto Correction">
+<meta property="article:tag" content="Language Model">
 <meta property="article:tag" content="Ngrams">
 <meta property="article:tag" content="Edit Distance">
 <meta property="article:tag" content="SRILM">
@@ -191,12 +191,12 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories">
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags">
-        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-count">118</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -270,7 +270,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-04-04 16:53:57" itemprop="dateModified" datetime="2026-04-04T16:53:57-04:00">2026-04-04</time>
+      <time title="Modified: 2026-04-04 23:05:26" itemprop="dateModified" datetime="2026-04-04T23:05:26-04:00">2026-04-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -622,7 +622,7 @@
 
           <div class="post-tags">
               <a href="/tags/Spell-Checking/" rel="tag"># Spell Checking</a>
-              <a href="/tags/Auto-Correction/" rel="tag"># Auto Correction</a>
+              <a href="/tags/Language-Model/" rel="tag"># Language Model</a>
               <a href="/tags/Ngrams/" rel="tag"># Ngrams</a>
               <a href="/tags/Edit-Distance/" rel="tag"># Edit Distance</a>
               <a href="/tags/SRILM/" rel="tag"># SRILM</a>
