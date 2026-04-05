@@ -1005,7 +1005,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2019-12-26 11:23:40" itemprop="dateModified" datetime="2019-12-26T11:23:40-05:00">2019-12-26</time>
+      <time title="Modified: 2026-04-04 22:10:32" itemprop="dateModified" datetime="2026-04-04T22:10:32-04:00">2026-04-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1041,8 +1041,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>深度学习模型经常受限于小数据集，我们可以使用数据增强 (Data Augmentation) 技术来生成更大规模更具多样性的训练集，从而提升模型的鲁棒性和性能。</p>
-<p>Deep Learning models are data-greedy and often limited by small datasets. Data Augmentation techniques can be applied to boost training datasets, so that the performance and robustness of models may be improved.</p>
+          <p>OCR 模型往往会受限于训练数据的规模和多样性。对于字符识别、单词识别或者简单的文本行识别任务来说，训练集里的文本图像通常都比较“干净”：文字比较居中，角度正常，背景单一，几乎没有模糊和噪声。但真实场景中的 OCR 输入并不是这样，拍照、扫描、裁剪和压缩都会带来各种各样的形变和退化。</p>
+<p>因此，一个很自然的想法是：在训练阶段主动对图像做一些随机扰动，构造出更大规模、更多样化的训练样本，让模型提前见过这些变化，从而提升鲁棒性。</p>
+<p>Deep learning models are data-greedy and often limited by small datasets. Data augmentation can improve both performance and robustness, especially for OCR tasks where geometric distortion is common.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/01/25/Image-Data-Augmentation-for-OCR/#more" rel="contents">
