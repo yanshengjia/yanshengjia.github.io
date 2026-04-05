@@ -25,7 +25,7 @@
 <meta property="og:description" content="After work, I studied the “Machine Learning Crash Course” produced by Google and made some notes. 在工作之余学习了 Google 出品的 “机器学习速成课程”，做了些笔记。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2018-04-02T04:07:29.000Z">
-<meta property="article:modified_time" content="2026-04-05T03:08:28.627Z">
+<meta property="article:modified_time" content="2026-04-05T05:19:36.071Z">
 <meta property="article:author" content="Shengjia Yan">
 <meta property="article:tag" content="TensorFlow">
 <meta property="article:tag" content="Machine Learning">
@@ -156,7 +156,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -169,6 +169,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%99%E9%97%A8%E8%AF%BE%E5%9C%A8%E8%AE%B2%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">这门课在讲什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">机器学习项目的基本流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E4%B8%8E%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">线性回归与损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E5%9C%A8%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">4.</span> <span class="nav-text">梯度下降在做什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E5%9B%9E%E5%BD%92%E5%88%B0%E5%88%86%E7%B1%BB"><span class="nav-number">5.</span> <span class="nav-text">从回归到分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E8%A6%81%E5%8F%AA%E7%9C%8B-Accuracy"><span class="nav-number">6.</span> <span class="nav-text">不要只看 Accuracy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%9B%E5%8C%96%E3%80%81%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E6%AD%A3%E5%88%99%E5%8C%96"><span class="nav-number">7.</span> <span class="nav-text">泛化、过拟合与正则化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B%E4%BE%9D%E7%84%B6%E5%BE%88%E9%87%8D%E8%A6%81"><span class="nav-number">8.</span> <span class="nav-text">特征工程依然很重要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TensorFlow-%E7%AE%80%E4%BB%8B"><span class="nav-number">9.</span> <span class="nav-text">TensorFlow 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E8%A7%89%E5%BE%97%E8%BF%99%E9%97%A8%E8%AF%BE%E6%9C%80%E6%9C%89%E4%BB%B7%E5%80%BC%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="nav-number">10.</span> <span class="nav-text">我觉得这门课最有价值的地方</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">11.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">12.</span> <span class="nav-text">References</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -268,7 +269,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-04-04 23:08:28" itemprop="dateModified" datetime="2026-04-04T23:08:28-04:00">2026-04-04</time>
+      <time title="Modified: 2026-04-05 01:19:36" itemprop="dateModified" datetime="2026-04-05T01:19:36-04:00">2026-04-05</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -314,6 +315,137 @@
 <p>在工作之余学习了 Google 出品的 “机器学习速成课程”，做了些笔记。</p>
 <span id="more"></span>
 <hr>
+<h2 id="这门课在讲什么"><a href="#这门课在讲什么" class="headerlink" title="这门课在讲什么"></a>这门课在讲什么</h2><p>Google 的 Machine Learning Crash Course (MLCC) 适合作为机器学习入门课，因为它并不追求一次性讲完所有算法，而是围绕一个更实际的问题展开：如果要把一个模型从数据、训练、评估一路做到能用，最核心的概念是什么。</p>
+<p>这门课覆盖的重点大致包括：</p>
+<ul>
+<li>监督学习的基本问题定义</li>
+<li>线性回归与逻辑回归</li>
+<li>损失函数与梯度下降</li>
+<li>分类模型的评估指标</li>
+<li>训练集、验证集、测试集</li>
+<li>泛化、过拟合与正则化</li>
+<li>特征工程与特征组合</li>
+<li>用 TensorFlow API 搭建基础模型</li>
+</ul>
+<p>如果已经学过一些机器学习教材，那么 MLCC 最有价值的地方不一定是“新知识”，而是它把很多概念讲得非常工程化。</p>
+<hr>
+<h2 id="机器学习项目的基本流程"><a href="#机器学习项目的基本流程" class="headerlink" title="机器学习项目的基本流程"></a>机器学习项目的基本流程</h2><p>MLCC 里反复强调的一点是，不要把机器学习理解成“选个算法然后开始训练”。更合理的视角是把它看成一个迭代流程：</p>
+<ol>
+<li>明确任务与标签</li>
+<li>准备和理解数据</li>
+<li>设计特征表示</li>
+<li>选择模型与损失函数</li>
+<li>训练模型</li>
+<li>在验证集上调参</li>
+<li>在测试集上做最终评估</li>
+</ol>
+<p>很多初学者一开始最容易忽略的是第 2 步和第 3 步。实际上，在工业场景中，数据质量和特征设计往往比“换一个更复杂的模型”更重要。</p>
+<hr>
+<h2 id="线性回归与损失函数"><a href="#线性回归与损失函数" class="headerlink" title="线性回归与损失函数"></a>线性回归与损失函数</h2><p>MLCC 从最基础的线性回归开始，这很合理，因为很多后续概念都可以从这里自然过渡出来。</p>
+<p>线性模型可以写成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y&#x27; = b + w1x1 + w2x2 + ... + wnxn</span><br></pre></td></tr></table></figure>
+<p>其中 <code>x</code> 是特征，<code>w</code> 是权重，<code>b</code> 是偏置，<code>y&#39;</code> 是模型预测值。</p>
+<p>训练的目标就是找到一组更好的参数，使预测值尽可能接近真实值。对于回归问题，常见的损失函数是平方损失或均方误差 (Mean Squared Error, MSE)。</p>
+<p>这里最重要的不是记住公式，而是理解两个事实：</p>
+<ul>
+<li>损失函数定义了“模型错得有多严重”</li>
+<li>训练过程本质上是在最小化损失函数</li>
+</ul>
+<hr>
+<h2 id="梯度下降在做什么"><a href="#梯度下降在做什么" class="headerlink" title="梯度下降在做什么"></a>梯度下降在做什么</h2><p>梯度下降 (Gradient Descent) 是整门课最核心的概念之一。</p>
+<p>它的直觉并不复杂：如果把损失函数看成一座山地形图，那么当前参数所在的位置通常不在最低点。梯度告诉我们当前位置“往哪个方向上升最快”，因此只要沿着梯度的反方向走，就有机会让损失继续下降。</p>
+<p>更新过程可以简单写成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parameter = parameter - learning_rate * gradient</span><br></pre></td></tr></table></figure>
+<p>这里有两个容易低估但非常关键的点：</p>
+<ul>
+<li>learning rate 太小，训练会很慢</li>
+<li>learning rate 太大，训练可能震荡，甚至无法收敛</li>
+</ul>
+<p>MLCC 在这一部分讲得很实用。对于工程实践来说，先观察 loss curve 是否稳定下降，通常比一开始纠结更复杂的优化器更重要。</p>
+<hr>
+<h2 id="从回归到分类"><a href="#从回归到分类" class="headerlink" title="从回归到分类"></a>从回归到分类</h2><p>在线性回归之后，课程很自然地过渡到逻辑回归 (Logistic Regression) 和分类问题。</p>
+<p>逻辑回归本质上仍然是在做一个线性组合，只不过最后会经过一个 sigmoid 函数，把输出压到 <code>0</code> 到 <code>1</code> 之间，表示某个类别出现的概率。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">probability = sigmoid(wx + b)</span><br></pre></td></tr></table></figure>
+<p>在二分类任务中，模型输出的通常不是最终类别，而是一个概率值。接下来还需要设定阈值 (threshold)，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if probability &gt;= 0.5:</span><br><span class="line">    predict positive</span><br><span class="line">else:</span><br><span class="line">    predict negative</span><br></pre></td></tr></table></figure>
+<p>这也是很多初学者容易混淆的地方：模型预测概率和最终分类决策，不是同一件事。</p>
+<hr>
+<h2 id="不要只看-Accuracy"><a href="#不要只看-Accuracy" class="headerlink" title="不要只看 Accuracy"></a>不要只看 Accuracy</h2><p>MLCC 在分类部分给人的一个很深的印象是，它没有停留在“准确率越高越好”这种非常表面的结论上。</p>
+<p>对于类别不平衡的数据集，Accuracy 往往会误导人。比如正样本只占 1%，模型如果永远预测负类，也能得到 99% 的准确率，但这个模型基本没有价值。</p>
+<p>因此在实际问题里，经常还要看：</p>
+<ul>
+<li>Precision</li>
+<li>Recall</li>
+<li>F1</li>
+<li>ROC</li>
+<li>AUC</li>
+</ul>
+<p>一个比较工程化的思路是：先明确业务更怕哪种错误，再选择更合适的指标。如果是风控问题，可能更怕漏报；如果是推荐或广告问题，可能更关注 precision 和排序质量。</p>
+<hr>
+<h2 id="泛化、过拟合与正则化"><a href="#泛化、过拟合与正则化" class="headerlink" title="泛化、过拟合与正则化"></a>泛化、过拟合与正则化</h2><p>这部分是机器学习入门里最重要、也最容易被“学会 API 但没学会思想”的地方。</p>
+<p>一个模型在训练集上表现很好，并不代表它真的学到了规律，也可能只是记住了训练数据中的噪声。这就是过拟合 (Overfitting)。</p>
+<p>与之对应，模型太简单、连训练集都学不好，就是欠拟合 (Underfitting)。</p>
+<p>MLCC 提醒我们，评估模型时要特别区分三件事：</p>
+<ul>
+<li>training error</li>
+<li>validation error</li>
+<li>test error</li>
+</ul>
+<p>一个健康的训练过程，通常是训练误差下降、验证误差也随之下降；如果训练误差继续下降，但验证误差开始恶化，就要警惕过拟合。</p>
+<p>缓解过拟合的常见方法包括：</p>
+<ul>
+<li>收集更多数据</li>
+<li>减少特征噪声</li>
+<li>降低模型复杂度</li>
+<li>使用正则化</li>
+<li>合理做 early stopping</li>
+</ul>
+<p>正则化 (Regularization) 可以理解为对模型复杂度加约束，避免参数过大、模型过于依赖少数特征。</p>
+<hr>
+<h2 id="特征工程依然很重要"><a href="#特征工程依然很重要" class="headerlink" title="特征工程依然很重要"></a>特征工程依然很重要</h2><p>虽然现在很多深度学习模型能够自动学习特征，但在结构化数据、广告、推荐、搜索、风控等问题里，特征工程依然是模型效果的重要来源。</p>
+<p>MLCC 对特征工程的讲解很适合初学者，尤其是下面几个点：</p>
+<ul>
+<li>数值特征需要关注尺度、分布和异常值</li>
+<li>类别特征通常要做 one-hot encoding、hashing 或 embedding</li>
+<li>分桶 (bucketization) 可以把连续值转成更稳定的离散特征</li>
+<li>特征交叉 (feature cross) 可以让线性模型表达更强的非线性关系</li>
+</ul>
+<p>例如用户年龄和设备类型分别看都很普通，但交叉起来之后，可能就能更好地区分不同人群的行为模式。这也是线性模型在工业界长期有生命力的一个原因。</p>
+<hr>
+<h2 id="TensorFlow-简介"><a href="#TensorFlow-简介" class="headerlink" title="TensorFlow 简介"></a>TensorFlow 简介</h2><p>这门课一边讲机器学习基础，一边用 TensorFlow 把一些核心概念落到代码里。这样做的好处是，很多原本停留在公式和定义层面的内容，会更容易和训练流程、特征处理、模型评估这些工程问题对应起来。</p>
+<p>从设计思路上看，TensorFlow 做的事情其实很清楚：用统一的计算图和张量表示，把数据流、模型计算、损失函数和参数更新组织到一起。这样一来，研究里常见的“定义模型、计算 loss、反向传播、更新参数”这条链路，就能比较自然地落到工程实现中。</p>
+<p>在实际使用中，TensorFlow 最常见的几类工作大致是：</p>
+<ul>
+<li>定义模型结构</li>
+<li>组织输入数据管道</li>
+<li>执行训练与评估</li>
+<li>保存和加载模型</li>
+<li>部署到不同运行环境</li>
+</ul>
+<p>我觉得 TensorFlow 最值得关注的地方，不是某一层 API 怎么写，而是它把机器学习训练过程拆得比较清楚。数据怎么进入模型，模型怎么产生预测，损失怎么定义，梯度怎么回传，参数又如何更新，这些环节都能在框架里找到明确对应。</p>
+<p>对初学者来说，这一点很有帮助。很多时候学机器学习最大的障碍不是公式本身，而是不知道一个模型在代码里到底是如何真正跑起来的。借助 TensorFlow 这样的框架，至少可以把“数学定义”和“工程实现”之间的那层隔阂拆开一些。</p>
+<hr>
+<h2 id="我觉得这门课最有价值的地方"><a href="#我觉得这门课最有价值的地方" class="headerlink" title="我觉得这门课最有价值的地方"></a>我觉得这门课最有价值的地方</h2><p>学完之后，我觉得 MLCC 最有价值的不是某一个公式，而是下面这些比较“工程化”的提醒：</p>
+<ul>
+<li>先把问题定义清楚，再谈模型</li>
+<li>先把数据看明白，再谈调参</li>
+<li>指标要服务于业务目标，不要迷信单一 accuracy</li>
+<li>验证集的作用是调参，不要把测试集用成验证集</li>
+<li>简单模型往往是很好的 baseline</li>
+<li>特征工程和数据质量常常决定上限</li>
+</ul>
+<p>这些原则今天看依然不过时。</p>
+<hr>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>如果把 MLCC 当成一门“机器学习第一课”，它最大的优点是路径非常清楚：从线性模型讲到分类，从损失函数讲到梯度下降，从训练讲到评估，从特征工程讲到 TensorFlow 实现，基本把一个入门者最需要建立的认知框架串了起来。</p>
+<p>对于已经有一些基础的同学，这门课的作用可能不是补充多少新知识，而是帮助自己把很多零散概念重新组织成一条更完整的工程链路。</p>
+<hr>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a href="https://developers.google.com/machine-learning/crash-course">Machine Learning Crash Course, Google for Developers</a></li>
+<li><a href="https://developers.google.com/machine-learning/crash-course/classification">Classification, Machine Learning Crash Course, Google for Developers</a></li>
+<li><a href="https://developers.google.com/machine-learning/crash-course/categorical-data/feature-crosses">Categorical data: Feature crosses, Machine Learning Crash Course, Google for Developers</a></li>
+<li><a href="https://www.tensorflow.org/guide/estimator">Estimators, TensorFlow</a></li>
+<li><a href="https://www.tensorflow.org/tutorials/estimator/linear">Build a linear model with Estimators, TensorFlow</a></li>
+</ul>
 
     </div>
 
