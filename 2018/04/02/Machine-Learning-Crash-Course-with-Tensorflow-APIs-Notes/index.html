@@ -25,7 +25,7 @@
 <meta property="og:description" content="After work, I studied the “Machine Learning Crash Course” produced by Google and made some notes. 在工作之余学习了 Google 出品的 “机器学习速成课程”，做了些笔记。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2018-04-02T04:07:29.000Z">
-<meta property="article:modified_time" content="2026-04-05T05:19:36.071Z">
+<meta property="article:modified_time" content="2026-04-05T05:28:19.388Z">
 <meta property="article:author" content="Shengjia Yan">
 <meta property="article:tag" content="TensorFlow">
 <meta property="article:tag" content="Machine Learning">
@@ -269,7 +269,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-04-05 01:19:36" itemprop="dateModified" datetime="2026-04-05T01:19:36-04:00">2026-04-05</time>
+      <time title="Modified: 2026-04-05 01:28:19" itemprop="dateModified" datetime="2026-04-05T01:28:19-04:00">2026-04-05</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -363,7 +363,7 @@
 </ul>
 <p>MLCC 在这一部分讲得很实用。对于工程实践来说，先观察 loss curve 是否稳定下降，通常比一开始纠结更复杂的优化器更重要。</p>
 <hr>
-<h2 id="从回归到分类"><a href="#从回归到分类" class="headerlink" title="从回归到分类"></a>从回归到分类</h2><p>在线性回归之后，课程很自然地过渡到逻辑回归 (Logistic Regression) 和分类问题。</p>
+<h2 id="从回归到分类"><a href="#从回归到分类" class="headerlink" title="从回归到分类"></a>从回归到分类</h2><p>在线性回归之后，MLCC 也继续讲到了逻辑回归 (Logistic Regression) 和分类问题。</p>
 <p>逻辑回归本质上仍然是在做一个线性组合，只不过最后会经过一个 sigmoid 函数，把输出压到 <code>0</code> 到 <code>1</code> 之间，表示某个类别出现的概率。</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">probability = sigmoid(wx + b)</span><br></pre></td></tr></table></figure>
 <p>在二分类任务中，模型输出的通常不是最终类别，而是一个概率值。接下来还需要设定阈值 (threshold)，例如：</p>
@@ -380,9 +380,9 @@
 <li>ROC</li>
 <li>AUC</li>
 </ul>
-<p>一个比较工程化的思路是：先明确业务更怕哪种错误，再选择更合适的指标。如果是风控问题，可能更怕漏报；如果是推荐或广告问题，可能更关注 precision 和排序质量。</p>
+<p>更实际一点的做法是，先想清楚业务更怕哪种错误，再选择更合适的指标。如果是风控问题，可能更怕漏报；如果是推荐或广告问题，可能更关注 precision 和排序质量。</p>
 <hr>
-<h2 id="泛化、过拟合与正则化"><a href="#泛化、过拟合与正则化" class="headerlink" title="泛化、过拟合与正则化"></a>泛化、过拟合与正则化</h2><p>这部分是机器学习入门里最重要、也最容易被“学会 API 但没学会思想”的地方。</p>
+<h2 id="泛化、过拟合与正则化"><a href="#泛化、过拟合与正则化" class="headerlink" title="泛化、过拟合与正则化"></a>泛化、过拟合与正则化</h2><p>这部分是机器学习入门里最重要的内容之一，但也最容易被草草带过。</p>
 <p>一个模型在训练集上表现很好，并不代表它真的学到了规律，也可能只是记住了训练数据中的噪声。这就是过拟合 (Overfitting)。</p>
 <p>与之对应，模型太简单、连训练集都学不好，就是欠拟合 (Underfitting)。</p>
 <p>MLCC 提醒我们，评估模型时要特别区分三件事：</p>
